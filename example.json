@@ -28438,12 +28438,6 @@
       "lat": 37.620134,
       "lng": -122.426316,
       "listingid": 8167676
-    }],
-    "result_type": "Hash",
-    "wms_db_ms": 2199,
-    "wms_dbcnt_ms": 1918,
-    "wms_model_version": "2.9.8",
-    "wms_pkg_ms": 196,
-    "wms_svc_common_version": "2.4.22"
+    }]
   }
 }

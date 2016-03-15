@@ -7,9 +7,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     center: new google.maps.LatLng(37.76487, -122.41948)
   });
 
+  // `Cors` is a simple CORS wrapper for requests.
   Cors.get('example.json', function(res) {
     var response = JSON.parse(res.target.response);
-    console.log(response);
+
   });
 
 });
