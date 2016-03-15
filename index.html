@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Google Maps Point Clustering with D3.</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map-container {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        bottom: 0;
+      }
+      #map {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map-container">
+      <div id="map"></div>
+    </div>
+
+    <script src="//maps.google.com/maps/api/js"></script>
+    <script src="//d3js.org/d3.v3.min.js"></script>
+    <script>
+      // Create the Google Map…
+      document.addEventListener("DOMContentLoaded", function(event) {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 10,
+          center: new google.maps.LatLng(37.76487, -122.41948)
+        });
+      });
+    </script>
+    <script src="dist/build.js"></script>
+  </body>
+</html>
