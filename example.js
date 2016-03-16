@@ -7,10 +7,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
     center: new google.maps.LatLng(37.76487, -122.41948)
   });
 
-  // `Cors` is a simple CORS wrapper for requests.
-  Cors.get('example.json', function(res) {
-    var response = JSON.parse(res.target.response);
+  // Construct PointCluster Object
+  // @params{object} - map instance required.
+  var pc = new PointCluster({
+    map: map
+  });
 
+  // Get data with d3 JSON call.
+  d3.json('example.json', function(error, res) {
+
+    // Set the collection of location objects.
+    pc.setCollection(res.data.result_list);
   });
 
 });
