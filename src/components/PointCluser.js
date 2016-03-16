@@ -23,9 +23,10 @@ export class PointCluster {
     var self = this;
     points.forEach(function(o, i) {
       var div = document.createElement("div");
-      div.className = "point-cluster";
+      div.className = "point-cluster medium";
       div.style.left = o[0] + 'px';
       div.style.top = o[1] + 'px';
+      div.innerHTML = o[2].length;
       self.map.getDiv().appendChild(div);
     });
   }
@@ -50,8 +51,8 @@ export class PointCluster {
   		var y = (point.y - topRight.y) * scale;
 
       return [
-        x,
-        y,
+        x-25,
+        y-25,
         i
       ]
     });
@@ -74,10 +75,8 @@ export class PointCluster {
 
   getCenterPoints(quadtree) {
 
-    console.log(quadtree)
-
     var clusterPoints = [];
-    var clusterRange = 45;
+    var clusterRange = 200;
 
     for (var x = 0; x <= document.getElementById('map').offsetWidth; x += clusterRange) {
       for (var y = 0; y <= document.getElementById('map').offsetHeight; y+= clusterRange) {

@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   google.maps.event.addListener(map, 'idle', function() {
 
-    // Get data with d3 JSON call.
+    // Get data with d3 JSON call. Use jQuery or CORS - doesn't matter.
     d3.json('example.json', function(error, res) {
 
       // Set the collection of location objects.
