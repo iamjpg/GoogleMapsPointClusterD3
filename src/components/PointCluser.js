@@ -14,10 +14,20 @@ export class PointCluster {
   print() {
     var projection = d3.geo.mercator();
     var path = d3.geo.path().projection(projection).pointRadius(1);
-    console.log(this.returnPointsRaw())
     var quadtree = d3.geom.quadtree()(this.returnPointsRaw());
+    var centerPoints = this.getCenterPoints(quadtree);
+    this.paintPinsToCanvas(centerPoints);
+  }
 
-    this.getCenterPoints(quadtree);
+  paintPinsToCanvas(points) {
+    var self = this;
+    points.forEach(function(o, i) {
+      var div = document.createElement("div");
+      div.className = "point-cluster";
+      div.style.left = o[0] + 'px';
+      div.style.top = o[1] + 'px';
+      self.map.getDiv().appendChild(div);
+    });
   }
 
   returnPointsRaw() {
@@ -51,9 +61,6 @@ export class PointCluster {
     var validData = [];
     quadtree.visit(function(node, x1, y1, x2, y2) {
       var p = node.point;
-      if (p !== null) {
-        console.log(p)
-      }
       if (p) {
         p.selected = (p[0] >= x0) && (p[0] < x3) && (p[1] >= y0) && (p[1] < y3);
         if (p.selected) {
@@ -62,7 +69,6 @@ export class PointCluster {
       }
       return x1 >= x3 || y1 >= y3 || x2 < x0 || y2 < y0;
     });
-    // console.log(validData)
     return validData;
   }
 
