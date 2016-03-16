@@ -22,11 +22,20 @@ export class PointCluster {
   paintPinsToCanvas(points) {
     var self = this;
     points.forEach(function(o, i) {
-      var div = document.createElement("div");
-      div.className = "point-cluster medium";
+      var clusterCount = o[2].length;
+      var classSize;
+      if (clusterCount.toString().length > 3) {
+        classSize = 'large';
+      } else if (clusterCount.toString().length == 2) {
+        classSize = 'medium';
+      } else {
+        classSize = 'small';
+      }
+      var div = document.createElement('div');
+      div.className = 'point-cluster ' + classSize;
       div.style.left = o[0] + 'px';
       div.style.top = o[1] + 'px';
-      div.innerHTML = o[2].length;
+      div.innerHTML = clusterCount;
       self.map.getDiv().appendChild(div);
     });
   }
@@ -76,7 +85,7 @@ export class PointCluster {
   getCenterPoints(quadtree) {
 
     var clusterPoints = [];
-    var clusterRange = 200;
+    var clusterRange = 150;
 
     for (var x = 0; x <= document.getElementById('map').offsetWidth; x += clusterRange) {
       for (var y = 0; y <= document.getElementById('map').offsetHeight; y+= clusterRange) {
@@ -98,6 +107,13 @@ export class PointCluster {
 
     return clusterPoints;
 
+  }
+
+  removeElements() {
+    var elements = document.getElementsByClassName('point-cluster');
+    while(elements.length > 0){
+      elements[0].parentNode.removeChild(elements[0]);
+    }
   }
 
 }
