@@ -13,11 +13,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
     map: map
   });
 
-  // Get data with d3 JSON call.
-  d3.json('example.json', function(error, res) {
+  google.maps.event.addListener(map, 'idle', function() {
 
-    // Set the collection of location objects.
-    pc.setCollection(res.data.result_list);
+    // Get data with d3 JSON call.
+    d3.json('example.json', function(error, res) {
+
+      // Set the collection of location objects.
+      pc.setCollection(res.data.result_list);
+
+      // Print clusters
+      pc.print();
+
+    });
+
   });
 
 });
