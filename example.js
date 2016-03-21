@@ -8,9 +8,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
   });
 
   // Construct PointCluster Object
-  // @params{object} - map instance required.
+  // @params{object}
   var pc = new PointCluster({
-    map: map
+    map: map, // Pass in your map intance you've created above.
+    clusterRange: 150 // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
   });
 
   google.maps.event.addListener(map, 'idle', function() {
@@ -45,11 +46,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     */
 
 
-    // Get data with d3 JSON call. Use jQuery or CORS - doesn't matter.
+    // Get data with d3 JSON call. You can obviously use whatever you please to grab your data.
     d3.json('example.json', function(error, res) {
-
-      console.log(error);
-      console.log(res)
 
       // Set the collection of location objects.
       pc.setCollection(res.data.result_list);
