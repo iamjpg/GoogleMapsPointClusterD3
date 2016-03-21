@@ -10,6 +10,7 @@ export class PointCluster {
     this.map = options.map;
     this.clusterRange = options.clusterRange || 300;
     this.threshold = options.threshold || 200;
+    this.setMapEvents();
   }
 
   setCollection(collection) {
@@ -51,11 +52,11 @@ export class PointCluster {
       div.dataset.latlngids = latLngPointerArray.join(',')
       div.innerHTML = clusterCount;
       self.map.getDiv().appendChild(div);
-      self.setEvents(div)
+      self.setClusterEvents(div)
     });
   }
 
-  setEvents(el) {
+  setClusterEvents(el) {
     var self = this;
     el.onmouseover = function() {
       self.showPolygon(this);
@@ -68,6 +69,13 @@ export class PointCluster {
       self.removePolygon();
       self.zoomToFit(this);
     }
+  }
+
+  setMapEvents() {
+    var self = this;
+    google.maps.event.addListener(this.map, 'idle', function() {
+      self.removeElements();
+    });
   }
 
   zoomToFit(el) {
