@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     pc.removeElements();
 
+    /*
     // Set the current bounds and center of the map to pass to service.
     var ne_lat, ne_lng, sw_lat, sw_lng, c_lat, c_lng;
     ne_lat = map.getBounds().getNorthEast().lat();
@@ -32,6 +33,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
       dataType: 'jsonp',
       success: function(res) {
 
+        console.log('Number of points: ' + res.data.number_returned);
+
         // Set the collection of location objects.
         pc.setCollection(res.data.result_list);
 
@@ -39,11 +42,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
         pc.print();
       }
     });
+    */
 
 
-    /*
     // Get data with d3 JSON call. Use jQuery or CORS - doesn't matter.
     d3.json('example.json', function(error, res) {
+
+      console.log(error);
+      console.log(res)
 
       // Set the collection of location objects.
       pc.setCollection(res.data.result_list);
@@ -52,7 +58,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       pc.print();
 
     });
-    */
 
   });
 
