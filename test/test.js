@@ -4,6 +4,6 @@ function importTest(name, path) {
   });
 }
 
-describe('Component Testing', function() {
-  importTest('About', './components/About');
+describe('PointCluster Testing', function() {
+  importTest('PointCluster', './components/PointCluster');
 });

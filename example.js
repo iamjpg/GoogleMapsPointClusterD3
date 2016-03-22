@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // @params{object}
   var pc = new PointCluster({
     map: map, // Pass in your map intance you've created above.
-    clusterRange: 150 // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
+    clusterRange: 250 // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
   });
 
   // Map idle listener.

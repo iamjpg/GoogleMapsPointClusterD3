@@ -15,9 +15,9 @@ export class PointCluster {
 
   setCollection(collection) {
     if (!collection) {
-      return console.error('Please pass an array of location objects.');
+      return console.error('Please pass an array of location objects. Ignore if running tests.');
     }
-    this.collection = window.pointCollection = collection;
+    this.collection = collection;
   }
 
   print() {
