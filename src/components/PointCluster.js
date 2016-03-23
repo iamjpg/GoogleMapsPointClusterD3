@@ -36,9 +36,12 @@ export class PointCluster {
 
   // createOverlay() is responsible for creating the div which we will append clusters and pins to.
   createOverlay() {
-    if (document.getElementById('point_cluster_overlay')) { return false; }
-    var overlay = new Overlay();
-    overlay.setMap(this.map);
+    if (this.overlay) {
+      this.overlay.setMap(null);
+    }
+    this.overlay = new Overlay(this.map);
+    this.overlay.setMap(this.map);
+    window.overlay = this.overlay;
   }
 
   // print() is reponsible for calling D3 methods to convert `this.collection` into quadtree points.
@@ -60,7 +63,7 @@ export class PointCluster {
         clearInterval(overlayInterval);
         self.paintPinsToCanvas(centerPoints);
       }
-    });
+    }, 10);
   }
 
   paintPinsToCanvas(points) {
