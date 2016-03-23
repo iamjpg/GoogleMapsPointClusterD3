@@ -1,42 +1,60 @@
-// Import library for establishing the convex hull of a cluster of markers
+// Import library for establishing the convex hull of a cluster of markers.
 import convexHull from '../services/convex_hull';
 
-// Import the simple overlay object which allows us to add object to the Google Maps instance
+// Import the simple overlay object which allows us to add object to the Google Maps instance.
 import Overlay from '../services/overlay';
 
-
+// PointCluster class definition.
 export class PointCluster {
 
+  // Constructor -> { options } object
   constructor(options) {
+
+    // Ensure that the Google Maps instance is passed. If not, return an error.
     if (!options.map) {
       return console.error('ERROR: Google map instance is a requirement.');
     }
+
+    // Set object properties with sensible defaults (except the map instance).
     this.map = options.map;
     this.clusterRange = options.clusterRange || 300;
     this.threshold = options.threshold || 200;
     this.setMapEvents();
   }
 
+  // setCollection() is responsible for setting the collection of lat/lng objects.
   setCollection(collection) {
+
+    // Collection is required. Throw error if not set.
     if (!collection) {
       return console.error('Please pass an array of location objects. Ignore if running tests.');
     }
+
+    // Set collection on the PointCluster object.
     this.collection = collection;
   }
 
+  // createOverlay() is responsible for creating the div which we will append clusters and pins to.
   createOverlay() {
     if (document.getElementById('point_cluster_overlay')) { return false; }
     var overlay = new Overlay();
     overlay.setMap(this.map);
   }
 
+  // print() is reponsible for calling D3 methods to convert `this.collection` into quadtree points.
   print() {
     var self = this;
+
+    // Set the projection, create quadtree, and get centerpoints.
     var projection = d3.geo.mercator();
     var path = d3.geo.path().projection(projection).pointRadius(1);
     var quadtree = d3.geom.quadtree()(this.returnPointsRaw());
     var centerPoints = this.getCenterPoints(quadtree);
+
+    // Create the overlay div to append to.
     this.createOverlay();
+
+    // Unfortunate setInterval as it takes a second for Google to append their overlay div.
     var overlayInterval = setInterval(function() {
       if (document.getElementById('point_cluster_overlay')) {
         clearInterval(overlayInterval);
