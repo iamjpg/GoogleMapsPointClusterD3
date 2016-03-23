@@ -2,7 +2,7 @@
   "name": "jellyfishjs",
   "version": "0.0.3",
   "description": "Routing + Underscore + Lodash = Ultimate JS Framework",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --hot --config ./webpack.base.config.js",
     "build": "webpack --progress --hide-modules --config webpack.prod.config.js",
