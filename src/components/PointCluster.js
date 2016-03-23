@@ -1,6 +1,6 @@
 // Convex hull library
 var convexHull = require('../services/convex_hull');
-var Overlay = require('./overlay');
+var Overlay = require('../services/overlay');
 
 export class PointCluster {
 
