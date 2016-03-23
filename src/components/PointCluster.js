@@ -1,5 +1,6 @@
 // Convex hull library
 var convexHull = require('../services/convex_hull');
+var Overlay = require('../services/overlay');
 
 export class PointCluster {
 
@@ -20,16 +21,31 @@ export class PointCluster {
     this.collection = collection;
   }
 
+  createOverlay() {
+    if (document.getElementById('point_cluster_overlay')) { return false; }
+    var overlay = new Overlay();
+    overlay.setMap(this.map);
+  }
+
   print() {
+    var self = this;
     var projection = d3.geo.mercator();
     var path = d3.geo.path().projection(projection).pointRadius(1);
     var quadtree = d3.geom.quadtree()(this.returnPointsRaw());
     var centerPoints = this.getCenterPoints(quadtree);
-    this.paintPinsToCanvas(centerPoints);
+    this.createOverlay();
+    var overlayInterval = setInterval(function() {
+      if (document.getElementById('point_cluster_overlay')) {
+        clearInterval(overlayInterval);
+        self.paintPinsToCanvas(centerPoints);
+      }
+    });
   }
 
   paintPinsToCanvas(points) {
     var self = this;
+    var frag = document.createDocumentFragment();
+
     points.forEach(function(o, i) {
       var clusterCount = o[2].length;
       var classSize;
@@ -51,9 +67,12 @@ export class PointCluster {
       });
       div.dataset.latlngids = latLngPointerArray.join(',')
       div.innerHTML = clusterCount;
-      self.map.getDiv().appendChild(div);
+      frag.appendChild(div);
       self.setClusterEvents(div)
     });
+
+    document.getElementById('point_cluster_overlay').appendChild(frag);
+
   }
 
   setClusterEvents(el) {
