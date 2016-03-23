@@ -1,7 +1,7 @@
 {
-  "name": "jellyfishjs",
-  "version": "0.0.3",
-  "description": "Routing + Underscore + Lodash = Ultimate JS Framework",
+  "name": "GoogleMapsPointCluster",
+  "version": "0.0.1",
+  "description": "Super fast point clustering on Google Maps via D3js",
   "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --hot --config ./webpack.base.config.js",

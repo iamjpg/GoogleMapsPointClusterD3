@@ -1,6 +1,9 @@
-// Convex hull library
-var convexHull = require('../services/convex_hull');
-var Overlay = require('../services/overlay');
+// Import library for establishing the convex hull of a cluster of markers
+import convexHull from '../services/convex_hull';
+
+// Import the simple overlay object which allows us to add object to the Google Maps instance
+import Overlay from '../services/overlay';
+
 
 export class PointCluster {
 
