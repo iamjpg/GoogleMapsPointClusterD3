@@ -250,6 +250,7 @@ export class PointCluster {
   }
 
   removePolygon() {
+    if (this.polygon === undefined) { return false; }
     this.polygon.setMap(null);
   }
 
