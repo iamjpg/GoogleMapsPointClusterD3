@@ -10,8 +10,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // Construct PointCluster Object
   // @params{object}
   var pc = new PointCluster({
-    map: map, // Pass in your map intance you've created above.
-    clusterRange: 150 // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
+    map: map, // Pass in your map intance.
+    clusterRange: 150, // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
+    clusterRgba: '255, 0, 102, .8', // Change the background of the cluster icon. RGBA only.
+    clusterBorder: '5px solid #dcdcdc', // Change the border around the icon. HEX only.
+    polygonStrokeColor: '#0f0f0e',
+    polygonStrokeOpacity: '0.5',
+    polygonStrokeWeight: '4',
+    polygonFillColor: '#0f0f0e',
+    polygonFillOpacity: '0.2'
   });
 
   // Map idle listener.

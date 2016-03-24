@@ -19,6 +19,13 @@ export class PointCluster {
     this.map = options.map;
     this.clusterRange = options.clusterRange || 300;
     this.threshold = options.threshold || 200;
+    this.clusterRgba = options.clusterRgba || '51, 102, 153, 0.8';
+    this.clusterBorder = options.clusterBorder || '5px solid #ccc';
+    this.polygonStrokeColor = options.polygonStrokeColor || '#336699';
+    this.polygonStrokeOpacity = options.polygonStrokeOpacity || '0.5';
+    this.polygonStrokeWeight = options.polygonStrokeWeight || '4';
+    this.polygonFillColor = options.polygonFillColor || '#336699';
+    this.polygonFillOpacity = options.polygonFillOpacity || '0.2';
     this.setMapEvents();
   }
 
@@ -72,18 +79,24 @@ export class PointCluster {
 
     points.forEach(function(o, i) {
       var clusterCount = o[2].length;
-      var classSize;
+      var classSize,
+          offset;
       if (clusterCount.toString().length >= 3) {
         classSize = 'large';
+        offset = 25;
       } else if (clusterCount.toString().length == 2) {
         classSize = 'medium';
+        offset = 20;
       } else {
         classSize = 'small';
+        offset = 15;
       }
       var div = document.createElement('div');
       div.className = 'point-cluster ' + classSize;
-      div.style.left = o[0] + 'px';
-      div.style.top = o[1] + 'px';
+      div.style.left = (o[0] - offset) + 'px';
+      div.style.top = (o[1] - offset) + 'px';
+      div.style.backgroundColor = 'rgba(' + self.clusterRgba + ')';
+      div.style.border = self.clusterBorder;
       div.dataset.positionid = i;
       var latLngPointerArray = [];
       o[2].forEach(function(a, b) {
@@ -156,8 +169,8 @@ export class PointCluster {
       var y = (point.y - topRight.y) * scale;
 
       return [
-        x - 25,
-        y - 25,
+        x,
+        y,
         i
       ]
     });
@@ -239,11 +252,11 @@ export class PointCluster {
 
     this.polygon = new google.maps.Polygon({
       paths: points,
-      strokeColor: '#FF0000',
-      strokeOpacity: 0.8,
-      strokeWeight: 3,
-      fillColor: '#FF0000',
-      fillOpacity: 0.35
+      strokeColor: self.polygonStrokeColor,
+      strokeOpacity: self.polygonStrokeOpacity,
+      strokeWeight: self.polygonStrokeWeight,
+      fillColor: self.polygonFillColor,
+      fillOpacity: self.polygonFillOpacity
     });
 
     this.polygon.setMap(self.map);
