@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   });
 
   // Map idle listener.
-  google.maps.event.addListener(map, 'idle', function() {
+  google.maps.event.addListenerOnce(map, 'idle', function() {
 
     // Get data with d3 JSON call. You can obviously use whatever you please to grab your data.
     d3.json('example.json', function(error, res) {

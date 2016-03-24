@@ -26,6 +26,8 @@ export class PointCluster {
     this.polygonStrokeWeight = options.polygonStrokeWeight || '4';
     this.polygonFillColor = options.polygonFillColor || '#336699';
     this.polygonFillOpacity = options.polygonFillOpacity || '0.2';
+
+    // Set map events.
     this.setMapEvents();
   }
 
@@ -130,7 +132,10 @@ export class PointCluster {
   setMapEvents() {
     var self = this;
     google.maps.event.addListener(this.map, 'idle', function() {
-      self.removeElements();
+      // self.removeElements();
+      if (self.collection) {
+        self.print();
+      }
     });
   }
 
