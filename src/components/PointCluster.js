@@ -98,7 +98,7 @@ export class PointCluster {
       div.style.left = (o[0] - offset) + 'px';
       div.style.top = (o[1] - offset) + 'px';
       div.style.backgroundColor = 'rgba(' + self.clusterRgba + ')';
-      div.style.border = self.clusterBorder;
+      // div.style.border = self.clusterBorder;
       div.dataset.positionid = i;
       var latLngPointerArray = [];
       o[2].forEach(function(a, b) {
@@ -235,6 +235,7 @@ export class PointCluster {
 
     var collectionIds = el.dataset.latlngids.split(',');
 
+    // Push the first lat/lng point to the end to close the polygon.
     collectionIds.push(collectionIds[0])
 
     var points = []
