@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   // Create the Google Map.
   window.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
+    zoom: 6,
     center: new google.maps.LatLng(37.76487, -122.41948)
   });
 
