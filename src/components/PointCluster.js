@@ -89,9 +89,11 @@ export class PointCluster {
       if (document.getElementById('point_cluster_overlay')) {
         clearInterval(overlayInterval);
         if (self.checkIfLatLngInBounds().length <= self.threshold) {
-          var points = new Point();
-          points.print(self.checkIfLatLngInBounds());
+          self.overlay.setMap(null);
+          self.points = new Point(self.map, self.checkIfLatLngInBounds());
+          self.points.print();
         } else {
+          if (self.points) { self.points.remove(); }
           self.paintClustersToCanvas(centerPoints);
         }
       }
