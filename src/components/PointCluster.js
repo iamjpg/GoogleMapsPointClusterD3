@@ -1,8 +1,13 @@
+// UnderscoreJS because it's awesome.
+import _ from 'underscore';
+
 // Import library for establishing the convex hull of a cluster of markers.
 import convexHull from '../services/convex_hull';
 
 // Import the simple overlay object which allows us to add object to the Google Maps instance.
 import Overlay from '../services/overlay';
+
+import { Point } from './Point';
 
 // PointCluster class definition.
 export class PointCluster {
@@ -41,6 +46,7 @@ export class PointCluster {
 
     // Set collection on the PointCluster object.
     this.collection = collection;
+    window.collection = _.clone(collection);
   }
 
   // createOverlay() is responsible for creating the div which we will append clusters and pins to.
@@ -51,6 +57,18 @@ export class PointCluster {
     this.overlay = new Overlay(this.map);
     this.overlay.setMap(this.map);
     window.overlay = this.overlay;
+  }
+
+  checkIfLatLngInBounds() {
+    var self = this;
+    var arr = _.clone(this.collection);
+    for (var i=0; i < arr.length; ++i) {
+      if (!self.map.getBounds().contains(new google.maps.LatLng(arr[i].lat, arr[i].lng))) {
+        arr.splice(i, 1);
+        --i; // Correct the index value
+      }
+    }
+    return arr;
   }
 
   // print() is reponsible for calling D3 methods to convert `this.collection` into quadtree points.
@@ -70,12 +88,17 @@ export class PointCluster {
     var overlayInterval = setInterval(function() {
       if (document.getElementById('point_cluster_overlay')) {
         clearInterval(overlayInterval);
-        self.paintPinsToCanvas(centerPoints);
+        if (self.checkIfLatLngInBounds().length <= self.threshold) {
+          var points = new Point();
+          points.print(self.checkIfLatLngInBounds());
+        } else {
+          self.paintClustersToCanvas(centerPoints);
+        }
       }
     }, 10);
   }
 
-  paintPinsToCanvas(points) {
+  paintClustersToCanvas(points) {
     var self = this;
     var frag = document.createDocumentFragment();
 
@@ -161,6 +184,8 @@ export class PointCluster {
     var topRight = projection.fromLatLngToPoint(this.map.getBounds().getNorthEast());
     var bottomLeft = projection.fromLatLngToPoint(this.map.getBounds().getSouthWest());
     var scale = Math.pow(2, this.map.getZoom());
+
+    this.pointsRawLatLng = []
 
     return this.collection.map(function(o, i) {
 

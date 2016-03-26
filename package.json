@@ -24,6 +24,7 @@
     "event-emitter": "^0.3.4",
     "graham_scan": "^1.0.4",
     "install": "^0.6.0",
+    "markerwithlabel": "^1.1.13",
     "mocha": "^2.4.5",
     "node-sass": "^3.4.2",
     "npm": "^3.8.1",
