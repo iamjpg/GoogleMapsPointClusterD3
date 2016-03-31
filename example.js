@@ -11,7 +11,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // @params{object}
   var pc = new PointCluster({
     map: map, // Pass in your map intance.
-    clusterRange: 200, // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
+    clusterRange: 100, // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
+    threshold: 300,
     clusterRgba: '255, 0, 102, .8', // Change the background of the cluster icon. RGBA only.
     clusterBorder: '5px solid #dcdcdc', // Change the border around the icon. HEX only.
     polygonStrokeColor: '#0f0f0e',

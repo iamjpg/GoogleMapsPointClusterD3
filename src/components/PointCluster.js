@@ -120,15 +120,55 @@ export class PointCluster {
       }
       var div = document.createElement('div');
       div.className = 'point-cluster ' + classSize;
-      div.style.left = (o[0] - offset) + 'px';
-      div.style.top = (o[1] - offset) + 'px';
+      // div.style.left = (o[0] - offset) + 'px';
+      // div.style.top = (o[1] - offset) + 'px';
       div.style.backgroundColor = 'rgba(' + self.clusterRgba + ')';
       // div.style.border = self.clusterBorder;
       div.dataset.positionid = i;
       var latLngPointerArray = [];
+
       o[2].forEach(function(a, b) {
         latLngPointerArray.push(a[2]);
       });
+
+
+      // START
+
+
+      var polygonCoords = []
+      var bounds = new google.maps.LatLngBounds();
+      var pi;
+      var projection = self.map.getProjection();
+      var topRight = projection.fromLatLngToPoint(self.map.getBounds().getNorthEast());
+      var bottomLeft = projection.fromLatLngToPoint(self.map.getBounds().getSouthWest());
+      var scale = Math.pow(2, self.map.getZoom());
+
+      latLngPointerArray.forEach(function(o, i) {
+        var pointer = self.collection[parseInt(o)];
+        polygonCoords.push(new google.maps.LatLng(pointer.lat, pointer.lng))
+      });
+
+      for (pi = 0; pi < polygonCoords.length; pi++) {
+        bounds.extend(polygonCoords[pi]);
+      }
+
+      var point = projection.fromLatLngToPoint(
+        new google.maps.LatLng(bounds.getCenter().lat(), bounds.getCenter().lng())
+      );
+
+      // Get the x/y based on the scale.
+      var x = parseInt((point.x - bottomLeft.x) * scale);
+      var y = parseInt((point.y - topRight.y) * scale);
+
+      console.log(x, y);
+
+      div.style.left = (x - offset) + 'px';
+      div.style.top = (y - offset) + 'px';
+
+
+
+      // END
+
       div.dataset.latlngids = latLngPointerArray.join(',')
       div.innerHTML = clusterCount;
       frag.appendChild(div);
