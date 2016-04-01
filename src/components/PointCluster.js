@@ -9,6 +9,8 @@ import Overlay from '../services/overlay';
 
 import { Point } from './Point';
 
+import { Helpers } from '../services/Helpers';
+
 // PointCluster class definition.
 export class PointCluster {
 
@@ -103,27 +105,15 @@ export class PointCluster {
   paintClustersToCanvas(points) {
     var self = this;
     var frag = document.createDocumentFragment();
+    var helpers = new Helpers;
 
+    // Loop over points assessing
     points.forEach(function(o, i) {
       var clusterCount = o[2].length;
-      var classSize,
-          offset;
-      if (clusterCount.toString().length >= 3) {
-        classSize = 'large';
-        offset = 25;
-      } else if (clusterCount.toString().length == 2) {
-        classSize = 'medium';
-        offset = 20;
-      } else {
-        classSize = 'small';
-        offset = 15;
-      }
+
       var div = document.createElement('div');
-      div.className = 'point-cluster ' + classSize;
-      // div.style.left = (o[0] - offset) + 'px';
-      // div.style.top = (o[1] - offset) + 'px';
+      div.className = 'point-cluster ' + helpers.returnClusterClassObject(clusterCount.toString().length).classSize;
       div.style.backgroundColor = 'rgba(' + self.clusterRgba + ')';
-      // div.style.border = self.clusterBorder;
       div.dataset.positionid = i;
       var latLngPointerArray = [];
 
@@ -131,9 +121,7 @@ export class PointCluster {
         latLngPointerArray.push(a[2]);
       });
 
-
-      // START
-
+      // START - Center cluster icon inside of Polygon.
 
       var polygonCoords = []
       var bounds = new google.maps.LatLngBounds();
@@ -160,14 +148,10 @@ export class PointCluster {
       var x = parseInt((point.x - bottomLeft.x) * scale);
       var y = parseInt((point.y - topRight.y) * scale);
 
-      console.log(x, y);
+      div.style.left = (x - helpers.returnClusterClassObject(clusterCount.toString().length).offSet) + 'px';
+      div.style.top = (y - helpers.returnClusterClassObject(clusterCount.toString().length).offSet) + 'px';
 
-      div.style.left = (x - offset) + 'px';
-      div.style.top = (y - offset) + 'px';
-
-
-
-      // END
+      // END - Center cluster icon inside of Polygon.
 
       div.dataset.latlngids = latLngPointerArray.join(',')
       div.innerHTML = clusterCount;
