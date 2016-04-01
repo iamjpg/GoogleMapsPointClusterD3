@@ -202,23 +202,21 @@ export class PointCluster {
   returnPointsRaw() {
 
     // Projection variables.
-    var projection = this.map.getProjection();
-    var topRight = projection.fromLatLngToPoint(this.map.getBounds().getNorthEast());
-    var bottomLeft = projection.fromLatLngToPoint(this.map.getBounds().getSouthWest());
-    var scale = Math.pow(2, this.map.getZoom());
+    var helpers = new Helpers;
+    var mapProjections = helpers.returnMapProjections(self.map);
 
     this.pointsRawLatLng = []
 
     return this.collection.map(function(o, i) {
 
       // Create our point.
-      var point = projection.fromLatLngToPoint(
+      var point = mapProjections.projection.fromLatLngToPoint(
         new google.maps.LatLng(o.lat, o.lng)
       );
 
       // Get the x/y based on the scale.
-      var x = (point.x - bottomLeft.x) * scale;
-      var y = (point.y - topRight.y) * scale;
+      var x = (point.x - mapProjections.bottomLeft.x) * mapProjections.scale;
+      var y = (point.y - mapProjections.topRight.y) * mapProjections.scale;
 
       return [
         x,
