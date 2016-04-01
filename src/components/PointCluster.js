@@ -124,12 +124,8 @@ export class PointCluster {
       // START - Center cluster icon inside of Polygon.
 
       var polygonCoords = []
-      var bounds = new google.maps.LatLngBounds();
       var pi;
-      var projection = self.map.getProjection();
-      var topRight = projection.fromLatLngToPoint(self.map.getBounds().getNorthEast());
-      var bottomLeft = projection.fromLatLngToPoint(self.map.getBounds().getSouthWest());
-      var scale = Math.pow(2, self.map.getZoom());
+      var mapProjections = helpers.returnMapProjections(self.map);
 
       latLngPointerArray.forEach(function(o, i) {
         var pointer = self.collection[parseInt(o)];
@@ -137,16 +133,16 @@ export class PointCluster {
       });
 
       for (pi = 0; pi < polygonCoords.length; pi++) {
-        bounds.extend(polygonCoords[pi]);
+        mapProjections.bounds.extend(polygonCoords[pi]);
       }
 
-      var point = projection.fromLatLngToPoint(
-        new google.maps.LatLng(bounds.getCenter().lat(), bounds.getCenter().lng())
+      var point = mapProjections.projection.fromLatLngToPoint(
+        new google.maps.LatLng(mapProjections.bounds.getCenter().lat(), mapProjections.bounds.getCenter().lng())
       );
 
       // Get the x/y based on the scale.
-      var x = parseInt((point.x - bottomLeft.x) * scale);
-      var y = parseInt((point.y - topRight.y) * scale);
+      var x = parseInt((point.x - mapProjections.bottomLeft.x) * mapProjections.scale);
+      var y = parseInt((point.y - mapProjections.topRight.y) * mapProjections.scale);
 
       div.style.left = (x - helpers.returnClusterClassObject(clusterCount.toString().length).offSet) + 'px';
       div.style.top = (y - helpers.returnClusterClassObject(clusterCount.toString().length).offSet) + 'px';

@@ -23,4 +23,19 @@ export class Helpers {
     }
 
   }
+
+  returnMapProjections(map) {
+
+    var bounds = new google.maps.LatLngBounds(),
+        projection = map.getProjection();
+
+    return {
+      bounds: bounds,
+      projection: projection,
+      topRight: projection.fromLatLngToPoint(map.getBounds().getNorthEast()),
+      bottomLeft: projection.fromLatLngToPoint(map.getBounds().getSouthWest()),
+      scale: Math.pow(2, map.getZoom())
+    }
+  }
+
 }
