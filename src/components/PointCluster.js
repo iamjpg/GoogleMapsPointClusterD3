@@ -86,6 +86,8 @@ export class PointCluster {
     // Create the overlay div to append to.
     this.createOverlay();
 
+    if (self.points) { self.points.remove(); }
+
     // Unfortunate setInterval as it takes a second for Google to append their overlay div.
     var overlayInterval = setInterval(function() {
       if (document.getElementById('point_cluster_overlay')) {
@@ -95,7 +97,7 @@ export class PointCluster {
           self.points = new Point(self.map, self.checkIfLatLngInBounds());
           self.points.print();
         } else {
-          if (self.points) { self.points.remove(); }
+          // if (self.points) { self.points.remove(); }
           self.paintClustersToCanvas(centerPoints);
         }
       }

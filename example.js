@@ -11,13 +11,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // @params{object}
   var pc = new PointCluster({
     map: map, // Pass in your map intance.
-    clusterRange: 100, // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
-    threshold: 100, // Threshold is the number of results before showing markers,
+    clusterRange: 150, // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
+    threshold: 300, // Threshold is the number of results before showing markers,
     clusterRgba: '255, 0, 102, .8', // Change the background of the cluster icon. RGBA only.
     clusterBorder: '5px solid #dcdcdc', // Change the border around the icon. HEX only.
     polygonStrokeColor: '#0f0f0e', // Polygon stroke color.
     polygonStrokeOpacity: '0.5', // Polygon stroke opacity.
-    polygonStrokeWeight: '4',// Polygon stroke weight.
+    polygonStrokeWeight: '4', // Polygon stroke weight.
     polygonFillColor: '#0f0f0e', // Polygom fill color.
     polygonFillOpacity: '0.2' // Polygon fill color.
   });
