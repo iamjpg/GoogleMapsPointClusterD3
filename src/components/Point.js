@@ -1,6 +1,7 @@
 // Import the MarkerWithLabel library.
 import MarkerWithLabel from 'markerwithlabel';
 import OverlappingMarkerSpiderfier from '../services/spider-marker';
+import Popper from '../services/popper';
 
 export class Point {
 
@@ -11,7 +12,7 @@ export class Point {
     this.oms = new OverlappingMarkerSpiderfier(this.map, {
       markersWontMove: true,
       markersWontHide: true,
-      nearbyDistance: 15,
+      nearbyDistance: 10,
       keepSpiderfied: true,
       legWeight: 3,
       usualLegZIndex: 25000
@@ -25,6 +26,7 @@ export class Point {
       var m = new MarkerWithLabel({
         position: new google.maps.LatLng(o.lat, o.lng),
         map: self.map,
+        hoverContent: 'Woot!!!',
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 0
@@ -50,10 +52,11 @@ export class Point {
     var self = this;
 
     this.oms.addListener('click', function(marker, event) {
-
+      self.removePopper();
     });
 
     this.oms.addListener('spiderfy', function(markers, event) {
+      self.removePopper();
       self.markers.forEach(function(marker) {
         marker.setOptions({
           zIndex: 1000,
@@ -70,6 +73,7 @@ export class Point {
     });
 
     this.oms.addListener('unspiderfy', function(markers, event) {
+      self.removePopper();
       self.markers.forEach(function(marker) {
         marker.setOptions({
           zIndex: 1000,
@@ -85,10 +89,22 @@ export class Point {
 
     var self = this;
     this.markers.forEach(function(marker) {
-      var mouseOverListener = marker.addListener('mouseover', function() {
+      var mouseOverListener = marker.addListener('mouseover', function(e) {
+        var target = e.target || e.srcElement;
+        var m = this;
+        var thePopper = new Popper(
+          target, {
+            content: m.get('hoverContent')
+          }, {
+            placement: 'top',
+            flipBehavior: ['left', 'bottom', 'top', 'right'],
+            boundariesElement: self.map.getDiv()
+          }
+        );
         this.setZIndex(5000);
       });
       var mouseOutListener = marker.addListener('mouseout', function() {
+        self.removePopper();
         this.setZIndex(1000);
       });
       self.markerListeners.push(mouseOverListener)
@@ -111,6 +127,11 @@ export class Point {
       this.markers[i].setMap(null);
     }
     this.markers = [];
+  }
+
+  removePopper() {
+    var popper = document.querySelector('.popper')
+    popper.remove();
   }
 
 }
