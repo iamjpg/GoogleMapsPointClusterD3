@@ -1,3 +1,6 @@
+$normal-pin-size: 16px;
+$hidden-pin-size: 4px;
+
 .point-cluster {
   position: absolute;
   color: #fff;
@@ -29,4 +32,22 @@
 }
 #point_cluster_overlay {
   position: absolute;
+}
+
+.marker-point {
+  box-sizing: border-box;
+  background: #0f2b5b;
+  box-shadow: 0 0 5px 1px #ccc;
+  border: 2px solid #FFF;
+  height: 16px;
+  width: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.fadePins {
+  border: 0px solid #FFF;
+  height: $hidden-pin-size;
+  width: $hidden-pin-size;
+  border-radius: $hidden-pin-size;
 }

@@ -1,8 +1,15 @@
+// UnderscoreJS because it's awesome.
+import _ from 'underscore';
+
 // Import library for establishing the convex hull of a cluster of markers.
 import convexHull from '../services/convex_hull';
 
 // Import the simple overlay object which allows us to add object to the Google Maps instance.
 import Overlay from '../services/overlay';
+
+import { Point } from './Point';
+
+import { Helpers } from '../services/Helpers';
 
 // PointCluster class definition.
 export class PointCluster {
@@ -41,6 +48,7 @@ export class PointCluster {
 
     // Set collection on the PointCluster object.
     this.collection = collection;
+    window.collection = _.clone(collection);
   }
 
   // createOverlay() is responsible for creating the div which we will append clusters and pins to.
@@ -51,6 +59,18 @@ export class PointCluster {
     this.overlay = new Overlay(this.map);
     this.overlay.setMap(this.map);
     window.overlay = this.overlay;
+  }
+
+  checkIfLatLngInBounds() {
+    var self = this;
+    var arr = _.clone(this.collection);
+    for (var i=0; i < arr.length; ++i) {
+      if (!self.map.getBounds().contains(new google.maps.LatLng(arr[i].lat, arr[i].lng))) {
+        arr.splice(i, 1);
+        --i; // Correct the index value
+      }
+    }
+    return arr;
   }
 
   // print() is reponsible for calling D3 methods to convert `this.collection` into quadtree points.
@@ -66,44 +86,71 @@ export class PointCluster {
     // Create the overlay div to append to.
     this.createOverlay();
 
+    if (self.points) { self.points.remove(); }
+
     // Unfortunate setInterval as it takes a second for Google to append their overlay div.
     var overlayInterval = setInterval(function() {
       if (document.getElementById('point_cluster_overlay')) {
         clearInterval(overlayInterval);
-        self.paintPinsToCanvas(centerPoints);
+        if (self.checkIfLatLngInBounds().length <= self.threshold) {
+          self.overlay.setMap(null);
+          self.points = new Point(self.map, self.checkIfLatLngInBounds());
+          self.points.print();
+        } else {
+          // if (self.points) { self.points.remove(); }
+          self.paintClustersToCanvas(centerPoints);
+        }
       }
     }, 10);
   }
 
-  paintPinsToCanvas(points) {
+  paintClustersToCanvas(points) {
     var self = this;
     var frag = document.createDocumentFragment();
+    var helpers = new Helpers;
 
+    // Loop over points assessing
     points.forEach(function(o, i) {
       var clusterCount = o[2].length;
-      var classSize,
-          offset;
-      if (clusterCount.toString().length >= 3) {
-        classSize = 'large';
-        offset = 25;
-      } else if (clusterCount.toString().length == 2) {
-        classSize = 'medium';
-        offset = 20;
-      } else {
-        classSize = 'small';
-        offset = 15;
-      }
+
       var div = document.createElement('div');
-      div.className = 'point-cluster ' + classSize;
-      div.style.left = (o[0] - offset) + 'px';
-      div.style.top = (o[1] - offset) + 'px';
+      div.className = 'point-cluster ' + helpers.returnClusterClassObject(clusterCount.toString().length).classSize;
       div.style.backgroundColor = 'rgba(' + self.clusterRgba + ')';
-      // div.style.border = self.clusterBorder;
       div.dataset.positionid = i;
       var latLngPointerArray = [];
+
       o[2].forEach(function(a, b) {
         latLngPointerArray.push(a[2]);
       });
+
+      // START - Center cluster icon inside of Polygon.
+
+      var polygonCoords = []
+      var pi;
+      var mapProjections = helpers.returnMapProjections(self.map);
+
+      latLngPointerArray.forEach(function(o, i) {
+        var pointer = self.collection[parseInt(o)];
+        polygonCoords.push(new google.maps.LatLng(pointer.lat, pointer.lng))
+      });
+
+      for (pi = 0; pi < polygonCoords.length; pi++) {
+        mapProjections.bounds.extend(polygonCoords[pi]);
+      }
+
+      var point = mapProjections.projection.fromLatLngToPoint(
+        new google.maps.LatLng(mapProjections.bounds.getCenter().lat(), mapProjections.bounds.getCenter().lng())
+      );
+
+      // Get the x/y based on the scale.
+      var x = parseInt((point.x - mapProjections.bottomLeft.x) * mapProjections.scale);
+      var y = parseInt((point.y - mapProjections.topRight.y) * mapProjections.scale);
+
+      div.style.left = (x - helpers.returnClusterClassObject(clusterCount.toString().length).offSet) + 'px';
+      div.style.top = (y - helpers.returnClusterClassObject(clusterCount.toString().length).offSet) + 'px';
+
+      // END - Center cluster icon inside of Polygon.
+
       div.dataset.latlngids = latLngPointerArray.join(',')
       div.innerHTML = clusterCount;
       frag.appendChild(div);
@@ -157,21 +204,21 @@ export class PointCluster {
   returnPointsRaw() {
 
     // Projection variables.
-    var projection = this.map.getProjection();
-    var topRight = projection.fromLatLngToPoint(this.map.getBounds().getNorthEast());
-    var bottomLeft = projection.fromLatLngToPoint(this.map.getBounds().getSouthWest());
-    var scale = Math.pow(2, this.map.getZoom());
+    var helpers = new Helpers;
+    var mapProjections = helpers.returnMapProjections(self.map);
+
+    this.pointsRawLatLng = []
 
     return this.collection.map(function(o, i) {
 
       // Create our point.
-      var point = projection.fromLatLngToPoint(
+      var point = mapProjections.projection.fromLatLngToPoint(
         new google.maps.LatLng(o.lat, o.lng)
       );
 
       // Get the x/y based on the scale.
-      var x = (point.x - bottomLeft.x) * scale;
-      var y = (point.y - topRight.y) * scale;
+      var x = (point.x - mapProjections.bottomLeft.x) * mapProjections.scale;
+      var y = (point.y - mapProjections.topRight.y) * mapProjections.scale;
 
       return [
         x,
