@@ -38,9 +38,9 @@ export class Point {
 
       self.oms.addMarker(m)
 
-      self.setEvents(m);
-
     });
+
+    self.setEvents();
 
     this.setOmsEvents();
 
@@ -61,23 +61,41 @@ export class Point {
         });
       })
       markers.forEach(function(marker) {
+        self.removeListeners()
         marker.setOptions({
           zIndex: 20000,
           labelClass: marker.labelClass.replace(" fadePins", "")
         });
       });
     });
+
+    this.oms.addListener('unspiderfy', function(markers, event) {
+      self.markers.forEach(function(marker) {
+        marker.setOptions({
+          zIndex: 1000,
+          labelClass: marker.labelClass.replace(" fadePins", "")
+        });
+      });
+      self.setEvents();
+    });
+
   }
 
-  setEvents(marker) {
-    var mouseOverListener = marker.addListener('mouseover', function() {
-      this.setZIndex(5000);
-    });
-    var mouseOutListener = marker.addListener('mouseout', function() {
-      this.setZIndex(1000);
-    });
-    this.markerListeners.push(mouseOverListener)
-    this.markerListeners.push(mouseOutListener)
+  setEvents() {
+
+    var self = this;
+    this.markers.forEach(function(marker) {
+      var mouseOverListener = marker.addListener('mouseover', function() {
+        this.setZIndex(5000);
+      });
+      var mouseOutListener = marker.addListener('mouseout', function() {
+        this.setZIndex(1000);
+      });
+      self.markerListeners.push(mouseOverListener)
+      self.markerListeners.push(mouseOutListener)
+    })
+
+
   }
 
   removeListeners() {
