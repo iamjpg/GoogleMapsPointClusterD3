@@ -1,5 +1,6 @@
 // Import the MarkerWithLabel library.
 import MarkerWithLabel from 'markerwithlabel';
+import OverlappingMarkerSpiderfier from '../services/spider-marker';
 
 export class Point {
 
@@ -7,6 +8,14 @@ export class Point {
     this.map = map;
     this.collection = collection;
     this.markerListeners = []
+    this.oms = new OverlappingMarkerSpiderfier(this.map, {
+      markersWontMove: true,
+      markersWontHide: true,
+      nearbyDistance: 15,
+      keepSpiderfied: true,
+      legWeight: 3,
+      usualLegZIndex: 25000
+    });
   }
 
   print() {
@@ -27,8 +36,36 @@ export class Point {
 
       self.markers.push(m);
 
+      self.oms.addMarker(m)
+
       self.setEvents(m);
 
+    });
+
+    this.setOmsEvents();
+
+  }
+
+  setOmsEvents() {
+    var self = this;
+
+    this.oms.addListener('click', function(marker, event) {
+
+    });
+
+    this.oms.addListener('spiderfy', function(markers, event) {
+      self.markers.forEach(function(marker) {
+        marker.setOptions({
+          zIndex: 1000,
+          labelClass: marker.labelClass + " fadePins"
+        });
+      })
+      markers.forEach(function(marker) {
+        marker.setOptions({
+          zIndex: 20000,
+          labelClass: marker.labelClass.replace(" fadePins", "")
+        });
+      });
     });
   }
 

@@ -1,3 +1,6 @@
+$normal-pin-size: 16px;
+$hidden-pin-size: 4px;
+
 .point-cluster {
   position: absolute;
   color: #fff;
@@ -40,4 +43,11 @@
   width: 16px;
   border-radius: 16px;
   cursor: pointer;
+}
+
+.fadePins {
+  border: 0px solid #FFF;
+  height: $hidden-pin-size;
+  width: $hidden-pin-size;
+  border-radius: $hidden-pin-size;
 }
