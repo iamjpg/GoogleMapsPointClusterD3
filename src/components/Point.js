@@ -64,7 +64,8 @@ export class Point {
         });
       })
       markers.forEach(function(marker) {
-        self.removeListeners()
+        self.removeListeners();
+        self.setEvents(true);
         marker.setOptions({
           zIndex: 20000,
           labelClass: marker.labelClass.replace(" fadePins", "")
@@ -85,8 +86,7 @@ export class Point {
 
   }
 
-  setEvents() {
-
+  setEvents(ignoreZindex=false) {
     var self = this;
     this.markers.forEach(function(marker) {
       var mouseOverListener = marker.addListener('mouseover', function(e) {
@@ -101,17 +101,19 @@ export class Point {
             boundariesElement: self.map.getDiv()
           }
         );
-        this.setZIndex(5000);
+        if (!ignoreZindex) {
+          this.setZIndex(5000);
+        }
       });
       var mouseOutListener = marker.addListener('mouseout', function() {
         self.removePopper();
-        this.setZIndex(1000);
+        if (!ignoreZindex) {
+          this.setZIndex(1000);
+        }
       });
       self.markerListeners.push(mouseOverListener)
       self.markerListeners.push(mouseOutListener)
-    })
-
-
+    });
   }
 
   removeListeners() {
@@ -130,8 +132,10 @@ export class Point {
   }
 
   removePopper() {
-    var popper = document.querySelector('.popper')
-    popper.remove();
+    var popper = document.querySelector('.popper');
+    if (popper) {
+      popper.remove();
+    }
   }
 
 }

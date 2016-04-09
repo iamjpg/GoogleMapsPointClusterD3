@@ -7,8 +7,10 @@ import convexHull from '../services/convex_hull';
 // Import the simple overlay object which allows us to add object to the Google Maps instance.
 import Overlay from '../services/overlay';
 
+// Import the point class which transfers from clusters to markers when under the threshold.
 import { Point } from './Point';
 
+// Various helpers to, well, help.
 import { Helpers } from '../services/Helpers';
 
 // PointCluster class definition.
