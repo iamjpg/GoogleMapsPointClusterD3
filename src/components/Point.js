@@ -26,7 +26,7 @@ export class Point {
       var m = new MarkerWithLabel({
         position: new google.maps.LatLng(o.lat, o.lng),
         map: self.map,
-        hoverContent: 'Woot!!!',
+        hoverContent: '<h3>Header</h3><p>This is some text</p><p>This is more text.</p>',
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 0
@@ -92,12 +92,18 @@ export class Point {
       var mouseOverListener = marker.addListener('mouseover', function(e) {
         var target = e.target || e.srcElement;
         var m = this;
-        var thePopper = new Popper(
+
+        // Determine where to place popper right/left
+        var mapDivHalfWidth = self.map.getDiv().offsetWidth / 2;
+        var markerLeftPos = target.offsetLeft;
+        var popperPlacement = (markerLeftPos > mapDivHalfWidth) ? 'left' : 'right';
+
+        var popper = new Popper(
           target, {
-            content: m.get('hoverContent')
+            content: m.get('hoverContent'),
+            allowHtml: true,
           }, {
-            placement: 'top',
-            flipBehavior: ['left', 'bottom', 'top', 'right'],
+            placement: popperPlacement,
             boundariesElement: self.map.getDiv()
           }
         );

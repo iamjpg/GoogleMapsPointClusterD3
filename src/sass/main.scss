@@ -50,10 +50,10 @@ $hidden-pin-size: 4px;
 }
 .popper {
   position: absolute;
-  background: #FFC107;
+  background: #fff;
   color: black;
   border-radius: 3px;
-  box-shadow: 0 0 2px rgba(0,0,0,0.5);
+  box-shadow: 0 0 5px rgba(0,0,0,0.7);
   padding: 10px;
   text-align: center;
 }
@@ -69,7 +69,7 @@ $hidden-pin-size: 4px;
 }
 .popper[x-placement^="top"] .popper__arrow {
   border-width: 5px 5px 0 5px;
-  border-color: #FFC107 transparent transparent transparent;
+  border-color: #fff transparent transparent transparent;
   bottom: -5px;
   left: calc(50% - 5px);
   margin-top: 0;
@@ -80,7 +80,7 @@ $hidden-pin-size: 4px;
 }
 .popper[x-placement^="bottom"] .popper__arrow {
   border-width: 0 5px 5px 5px;
-  border-color: transparent transparent #FFC107 transparent;
+  border-color: transparent transparent #fff transparent;
   top: -5px;
   left: calc(50% - 5px);
   margin-top: 0;
@@ -91,7 +91,7 @@ $hidden-pin-size: 4px;
 }
 .popper[x-placement^="right"] .popper__arrow {
   border-width: 5px 5px 5px 0;
-  border-color: transparent #FFC107 transparent transparent;
+  border-color: transparent #fff transparent transparent;
   left: -5px;
   top: calc(50% - 5px);
   margin-left: 0;
@@ -102,7 +102,7 @@ $hidden-pin-size: 4px;
 }
 .popper[x-placement^="left"] .popper__arrow {
   border-width: 5px 0 5px 5px;
-  border-color: transparent transparent transparent #FFC107;
+  border-color: transparent transparent transparent #fff;
   right: -5px;
   top: calc(50% - 5px);
   margin-left: 0;
