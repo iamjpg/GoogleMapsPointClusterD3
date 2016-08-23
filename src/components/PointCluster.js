@@ -26,6 +26,7 @@ export class PointCluster {
 
     // Set object properties with sensible defaults (except the map instance).
     this.map = options.map;
+    this.mapContainer = options.mapContainer || 'map';
     this.clusterRange = options.clusterRange || 300;
     this.threshold = options.threshold || 200;
     this.clusterRgba = options.clusterRgba || '51, 102, 153, 0.8';
@@ -67,7 +68,9 @@ export class PointCluster {
     var self = this;
     var arr = _.clone(this.collection);
     for (var i=0; i < arr.length; ++i) {
-      if (!self.map.getBounds().contains(new google.maps.LatLng(arr[i].lat, arr[i].lng))) {
+      let lat = arr[i].lat || arr[i].location.latitude;
+      let lng = arr[i].lng || arr[i].location.longitude;
+      if (!self.map.getBounds().contains(new google.maps.LatLng(lat, lng))) {
         arr.splice(i, 1);
         --i; // Correct the index value
       }
@@ -207,7 +210,7 @@ export class PointCluster {
 
     // Projection variables.
     var helpers = new Helpers;
-    var mapProjections = helpers.returnMapProjections(self.map);
+    var mapProjections = helpers.returnMapProjections(this.map);
 
     this.pointsRawLatLng = []
 
@@ -249,8 +252,8 @@ export class PointCluster {
 
     var clusterPoints = [];
 
-    for (var x = 0; x <= document.getElementById('map').offsetWidth; x += this.clusterRange) {
-      for (var y = 0; y <= document.getElementById('map').offsetHeight; y += this.clusterRange) {
+    for (var x = 0; x <= document.getElementById(this.mapContainer).offsetWidth; x += this.clusterRange) {
+      for (var y = 0; y <= document.getElementById(this.mapContainer).offsetHeight; y += this.clusterRange) {
         var searched = this.searchQuadTree(quadtree, x, y, x + this.clusterRange, y + this.clusterRange);
 
         var centerPoint = searched.reduce(function(prev, current) {

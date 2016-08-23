@@ -23,8 +23,10 @@ export class Point {
     var self = this;
     this.markers = [];
     this.collection.forEach(function(o, i) {
+      let lat = o.lat || o.location.latitude;
+      let lng = o.lng || o.location.longitude;
       var m = new MarkerWithLabel({
-        position: new google.maps.LatLng(o.lat, o.lng),
+        position: new google.maps.LatLng(lat, lng),
         map: self.map,
         hoverContent: '<h3>Header</h3><p>This is some text</p><p>This is more text.</p>',
         icon: {
