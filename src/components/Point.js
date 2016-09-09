@@ -95,6 +95,12 @@ export class Point {
         var target = e.target || e.srcElement;
         var m = this;
 
+        // First, set the hover state of the marker
+        marker.setOptions({
+          zIndex: 10000,
+          labelClass: this.labelClass + " PointHoverState"
+        });
+
         // Determine where to place popper right/left
         var mapDivHalfWidth = self.map.getDiv().offsetWidth / 2;
         var markerLeftPos = target.offsetLeft;
@@ -114,6 +120,11 @@ export class Point {
         }
       });
       var mouseOutListener = marker.addListener('mouseout', function() {
+        // First, remove the hover state of the marker
+        marker.setOptions({
+          zIndex: 100,
+          labelClass: this.labelClass.replace(" PointHoverState", "")
+        });
         self.removePopper();
         if (!ignoreZindex) {
           this.setZIndex(1000);
