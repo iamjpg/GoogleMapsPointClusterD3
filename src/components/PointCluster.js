@@ -1,6 +1,10 @@
 // UnderscoreJS because it's awesome.
 import _ from 'underscore';
 
+// Import the point publish subscribe pattern.
+import PointPubSub from 'vanilla-pubsub';
+window.PointPubSub = PointPubSub;
+
 // Import library for establishing the convex hull of a cluster of markers.
 import convexHull from '../services/convex_hull';
 
@@ -9,10 +13,6 @@ import Overlay from '../services/overlay';
 
 // Import the point class which transfers from clusters to markers when under the threshold.
 import { Point } from './Point';
-
-// Import the point publish subscribe pattern.
-import PointPubSub from 'vanilla-pubsub';
-window.PointPubSub = PointPubSub;
 
 // Various helpers to, well, help.
 import { Helpers } from '../services/Helpers';

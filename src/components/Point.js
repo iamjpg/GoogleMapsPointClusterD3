@@ -28,7 +28,7 @@ export class Point {
       var m = new MarkerWithLabel({
         position: new google.maps.LatLng(lat, lng),
         map: self.map,
-        hoverContent: '<h3>Header</h3><p>This is some text</p><p>This is more text.</p>',
+        hoverContent: '<p>' + o.lat + ', ' + o.lng + '</p>',
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 0
