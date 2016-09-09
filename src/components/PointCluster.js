@@ -10,6 +10,10 @@ import Overlay from '../services/overlay';
 // Import the point class which transfers from clusters to markers when under the threshold.
 import { Point } from './Point';
 
+// Import the point publish subscribe pattern.
+import PointPubSub from 'vanilla-pubsub';
+window.PointPubSub = PointPubSub;
+
 // Various helpers to, well, help.
 import { Helpers } from '../services/Helpers';
 
@@ -99,12 +103,13 @@ export class PointCluster {
         clearInterval(overlayInterval);
         if (self.checkIfLatLngInBounds().length <= self.threshold) {
           self.overlay.setMap(null);
-          self.points = new Point(self.map, self.checkIfLatLngInBounds());
+          self.points = window.PointClusterPoints = new Point(self.map, self.checkIfLatLngInBounds());
           self.points.print();
         } else {
-          // if (self.points) { self.points.remove(); }
+          self.points.collection = [];
           self.paintClustersToCanvas(centerPoints);
         }
+        PointPubSub.publish('Point.show', self.points.collection)
       }
     }, 10);
   }

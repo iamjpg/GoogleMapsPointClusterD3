@@ -3,8 +3,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   // Create the Google Map.
   window.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 6,
-    center: new google.maps.LatLng(37.76487, -122.41948)
+    // Zoom for US.
+    // zoom: 6,
+    // center: new google.maps.LatLng(37.76487, -122.41948)
+    // Direct to pins
+    zoom: 15,
+    center: new google.maps.LatLng(37.76859506472946, -122.49202600000001)
   });
 
   // Construct PointCluster Object
@@ -33,6 +37,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       // Print clusters
       pc.print();
+
+      //
+      PointPubSub.subscribe('Point.show', function(res) {
+        var results_div = document.getElementById('results');
+        results_div.innerHTML = '';
+        res.forEach(function(o, i) {
+          var p = document.body.appendChild(document.createElement("p"));
+          p.innerHTML = o.lat + ', ' + o.lng;
+          results_div.appendChild(p);
+        });
+      });
 
     });
 
