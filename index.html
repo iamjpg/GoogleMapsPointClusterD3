@@ -11,7 +11,7 @@
       }
       #map-container {
         position: fixed;
-        width: 100%;
+        width: 75%;
         top: 0;
         bottom: 0;
       }
@@ -19,11 +19,20 @@
         width: 100%;
         height: 100%;
       }
+      #results {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 25%;
+        overflow-y: auto;
+      }
     </style>
   </head>
   <body>
     <div id="map-container">
       <div id="map"></div>
+      <div id="results"></div>
     </div>
 
     <script src="//maps.google.com/maps/api/js"></script>
