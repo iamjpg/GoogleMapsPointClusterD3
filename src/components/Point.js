@@ -9,6 +9,7 @@ export class Point {
     this.map = map;
     this.collection = collection;
     this.markerListeners = []
+    this.setExternalMouseEvents();
     this.oms = new OverlappingMarkerSpiderfier(this.map, {
       markersWontMove: true,
       markersWontHide: true,
@@ -86,6 +87,26 @@ export class Point {
       self.setEvents();
     });
 
+  }
+
+  setExternalMouseEvents() {
+    var self = this;
+    document.addEventListener('mouseover', function(e) {
+      if (e.target.className === 'PinResult') {
+        self.markers[parseInt(e.target.getAttribute('data-pinindex'))].setOptions({
+          zIndex: 10000,
+          labelClass: self.markers[parseInt(e.target.getAttribute('data-pinindex'))].labelClass + " PointHoverState"
+        });
+      }
+    });
+    document.addEventListener('mouseout', function(e) {
+      if (e.target.className === 'PinResult') {
+        self.markers[parseInt(e.target.getAttribute('data-pinindex'))].setOptions({
+          zIndex: 100,
+          labelClass: self.markers[parseInt(e.target.getAttribute('data-pinindex'))].labelClass.replace(" PointHoverState", "")
+        });
+      }
+    });
   }
 
   setEvents(ignoreZindex=false) {
