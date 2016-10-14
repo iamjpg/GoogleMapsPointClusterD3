@@ -24,12 +24,15 @@ export class Point {
     var self = this;
     this.markers = [];
     this.collection.forEach(function(o, i) {
+      if (i === 0) {
+        console.log(o)
+      }
       let lat = o.lat || o.location.latitude;
       let lng = o.lng || o.location.longitude;
       var m = new MarkerWithLabel({
         position: new google.maps.LatLng(lat, lng),
         map: self.map,
-        hoverContent: '<p>' + o.lat + ', ' + o.lng + '</p>',
+        hoverContent: o.hoverData || "",
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 0
@@ -45,7 +48,7 @@ export class Point {
 
     });
 
-    self.setEvents();
+    self.setEvents(false);
 
     this.setOmsEvents();
 
@@ -84,7 +87,7 @@ export class Point {
           labelClass: marker.labelClass.replace(" fadePins", "")
         });
       });
-      self.setEvents();
+      self.setEvents(false);
     });
 
   }
@@ -93,6 +96,10 @@ export class Point {
     var self = this;
     document.addEventListener('mouseover', function(e) {
       if (e.target.className === 'PinResult') {
+        // console.log(self.markers, self.markers.length)
+        if (!self.markers[parseInt(e.target.getAttribute('data-pinindex'))]) {
+          return false;
+        }
         self.markers[parseInt(e.target.getAttribute('data-pinindex'))].setOptions({
           zIndex: 10000,
           labelClass: self.markers[parseInt(e.target.getAttribute('data-pinindex'))].labelClass + " PointHoverState"
@@ -101,6 +108,9 @@ export class Point {
     });
     document.addEventListener('mouseout', function(e) {
       if (e.target.className === 'PinResult') {
+        if (!self.markers[parseInt(e.target.getAttribute('data-pinindex'))]) {
+          return false;
+        }
         self.markers[parseInt(e.target.getAttribute('data-pinindex'))].setOptions({
           zIndex: 100,
           labelClass: self.markers[parseInt(e.target.getAttribute('data-pinindex'))].labelClass.replace(" PointHoverState", "")
@@ -125,7 +135,7 @@ export class Point {
         // Determine where to place popper right/left
         var mapDivHalfWidth = self.map.getDiv().offsetWidth / 2;
         var markerLeftPos = target.offsetLeft;
-        var popperPlacement = (markerLeftPos > mapDivHalfWidth) ? 'left' : 'right';
+        var popperPlacement = (markerLeftPos > mapDivHalfWidth) ? 'top' : 'top';
 
         var popper = new Popper(
           target, {
@@ -168,7 +178,7 @@ export class Point {
     for (var i = 0; i < this.markers.length; i++) {
       this.markers[i].setMap(null);
     }
-    this.markers = [];
+    // this.markers = [];
   }
 
   removePopper() {

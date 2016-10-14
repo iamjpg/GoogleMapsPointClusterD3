@@ -32,6 +32,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // Get data with d3 JSON call. You can obviously use whatever you please to grab your data.
     d3.json('example.json', function(error, res) {
 
+      res.data.result_list.forEach(function(o, i) {
+        o.hoverData = "Hello<br>" + o.lat + " : " + o.lng
+      });
+
       // Set the collection of location objects.
       pc.setCollection(res.data.result_list);
 
