@@ -9,6 +9,7 @@ export class Point {
     this.map = map;
     this.collection = collection;
     this.markerListeners = []
+    this.setExternalMouseEvents();
     this.oms = new OverlappingMarkerSpiderfier(this.map, {
       markersWontMove: true,
       markersWontHide: true,
@@ -23,12 +24,15 @@ export class Point {
     var self = this;
     this.markers = [];
     this.collection.forEach(function(o, i) {
+      if (i === 0) {
+        console.log(o)
+      }
       let lat = o.lat || o.location.latitude;
       let lng = o.lng || o.location.longitude;
       var m = new MarkerWithLabel({
         position: new google.maps.LatLng(lat, lng),
         map: self.map,
-        hoverContent: '<h3>Header</h3><p>This is some text</p><p>This is more text.</p>',
+        hoverContent: o.hoverData || "",
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 0
@@ -44,7 +48,7 @@ export class Point {
 
     });
 
-    self.setEvents();
+    self.setEvents(false);
 
     this.setOmsEvents();
 
@@ -83,9 +87,36 @@ export class Point {
           labelClass: marker.labelClass.replace(" fadePins", "")
         });
       });
-      self.setEvents();
+      self.setEvents(false);
     });
 
+  }
+
+  setExternalMouseEvents() {
+    var self = this;
+    document.addEventListener('mouseover', function(e) {
+      if (e.target.className === 'PinResult') {
+        // console.log(self.markers, self.markers.length)
+        if (!self.markers[parseInt(e.target.getAttribute('data-pinindex'))]) {
+          return false;
+        }
+        self.markers[parseInt(e.target.getAttribute('data-pinindex'))].setOptions({
+          zIndex: 10000,
+          labelClass: self.markers[parseInt(e.target.getAttribute('data-pinindex'))].labelClass + " PointHoverState"
+        });
+      }
+    });
+    document.addEventListener('mouseout', function(e) {
+      if (e.target.className === 'PinResult') {
+        if (!self.markers[parseInt(e.target.getAttribute('data-pinindex'))]) {
+          return false;
+        }
+        self.markers[parseInt(e.target.getAttribute('data-pinindex'))].setOptions({
+          zIndex: 100,
+          labelClass: self.markers[parseInt(e.target.getAttribute('data-pinindex'))].labelClass.replace(" PointHoverState", "")
+        });
+      }
+    });
   }
 
   setEvents(ignoreZindex=false) {
@@ -95,10 +126,16 @@ export class Point {
         var target = e.target || e.srcElement;
         var m = this;
 
+        // First, set the hover state of the marker
+        marker.setOptions({
+          zIndex: 10000,
+          labelClass: this.labelClass + " PointHoverState"
+        });
+
         // Determine where to place popper right/left
         var mapDivHalfWidth = self.map.getDiv().offsetWidth / 2;
         var markerLeftPos = target.offsetLeft;
-        var popperPlacement = (markerLeftPos > mapDivHalfWidth) ? 'left' : 'right';
+        var popperPlacement = (markerLeftPos > mapDivHalfWidth) ? 'top' : 'top';
 
         var popper = new Popper(
           target, {
@@ -114,6 +151,11 @@ export class Point {
         }
       });
       var mouseOutListener = marker.addListener('mouseout', function() {
+        // First, remove the hover state of the marker
+        marker.setOptions({
+          zIndex: 100,
+          labelClass: this.labelClass.replace(" PointHoverState", "")
+        });
         self.removePopper();
         if (!ignoreZindex) {
           this.setZIndex(1000);
@@ -136,7 +178,7 @@ export class Point {
     for (var i = 0; i < this.markers.length; i++) {
       this.markers[i].setMap(null);
     }
-    this.markers = [];
+    // this.markers = [];
   }
 
   removePopper() {
