@@ -5,6 +5,7 @@ import Popper from '../services/popper';
 
 export class Point {
 
+  // Constructor -> { options } object
   constructor(map, collection) {
     this.map = map;
     this.collection = collection;
@@ -21,6 +22,8 @@ export class Point {
     });
   }
 
+  // Document click is to simply remove a clicked popper if user
+  // clicks away.
   setDocumentClick() {
     const self = this;
     document.addEventListener('click', function (e) {
@@ -31,11 +34,11 @@ export class Point {
     });
   }
 
+  // Print the points when under threshold.
   print() {
     const self = this;
     this.markers = [];
     this.collection.forEach(function(o, i) {
-      // console.log(JSON.parse(JSON.stringify(o)))
       let lat = o.lat || o.location.latitude;
       let lng = o.lng || o.location.longitude;
       let m = new MarkerWithLabel({
@@ -64,6 +67,7 @@ export class Point {
 
   }
 
+  // Init the point spiderification.
   setOmsEvents() {
     const self = this;
 
@@ -104,6 +108,7 @@ export class Point {
 
   }
 
+  // Various events for the points.
   setExternalMouseEvents() {
     const self = this;
     document.addEventListener('mouseover', function(e) {
@@ -130,6 +135,7 @@ export class Point {
     });
   }
 
+  // A universal point method for removing the hoverstate of all pins.
   removeUniversalPointHoverState() {
     this.markers.forEach((o, i) => {
       o.setOptions({
@@ -139,6 +145,7 @@ export class Point {
     })
   }
 
+  // Set the hover events.
   setHoverEvents(ignoreZindex=false) {
 
     // set click events here.
@@ -197,6 +204,7 @@ export class Point {
     });
   }
 
+  // Set the click events.
   setClickEvents(ignoreZindex=false) {
 
     const self = this;
@@ -230,6 +238,7 @@ export class Point {
     });
   }
 
+  // Remove listeners.
   removeListeners() {
     for (let i = 0; i < this.markerListeners.length; i++) {
       google.maps.event.removeListener(this.markerListeners[i]);
@@ -237,6 +246,7 @@ export class Point {
     this.markerListeners = [];
   }
 
+  // Remove method to remove everything.
   remove() {
     this.removeListeners();
     for (var i = 0; i < this.markers.length; i++) {
@@ -244,6 +254,7 @@ export class Point {
     }
   }
 
+  // Remove the poppers either hover or click.
   removePopper(clicked=false) {
     let poppers = document.getElementsByClassName('popper');
     for (let i = 0; i < poppers.length; i++) {

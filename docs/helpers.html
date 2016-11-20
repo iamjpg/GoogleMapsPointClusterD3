@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>helpers.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="Point.html">
+                  Point.js
+                </a>
+              
+                
+                <a class="source" href="PointCluster.html">
+                  PointCluster.js
+                </a>
+              
+                
+                <a class="source" href="PubSub.html">
+                  PubSub.js
+                </a>
+              
+                
+                <a class="source" href="convex_hull.html">
+                  convex_hull.js
+                </a>
+              
+                
+                <a class="source" href="helpers.html">
+                  helpers.js
+                </a>
+              
+                
+                <a class="source" href="overlay.html">
+                  overlay.js
+                </a>
+              
+                
+                <a class="source" href="popper.html">
+                  popper.js
+                </a>
+              
+                
+                <a class="source" href="spider-marker.html">
+                  spider-marker.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>helpers.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Helpers</span> </span>{
+  <span class="hljs-keyword">constructor</span>() {
+
+  }
+
+  returnClusterClassObject(length) {
+    <span class="hljs-keyword">var</span> classSize,
+        offset;
+    <span class="hljs-keyword">if</span> (length &gt;= <span class="hljs-number">3</span>) {
+      classSize = <span class="hljs-string">'large'</span>;
+      offset = <span class="hljs-number">25</span>;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (length == <span class="hljs-number">2</span>) {
+      classSize = <span class="hljs-string">'medium'</span>;
+      offset = <span class="hljs-number">20</span>;
+    } <span class="hljs-keyword">else</span> {
+      classSize = <span class="hljs-string">'small'</span>;
+      offset = <span class="hljs-number">15</span>;
+    }
+
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">classSize</span>: classSize,
+      <span class="hljs-attr">offSet</span>: offset
+    }
+
+  }
+
+  returnMapProjections(map) {
+
+    <span class="hljs-keyword">var</span> bounds = <span class="hljs-keyword">new</span> google.maps.LatLngBounds(),
+        projection = map.getProjection();
+
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">bounds</span>: bounds,
+      <span class="hljs-attr">projection</span>: projection,
+      <span class="hljs-attr">topRight</span>: projection.fromLatLngToPoint(map.getBounds().getNorthEast()),
+      <span class="hljs-attr">bottomLeft</span>: projection.fromLatLngToPoint(map.getBounds().getSouthWest()),
+      <span class="hljs-attr">scale</span>: <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, map.getZoom())
+    }
+  }
+
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

@@ -1,0 +1,2218 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>popper.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="Point.html">
+                  Point.js
+                </a>
+              
+                
+                <a class="source" href="PointCluster.html">
+                  PointCluster.js
+                </a>
+              
+                
+                <a class="source" href="PubSub.html">
+                  PubSub.js
+                </a>
+              
+                
+                <a class="source" href="convex_hull.html">
+                  convex_hull.js
+                </a>
+              
+                
+                <a class="source" href="helpers.html">
+                  helpers.js
+                </a>
+              
+                
+                <a class="source" href="overlay.html">
+                  overlay.js
+                </a>
+              
+                
+                <a class="source" href="popper.html">
+                  popper.js
+                </a>
+              
+                
+                <a class="source" href="spider-marker.html">
+                  spider-marker.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>popper.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/**
+ * @fileOverview Kickass library to create and place poppers near their reference elements.
+ * @version 0.3.0
+ * @license
+ * Copyright (c) 2016 Federico Zivolo and contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Cross module loader
+Supported: Node, AMD, Browser globals</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>;(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">root, factory</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> define === <span class="hljs-string">'function'</span> &amp;&amp; define.amd) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>AMD. Register as an anonymous module.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        define(factory);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">module</span> === <span class="hljs-string">'object'</span> &amp;&amp; <span class="hljs-built_in">module</span>.exports) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Node. Does not work with strict CommonJS, but
+only CommonJS-like environments that support module.exports,
+like Node.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">module</span>.exports = factory();
+    } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Browser globals (root is window)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        root.Popper = factory();
+    }
+}(<span class="hljs-keyword">this</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-meta">
+    'use strict'</span>;
+
+    <span class="hljs-keyword">var</span> root = <span class="hljs-built_in">window</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>default options</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> DEFAULTS = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>placement of the popper</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        placement: <span class="hljs-string">'bottom'</span>,
+
+        <span class="hljs-attr">gpuAcceleration</span>: <span class="hljs-literal">true</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>shift popper from its origin by the given amount of pixels (can be negative)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        offset: <span class="hljs-number">0</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>the element which will act as boundary of the popper</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        boundariesElement: <span class="hljs-string">'viewport'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>amount of pixel used to define a minimum distance between the boundaries and the popper</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        boundariesPadding: <span class="hljs-number">5</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>popper will try to prevent overflow following this order,
+by default, then, it could overflow on the left and on top of the boundariesElement</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        preventOverflowOrder: [<span class="hljs-string">'left'</span>, <span class="hljs-string">'right'</span>, <span class="hljs-string">'top'</span>, <span class="hljs-string">'bottom'</span>],</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>the behavior used by flip to change the placement of the popper</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        flipBehavior: <span class="hljs-string">'flip'</span>,
+
+        <span class="hljs-attr">arrowElement</span>: <span class="hljs-string">'[x-arrow]'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>list of functions used to modify the offsets before they are applied to the popper</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        modifiers: [ <span class="hljs-string">'shift'</span>, <span class="hljs-string">'offset'</span>, <span class="hljs-string">'preventOverflow'</span>, <span class="hljs-string">'keepTogether'</span>, <span class="hljs-string">'arrow'</span>, <span class="hljs-string">'flip'</span>, <span class="hljs-string">'applyStyle'</span>],
+
+        <span class="hljs-attr">modifiersIgnored</span>: [],
+    };
+
+    <span class="hljs-comment">/**
+     * Create a new Popper.js instance
+     * @constructor Popper
+     * @param {HTMLElement} triger
+     * @param {HTMLElement|Object} popper
+     *      The HTML element used as popper, or a configuration used to generate the popper.
+     * @param {String} [popper.tagName='div'] The tag name of the generated popper.
+     * @param {Array} [popper.classNames=['popper']] Array of classes to apply to the generated popper.
+     * @param {Array} [popper.attributes] Array of attributes to apply, specify `attr:value` to assign a value to it.
+     * @param {HTMLElement|String} [popper.parent=window.document.body] The parent element, given as HTMLElement or as query string.
+     * @param {String} [popper.content] The content of the popper, it can be text or HTML, in case of HTML, enable `allowHtml`.
+     * @param {Boolean} [popper.allowHtml=false] If set to true, the `content` will be parsed as HTML.
+     * @param {String} [popper.arrow.tagName='div'] Same as `popper.tagName` but for the arrow element.
+     * @param {Array} [popper.arrow.classNames='popper__arrow'] Same as `popper.classNames` but for the arrow element.
+     * @param {String} [popper.arrow.attributes=['x-arrow']] Same as `popper.attributes` but for the arrow element.
+     * @param {Object} options
+     * @param {String} [options.placement=bottom]
+     *      Placement of the popper accepted values: `top(-left, -right), right(-left, -right), bottom(-left, -right),
+     *      left(-left, -right)`
+     *
+     * @param {Boolean} [options.gpuAcceleration=true]
+     *      When this property is set to true, the popper position will be applied using CSS3 translate3d, allowing the
+     *      browser to use the GPU to accelerate the rendering.
+     *      If set to false, the popper will be placed using `top` and `left` properties, not using the GPU.
+     *
+     * @param {Number} [options.offset=0]
+     *      Amount of pixels the popper will be shifted (can be negative).
+     *
+     * @param {String|Element} [options.boundariesElement='viewport']
+     *      The element which will define the boundaries of the popper position, the popper will never be placed outside
+     *      of the defined boundaries (except if `keepTogether` is enabled)
+     *
+     * @param {Number} [options.boundariesPadding=5]
+     *      Additional padding for the boundaries
+     *
+     * @param {Array} [options.preventOverflowOrder=['left', 'right', 'top', 'bottom']]
+     *      Order used when Popper.js tries to avoid overflows from the boundaries, they will be checked in order,
+     *      this means that the last ones will never overflow
+     *
+     * @param {String|Array} [options.flipBehavior='flip']
+     *      The behavior used by the `flip` modifier to change the placement of the popper when the latter is trying to
+     *      overlap its trigger element. Defining `flip` as value, the placement will be flipped on
+     *      its axis (`right - left`, `top - bottom`).
+     *      You can even pass an array of placements (eg: `['right', 'left', 'top']` ) to manually specify
+     *      how alter the placement when a flip is needed. (eg. in the above example, it would first flip from right to left,
+     *      then, if even in its new placement, the popper is overlapping its trigger, it will be moved to top)
+     *
+     * @param {Array} [options.modifiers=[ 'shift', 'offset', 'preventOverflow', 'keepTogether', 'arrow', 'flip', 'applyStyle']]
+     *      List of functions used to modify the data before they are applied to the popper, add your custom functions
+     *      to this array to edit the offsets and placement.
+     *      The function should reflect the @params and @returns of preventOverflow
+     *
+     * @param {Array} [options.modifiersIgnored=[]]
+     *      Put here any built-in modifier name you want to exclude from the modifiers list
+     *      The function should reflect the @params and @returns of preventOverflow
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Popper</span>(<span class="hljs-params">trigger, popper, options</span>) </span>{
+        <span class="hljs-keyword">this</span>._trigger = trigger;
+        <span class="hljs-keyword">this</span>.state = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>if the popper variable is a configuration object, parse it to generate an HTMLElement
+generate a default popper if is not defined</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> isNotDefined = popper === <span class="hljs-literal">undefined</span> || popper === <span class="hljs-literal">null</span>;
+        <span class="hljs-keyword">var</span> isConfig = popper &amp;&amp; popper.constructor.name === <span class="hljs-string">'Object'</span>;
+        <span class="hljs-keyword">if</span> (  isNotDefined || isConfig) {
+            <span class="hljs-keyword">this</span>._popper = <span class="hljs-keyword">this</span>.parse(isConfig ? popper : {});
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>otherwise, use the given HTMLElement as popper</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">this</span>._popper = popper;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>with {} we create a new object with the options inside it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>._options = <span class="hljs-built_in">Object</span>.assign({}, DEFAULTS, options);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>iterate trough the list of modifiers, the ones defined as strings refers to internal methods of Popper.js
+so we return the corresponding method</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>._options.modifiers = <span class="hljs-keyword">this</span>._options.modifiers.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">modifier</span>) </span>{
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> modifier === <span class="hljs-string">'string'</span>) {
+                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._options.modifiersIgnored.indexOf(modifier) !== <span class="hljs-number">-1</span>) {
+                    <span class="hljs-keyword">return</span>;
+                }
+                <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.modifiers[modifier];
+            } <span class="hljs-keyword">else</span> {
+                <span class="hljs-keyword">return</span> modifier;
+            }
+        }.bind(<span class="hljs-keyword">this</span>));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>set the x-placement attribute before everything else because it could be used to add margins to the popper
+margins needs to be calculated to get the correct popper offsets</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>._popper.setAttribute(<span class="hljs-string">'x-placement'</span>, <span class="hljs-keyword">this</span>._options.placement);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>fire the first update to position the popper in the right place</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.update();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>setup event listeners, they will take care of update the position in specific situations</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>._setupEventListeners();
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Methods</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-comment">/**
+     * Destroy the popper
+     * @method
+     * @memberof Popper
+     */</span>
+    Popper.prototype.destroy = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">this</span>._popper.removeAttribute(<span class="hljs-string">'x-placement'</span>);
+        <span class="hljs-keyword">this</span>._popper.style.left = <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">this</span>._popper.style.position = <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">this</span>._popper.style.top = <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">this</span>._popper.style[getSupportedPropertyName(<span class="hljs-string">'transform'</span>)] = <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">this</span>._removeEventListeners();
+    };
+
+    <span class="hljs-comment">/**
+     * Updates the position of the popper, computing the new offsets and applying the new style
+     * @method
+     * @memberof Popper
+     */</span>
+    Popper.prototype.update = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> data = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>store placement inside the data object, modifiers will be able to edit <code>placement</code> if needed
+and refer to _originalPlacement to know the original value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        data.placement = <span class="hljs-keyword">this</span>._options.placement;
+        data._originalPlacement = <span class="hljs-keyword">this</span>._options.placement;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>compute the popper and trigger offsets and put them inside data.offsets</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        data.offsets = <span class="hljs-keyword">this</span>._getOffsets(<span class="hljs-keyword">this</span>._popper, <span class="hljs-keyword">this</span>._trigger, data.placement);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>get boundaries</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        data.boundaries = <span class="hljs-keyword">this</span>._getBoundaries(data, <span class="hljs-keyword">this</span>._options.boundariesPadding, <span class="hljs-keyword">this</span>._options.boundariesElement);
+
+        data = <span class="hljs-keyword">this</span>.runModifiers(data, <span class="hljs-keyword">this</span>._options.modifiers);
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.state.updateCallback === <span class="hljs-string">'function'</span>) {
+            <span class="hljs-keyword">this</span>.state.updateCallback(data);
+        }
+
+    };
+
+    <span class="hljs-comment">/**
+     * If a function is passed, it will be executed after the initialization of popper with as first argument the Popper instance.
+     * @method
+     * @memberof Popper
+     * @param {Function} callback
+     */</span>
+    Popper.prototype.onCreate = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">callback</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>the createCallbacks return as first argument the popper instance</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        callback(<span class="hljs-keyword">this</span>);
+    };
+
+    <span class="hljs-comment">/**
+     * If a function is passed, it will be executed after each update of popper with as first argument the set of coordinates and informations
+     * used to style popper and its arrow.
+     * @method
+     * @memberof Popper
+     * @param {Function} callback
+     */</span>
+    Popper.prototype.onUpdate = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">callback</span>) </span>{
+        <span class="hljs-keyword">this</span>.state.updateCallback = callback;
+    };
+
+    <span class="hljs-comment">/**
+     * Helper used to generate poppers from a configuration file
+     * @method
+     * @memberof Popper
+     */</span>
+    Popper.prototype.parse = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">config</span>) </span>{
+        <span class="hljs-keyword">var</span> defaultConfig = {
+            <span class="hljs-attr">tagName</span>: <span class="hljs-string">'div'</span>,
+            <span class="hljs-attr">classNames</span>: [ <span class="hljs-string">'popper'</span> ],
+            <span class="hljs-attr">attributes</span>: [],
+            <span class="hljs-attr">parent</span>: root.document.body,
+            <span class="hljs-attr">content</span>: <span class="hljs-string">''</span>,
+            <span class="hljs-attr">allowHtml</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">arrow</span>: {
+                <span class="hljs-attr">tagName</span>: <span class="hljs-string">'div'</span>,
+                <span class="hljs-attr">classNames</span>: [ <span class="hljs-string">'popper__arrow'</span> ],
+                <span class="hljs-attr">attributes</span>: [ <span class="hljs-string">'x-arrow'</span>]
+            }
+        };
+        config = <span class="hljs-built_in">Object</span>.assign({}, defaultConfig, config);
+
+        <span class="hljs-keyword">var</span> d = root.document;
+
+        <span class="hljs-keyword">var</span> popper = d.createElement(config.tagName);
+        addClassNames(popper, config.classNames);
+        addAttributes(popper, config.attributes);
+        <span class="hljs-keyword">if</span> (config.allowHtml) {
+            popper.innerHTML = config.content;
+        } <span class="hljs-keyword">else</span> {
+            popper.textContent = config.content;
+        }
+
+        <span class="hljs-keyword">if</span> (config.arrow) {
+            <span class="hljs-keyword">var</span> arrow = d.createElement(config.arrow.tagName);
+            addClassNames(arrow, config.arrow.classNames);
+            addAttributes(arrow, config.arrow.attributes);
+            popper.appendChild(arrow);
+        }
+
+        <span class="hljs-keyword">var</span> parent = config.parent;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>if the given parent is a string, use it to match an element
+if more than one element is matched, the first one will be used as parent
+if no elements are matched, the script will throw an error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> parent === <span class="hljs-string">'string'</span>) {
+            parent = d.querySelectorAll(config.parent);
+            <span class="hljs-keyword">if</span> (parent.length &gt; <span class="hljs-number">1</span>) {
+                <span class="hljs-built_in">console</span>.warning(<span class="hljs-string">'WARNING: the given `parent` query('</span> + config.parent + <span class="hljs-string">') matched more than one element, the first one will be used'</span>);
+            }
+            <span class="hljs-keyword">if</span> (parent.length === <span class="hljs-number">0</span>) {
+                <span class="hljs-keyword">throw</span> <span class="hljs-string">'ERROR: the given `parent` doesn\'t exists!'</span>;
+            }
+            parent = parent[<span class="hljs-number">0</span>];
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>if the given parent is a DOM nodes list or an array of nodes with more than one element,
+the first one will be used as parent</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (parent.length &gt; <span class="hljs-number">1</span>) {
+            <span class="hljs-built_in">console</span>.warning(<span class="hljs-string">'WARNING: you have passed as parent a list of elements, the first one will be used'</span>);
+            parent = parent[<span class="hljs-number">0</span>];
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>append the generated popper to its parent</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        parent.appendChild(popper);
+
+        <span class="hljs-keyword">return</span> popper;
+
+        <span class="hljs-comment">/**
+         * Adds class names to the given element
+         * @function
+         * @ignore
+         * @param {HTMLElement} target
+         * @param {Array} classes
+         */</span>
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addClassNames</span>(<span class="hljs-params">element, classNames</span>) </span>{
+            classNames.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">className</span>) </span>{
+                element.classList.add(className);
+            });
+        }
+
+        <span class="hljs-comment">/**
+         * Adds attributes to the given element
+         * @function
+         * @ignore
+         * @param {HTMLElement} target
+         * @param {Array} attributes
+         * @example
+         * addAttributes(element, [ 'data-info:foobar' ]);
+         */</span>
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addAttributes</span>(<span class="hljs-params">element, attributes</span>) </span>{
+            attributes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">attribute</span>) </span>{
+                element.setAttribute(attribute.split(<span class="hljs-string">':'</span>)[<span class="hljs-number">0</span>], attribute.split(<span class="hljs-string">':'</span>)[<span class="hljs-number">1</span>]);
+            });
+        }
+
+    };
+
+    <span class="hljs-comment">/**
+     * Get offsets to the popper
+     * @method
+     * @memberof Popper
+     * @access private
+     * @param {Element} popper - the popper element
+     * @param {Element} trigger - the trigger element (the popper will be relative to this)
+     * @returns {Object} An object containing the offsets which will be applied to the popper
+     */</span>
+    Popper.prototype._getOffsets = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">popper, trigger, placement</span>) </span>{
+        placement = placement.split(<span class="hljs-string">'-'</span>)[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">var</span> popperOffsets = {};
+
+        <span class="hljs-keyword">var</span> container = getOffsetParent(trigger);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Decide if the popper will be fixed
+If the trigger is inside a fixed context, the popper will be fixed as well to allow them to scroll together</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> isParentFixed = isFixed(trigger, container);
+        popperOffsets.position = isParentFixed ? <span class="hljs-string">'fixed'</span> : <span class="hljs-string">'absolute'</span>;
+        <span class="hljs-keyword">this</span>.state.position = popperOffsets.position;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Get trigger position</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> triggerOffsets = getOffsetRectRelativeToCustomParent(trigger, getOffsetParent(popper), isParentFixed);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Get popper sizes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> popperRect = getOuterSizes(popper);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Compute offsets of popper</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>depending by the popper placement we have to compute its offsets slightly differently</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> ([<span class="hljs-string">'right'</span>, <span class="hljs-string">'left'</span>].indexOf(placement) !== <span class="hljs-number">-1</span>) {
+            popperOffsets.top = triggerOffsets.top + triggerOffsets.height / <span class="hljs-number">2</span> - popperRect.height / <span class="hljs-number">2</span>;
+            <span class="hljs-keyword">if</span> (placement === <span class="hljs-string">'left'</span>) {
+                popperOffsets.left = triggerOffsets.left - popperRect.width;
+            } <span class="hljs-keyword">else</span> {
+                popperOffsets.left = triggerOffsets.right;
+            }
+        } <span class="hljs-keyword">else</span> {
+            popperOffsets.left = triggerOffsets.left + triggerOffsets.width / <span class="hljs-number">2</span> - popperRect.width / <span class="hljs-number">2</span>;
+            <span class="hljs-keyword">if</span> (placement === <span class="hljs-string">'top'</span>) {
+                popperOffsets.top = triggerOffsets.top - popperRect.height;
+            } <span class="hljs-keyword">else</span> {
+                popperOffsets.top = triggerOffsets.bottom;
+            }
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Add width and height to our offsets object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        popperOffsets.width   = popperRect.width;
+        popperOffsets.height  = popperRect.height;
+
+
+        <span class="hljs-keyword">return</span> {
+            <span class="hljs-attr">popper</span>: popperOffsets,
+            <span class="hljs-attr">trigger</span>: triggerOffsets
+        };
+    };
+
+
+    <span class="hljs-keyword">var</span> _updateBound = <span class="hljs-literal">null</span>;
+    <span class="hljs-comment">/**
+     * Setup needed event listeners used to update the popper position
+     * @method
+     * @memberof Popper
+     * @access private
+     */</span>
+    Popper.prototype._setupEventListeners = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>NOTE: 1 DOM access here</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        _updateBound = <span class="hljs-keyword">this</span>.update.bind(<span class="hljs-keyword">this</span>);
+        root.addEventListener(<span class="hljs-string">'resize'</span>, _updateBound);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>if the boundariesElement is window or the popper position is fixed, we don’t need to listen for the scroll event</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._options.boundariesElement !== <span class="hljs-string">'window'</span> &amp;&amp; <span class="hljs-keyword">this</span>.state.position !== <span class="hljs-string">'fixed'</span>) {
+            <span class="hljs-keyword">var</span> target = getScrollParent(<span class="hljs-keyword">this</span>._trigger);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>here it could be both <code>body</code> or <code>documentElement</code> thanks to Firefox, we then check both</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (target === root.document.body || target === root.document.documentElement) {
+                target = root;
+            }
+            target.addEventListener(<span class="hljs-string">'scroll'</span>, _updateBound);
+        }
+    };
+
+    <span class="hljs-comment">/**
+     * Remove event listeners used to update the popper position
+     * @method
+     * @memberof Popper
+     * @access private
+     */</span>
+    Popper.prototype._removeEventListeners = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>NOTE: 1 DOM access here</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        root.removeEventListener(<span class="hljs-string">'resize'</span>, _updateBound);
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._options.boundariesElement !== <span class="hljs-string">'window'</span> &amp;&amp; <span class="hljs-keyword">this</span>.state.position !== <span class="hljs-string">'fixed'</span>) {
+            <span class="hljs-keyword">var</span> target = getScrollParent(<span class="hljs-keyword">this</span>._trigger);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>here it could be both <code>body</code> or <code>documentElement</code> thanks to Firefox, we then check both</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (target === root.document.body || target === root.document.documentElement) {
+                target = root;
+            }
+            target.removeEventListener(<span class="hljs-string">'scroll'</span>, _updateBound);
+        }
+        _updateBound = <span class="hljs-literal">null</span>;
+    };
+
+    <span class="hljs-comment">/**
+     * Computed the boundaries limits and return them
+     * @method
+     * @memberof Popper
+     * @access private
+     * @param {Object} data - Object containing the property "offsets" generated by `_getOffsets`
+     * @param {Number} padding - Boundaries padding
+     * @param {Element} boundariesElement - Element used to define the boundaries
+     * @returns {Object} Coordinates of the boundaries
+     */</span>
+    Popper.prototype._getBoundaries = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data, padding, boundariesElement</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>NOTE: 1 DOM access here</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> boundaries = {};
+        <span class="hljs-keyword">var</span> width, height;
+        <span class="hljs-keyword">if</span> (boundariesElement === <span class="hljs-string">'window'</span>) {
+            <span class="hljs-keyword">var</span> body = root.document.body,
+                html = root.document.documentElement;
+
+            height = <span class="hljs-built_in">Math</span>.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+            width = <span class="hljs-built_in">Math</span>.max( body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth );
+
+            boundaries = {
+                <span class="hljs-attr">top</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">right</span>: width,
+                <span class="hljs-attr">bottom</span>: height,
+                <span class="hljs-attr">left</span>: <span class="hljs-number">0</span>
+            };
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (boundariesElement === <span class="hljs-string">'viewport'</span>) {
+            <span class="hljs-keyword">var</span> offsetParent = getOffsetParent(<span class="hljs-keyword">this</span>._popper);
+            <span class="hljs-keyword">var</span> scrollParent = getScrollParent(<span class="hljs-keyword">this</span>._popper);
+            <span class="hljs-keyword">var</span> offsetParentRect = getOffsetRect(offsetParent);
+
+            boundaries = {
+                <span class="hljs-attr">top</span>: <span class="hljs-number">0</span> - (offsetParentRect.top - scrollParent.scrollTop),
+                <span class="hljs-attr">right</span>: root.document.documentElement.clientWidth - offsetParentRect.left,
+                <span class="hljs-attr">bottom</span>: root.document.documentElement.clientHeight - (offsetParentRect.top - scrollParent.scrollTop),
+                <span class="hljs-attr">left</span>: <span class="hljs-number">0</span> - offsetParentRect.left
+            };
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">if</span> (getOffsetParent(<span class="hljs-keyword">this</span>._popper) === boundariesElement) {
+                boundaries = {
+                    <span class="hljs-attr">top</span>: <span class="hljs-number">0</span>,
+                    <span class="hljs-attr">left</span>: <span class="hljs-number">0</span>,
+                    <span class="hljs-attr">right</span>: boundariesElement.clientWidth,
+                    <span class="hljs-attr">bottom</span>: boundariesElement.clientHeight
+                };
+            } <span class="hljs-keyword">else</span> {
+                boundaries = getOffsetRect(boundariesElement);
+            }
+        }
+        boundaries.left += padding;
+        boundaries.right -= padding;
+        boundaries.top = boundaries.top + padding;
+        boundaries.bottom = boundaries.bottom - padding;
+        <span class="hljs-keyword">return</span> boundaries;
+    };
+
+
+    <span class="hljs-comment">/**
+     * Loop trough the list of modifiers and run them in order, each of them will then edit the data object
+     * @method
+     * @memberof Popper
+     * @access public
+     * @param {Object} data
+     * @param {Array} modifiers
+     * @param {Function} ends
+     */</span>
+    Popper.prototype.runModifiers = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data, modifiers, ends</span>) </span>{
+        <span class="hljs-keyword">var</span> modifiersToRun = modifiers.slice();
+        <span class="hljs-keyword">if</span> (ends !== <span class="hljs-literal">undefined</span>) {
+            modifiersToRun = <span class="hljs-keyword">this</span>._options.modifiers.slice(<span class="hljs-number">0</span>, getArrayKeyIndex(<span class="hljs-keyword">this</span>._options.modifiers, ends));
+        }
+
+        modifiersToRun.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">modifier</span>) </span>{
+            <span class="hljs-keyword">if</span> (isFunction(modifier)) {
+                data = modifier.call(<span class="hljs-keyword">this</span>, data);
+            }
+        }.bind(<span class="hljs-keyword">this</span>));
+
+        <span class="hljs-keyword">return</span> data;
+    };
+
+    <span class="hljs-comment">/**
+     * Helper used to know if the given modifier depends from another one.
+     * @method
+     * @memberof Popper
+     */</span>
+
+    Popper.prototype.isModifierRequired = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">requesting, requested</span>) </span>{
+        <span class="hljs-keyword">var</span> index = getArrayKeyIndex(<span class="hljs-keyword">this</span>._options.modifiers, requesting);
+        <span class="hljs-keyword">return</span> !!<span class="hljs-keyword">this</span>._options.modifiers.slice(<span class="hljs-number">0</span>, index).filter(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">modifier</span>) </span>{
+            <span class="hljs-keyword">return</span> modifier === requested;
+        }).length;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Modifiers</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-comment">/**
+     * Modifiers list
+     * @namespace Popper.modifiers
+     * @memberof Popper
+     * @type {Object}
+     */</span>
+    Popper.prototype.modifiers = {};
+
+    <span class="hljs-comment">/**
+     * Apply the computed styles to the popper element
+     * @method
+     * @memberof Popper.modifiers
+     * @argument {Object} data - The data object generated by `update` method
+     * @returns {Object} The same data object
+     */</span>
+    Popper.prototype.modifiers.applyStyle = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>apply the final offsets to the popper
+NOTE: 1 DOM access here</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> styles = {
+            <span class="hljs-attr">position</span>: data.offsets.popper.position
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>round top and left to avoid blurry text</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> left = <span class="hljs-built_in">Math</span>.round(data.offsets.popper.left);
+        <span class="hljs-keyword">var</span> top = <span class="hljs-built_in">Math</span>.round(data.offsets.popper.top);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>if gpuAcceleration is set to true and transform is supported, we use <code>translate3d</code> to apply the position to the popper
+we automatically use the supported prefixed version if needed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> prefixedProperty;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._options.gpuAcceleration &amp;&amp; (prefixedProperty = getSupportedPropertyName(<span class="hljs-string">'transform'</span>))) {
+            styles[prefixedProperty] = <span class="hljs-string">'translate3d('</span> + left + <span class="hljs-string">'px, '</span> + top + <span class="hljs-string">'px, 0)'</span>;
+            styles.top = <span class="hljs-number">0</span>;
+            styles.left = <span class="hljs-number">0</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>othwerise, we use the standard <code>left</code> and <code>top</code> properties</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> {
+            styles.left =left;
+            styles.top = top;
+        }
+
+        setStyle(<span class="hljs-keyword">this</span>._popper, styles);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>set an attribute which will be useful to style the tooltip (use it to properly position its arrow)
+NOTE: 1 DOM access here</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>._popper.setAttribute(<span class="hljs-string">'x-placement'</span>, data.placement);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>if the arrow modifier is required and the arrow style has been computed, apply the arrow style</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isModifierRequired(<span class="hljs-keyword">this</span>.modifiers.applyStyle, <span class="hljs-keyword">this</span>.modifiers.arrow) &amp;&amp; data.offsets.arrow) {
+            setStyle(data.arrowElement, data.offsets.arrow);
+        }
+
+        <span class="hljs-keyword">return</span> data;
+    };
+
+    <span class="hljs-comment">/**
+     * Modifier used to shift the popper on the start or end of its reference element side
+     * @method
+     * @memberof Popper.modifiers
+     * @argument {Object} data - The data object generated by `update` method
+     * @returns {Object} The data object, properly modified
+     */</span>
+    Popper.prototype.modifiers.shift = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+        <span class="hljs-keyword">var</span> trigger = data.offsets.trigger;
+        <span class="hljs-keyword">var</span> popper = getPopperClientRect(data.offsets.popper);
+        <span class="hljs-keyword">var</span> placement = data.placement;
+        <span class="hljs-keyword">var</span> shiftVariation = placement.split(<span class="hljs-string">'-'</span>)[<span class="hljs-number">1</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>if no shift shiftVariation is specified, don’t run the modifier</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!shiftVariation) {
+            <span class="hljs-keyword">return</span> data;
+        }
+
+        <span class="hljs-keyword">var</span> shiftOffsets = {
+            <span class="hljs-attr">y</span>: {
+                <span class="hljs-attr">start</span>:  trigger.top,
+                <span class="hljs-attr">end</span>:    trigger.top + trigger.height - popper.height
+            },
+            <span class="hljs-attr">x</span>: {
+                <span class="hljs-attr">start</span>:  trigger.left,
+                <span class="hljs-attr">end</span>:    trigger.left + trigger.width - popper.width
+            }
+        };
+
+        <span class="hljs-keyword">var</span> shiftOffsetsMap = {
+            <span class="hljs-attr">bottom</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+                <span class="hljs-keyword">return</span> {
+                    <span class="hljs-attr">left</span>: shiftOffsets.x[shiftVariation]
+                };
+            },
+            <span class="hljs-attr">top</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+                <span class="hljs-keyword">return</span> {
+                    <span class="hljs-attr">left</span>: shiftOffsets.x[shiftVariation]
+                };
+            },
+            <span class="hljs-attr">left</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+                <span class="hljs-keyword">return</span> {
+                    <span class="hljs-attr">top</span>:  shiftOffsets.y[shiftVariation]
+                };
+            },
+            <span class="hljs-attr">right</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+                <span class="hljs-keyword">return</span> {
+                    <span class="hljs-attr">top</span>:  shiftOffsets.y[shiftVariation]
+                };
+            }
+        };
+
+        popper = <span class="hljs-built_in">Object</span>.assign(popper, shiftOffsetsMap[placement.split(<span class="hljs-string">'-'</span>)[<span class="hljs-number">0</span>]]());
+
+        data.offsets.popper = popper;
+        <span class="hljs-keyword">return</span> data;
+    };
+
+
+    <span class="hljs-comment">/**
+     * Modifier used to make sure the popper does not overflows from it's boundaries
+     * @method
+     * @memberof Popper.modifiers
+     * @argument {Object} data - The data object generated by `update` method
+     * @returns {Object} The data object, properly modified
+     */</span>
+    Popper.prototype.modifiers.preventOverflow = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+        <span class="hljs-keyword">var</span> order = <span class="hljs-keyword">this</span>._options.preventOverflowOrder;
+        <span class="hljs-keyword">var</span> popper = getPopperClientRect(data.offsets.popper);
+
+        <span class="hljs-keyword">var</span> check = {
+            <span class="hljs-attr">left</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+                <span class="hljs-keyword">var</span> left = popper.left;
+                <span class="hljs-keyword">if</span> (popper.left &lt; data.boundaries.left) {
+                    left = <span class="hljs-built_in">Math</span>.max(popper.left, data.boundaries.left);
+                }
+                <span class="hljs-keyword">return</span> { <span class="hljs-attr">left</span>: left };
+            },
+            <span class="hljs-attr">right</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+                <span class="hljs-keyword">var</span> left = popper.left;
+                <span class="hljs-keyword">if</span> (popper.right &gt; data.boundaries.right) {
+                    left = <span class="hljs-built_in">Math</span>.min(popper.left, data.boundaries.right - popper.width);
+                }
+                <span class="hljs-keyword">return</span> { <span class="hljs-attr">left</span>: left };
+            },
+            <span class="hljs-attr">top</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+                <span class="hljs-keyword">var</span> top = popper.top;
+                <span class="hljs-keyword">if</span> (popper.top &lt; data.boundaries.top) {
+                    top = <span class="hljs-built_in">Math</span>.max(popper.top, data.boundaries.top);
+                }
+                <span class="hljs-keyword">return</span> { <span class="hljs-attr">top</span>: top };
+            },
+            <span class="hljs-attr">bottom</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+                <span class="hljs-keyword">var</span> top = popper.top;
+                <span class="hljs-keyword">if</span> (popper.bottom &gt; data.boundaries.bottom) {
+                    top = <span class="hljs-built_in">Math</span>.min(popper.top, data.boundaries.bottom - popper.height);
+                }
+                <span class="hljs-keyword">return</span> { <span class="hljs-attr">top</span>: top };
+            }
+        };
+
+        order.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">direction</span>) </span>{
+            data.offsets.popper = <span class="hljs-built_in">Object</span>.assign(popper, check[direction]());
+        });
+
+        <span class="hljs-keyword">return</span> data;
+    };
+
+    <span class="hljs-comment">/**
+     * Modifier used to make sure the popper is always near its trigger
+     * @method
+     * @memberof Popper.modifiers
+     * @argument {Object} data - The data object generated by _update method
+     * @returns {Object} The data object, properly modified
+     */</span>
+    Popper.prototype.modifiers.keepTogether = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+        <span class="hljs-keyword">var</span> popper  = getPopperClientRect(data.offsets.popper);
+        <span class="hljs-keyword">var</span> trigger = data.offsets.trigger;
+        <span class="hljs-keyword">var</span> f = <span class="hljs-built_in">Math</span>.floor;
+
+        <span class="hljs-keyword">if</span> (popper.right &lt; f(trigger.left)) {
+            data.offsets.popper.left = f(trigger.left) - popper.width;
+        }
+        <span class="hljs-keyword">if</span> (popper.left &gt; f(trigger.right)) {
+            data.offsets.popper.left = f(trigger.right);
+        }
+        <span class="hljs-keyword">if</span> (popper.bottom &lt; f(trigger.top)) {
+            data.offsets.popper.top = f(trigger.top) - popper.height;
+        }
+        <span class="hljs-keyword">if</span> (popper.top &gt; f(trigger.bottom)) {
+            data.offsets.popper.top = f(trigger.bottom);
+        }
+
+        <span class="hljs-keyword">return</span> data;
+    };
+
+    <span class="hljs-comment">/**
+     * Modifier used to flip the placement of the popper when the latter is starting overlapping its trigger.
+     * Requires the `preventOverflow` modifier before it in order to work.
+     * **<span class="hljs-doctag">NOTE:</span>** This modifier will run all its previous modifiers everytime it tries to flip the popper!
+     * @method
+     * @memberof Popper.modifiers
+     * @argument {Object} data - The data object generated by _update method
+     * @returns {Object} The data object, properly modified
+     */</span>
+    Popper.prototype.modifiers.flip = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>check if preventOverflow is in the list of modifiers before the flip modifier.
+otherwise flip would not work as expected.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.isModifierRequired(<span class="hljs-keyword">this</span>.modifiers.flip, <span class="hljs-keyword">this</span>.modifiers.preventOverflow)) {
+            <span class="hljs-built_in">console</span>.warn(<span class="hljs-string">'WARNING: preventOverflow modifier is required by flip modifier in order to work, be sure to include it before flip!'</span>);
+            <span class="hljs-keyword">return</span> data;
+        }
+
+        <span class="hljs-keyword">if</span> (data.flipped &amp;&amp; data.placement === data._originalPlacement) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>seems like flip is trying to loop, probably there’s not enough space on any of the flippable sides</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">return</span> data;
+        }
+
+        <span class="hljs-keyword">var</span> placement = data.placement.split(<span class="hljs-string">'-'</span>)[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">var</span> placementOpposite = getOppositePlacement(placement);
+        <span class="hljs-keyword">var</span> variation = data.placement.split(<span class="hljs-string">'-'</span>)[<span class="hljs-number">1</span>] || <span class="hljs-string">''</span>;
+
+        <span class="hljs-keyword">var</span> flipOrder = [];
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>._options.flipBehavior === <span class="hljs-string">'flip'</span>) {
+            flipOrder = [
+                placement,
+                placementOpposite
+            ];
+        } <span class="hljs-keyword">else</span> {
+            flipOrder = <span class="hljs-keyword">this</span>._options.flipBehavior;
+        }
+
+        flipOrder.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">step, index</span>) </span>{
+            <span class="hljs-keyword">if</span> (placement !== step || flipOrder.length === index + <span class="hljs-number">1</span>) {
+                <span class="hljs-keyword">return</span>;
+            }
+
+            placement = data.placement.split(<span class="hljs-string">'-'</span>)[<span class="hljs-number">0</span>];
+            placementOpposite = getOppositePlacement(placement);
+
+            <span class="hljs-keyword">var</span> popperOffsets = getPopperClientRect(data.offsets.popper);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>this boolean is used to distinguish right and bottom from top and left
+they need different computations to get flipped</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">var</span> a = [<span class="hljs-string">'right'</span>, <span class="hljs-string">'bottom'</span>].indexOf(placement) !== <span class="hljs-number">-1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>using Math.floor because the trigger offsets may contain decimals we are not going to consider here</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (
+                a &amp;&amp; <span class="hljs-built_in">Math</span>.floor(data.offsets.trigger[placement]) &gt; <span class="hljs-built_in">Math</span>.floor(popperOffsets[placementOpposite]) ||
+                !a &amp;&amp; <span class="hljs-built_in">Math</span>.floor(data.offsets.trigger[placement]) &lt; <span class="hljs-built_in">Math</span>.floor(popperOffsets[placementOpposite])
+            ) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>we’ll use this boolean to detect any flip loop</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                data.flipped = <span class="hljs-literal">true</span>;
+                data.placement = flipOrder[index + <span class="hljs-number">1</span>];
+                <span class="hljs-keyword">if</span> (variation) {
+                    data.placement += <span class="hljs-string">'-'</span> + variation;
+                }
+                data.offsets.popper = <span class="hljs-keyword">this</span>._getOffsets(<span class="hljs-keyword">this</span>._popper, <span class="hljs-keyword">this</span>._trigger, data.placement).popper;
+
+                data = <span class="hljs-keyword">this</span>.runModifiers(data, <span class="hljs-keyword">this</span>._options.modifiers, <span class="hljs-keyword">this</span>._flip);
+            }
+        }.bind(<span class="hljs-keyword">this</span>));
+        <span class="hljs-keyword">return</span> data;
+    };
+
+    <span class="hljs-comment">/**
+     * Modifier used to add an offset to the popper, useful if you more granularity positioning your popper.
+     * The offsets will shift the popper on the side of its trigger element.
+     * @method
+     * @memberof Popper.modifiers
+     * @argument {Object} data - The data object generated by _update method
+     * @returns {Object} The data object, properly modified
+     */</span>
+    Popper.prototype.modifiers.offset = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+        <span class="hljs-keyword">var</span> offset = <span class="hljs-keyword">this</span>._options.offset;
+        <span class="hljs-keyword">var</span> popper  = data.offsets.popper;
+
+        <span class="hljs-keyword">if</span> (data.placement.indexOf(<span class="hljs-string">'left'</span>) !== <span class="hljs-number">-1</span>) {
+            popper.top -= offset;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (data.placement.indexOf(<span class="hljs-string">'right'</span>) !== <span class="hljs-number">-1</span>) {
+            popper.top += offset;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (data.placement.indexOf(<span class="hljs-string">'top'</span>) !== <span class="hljs-number">-1</span>) {
+            popper.left -= offset;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (data.placement.indexOf(<span class="hljs-string">'bottom'</span>) !== <span class="hljs-number">-1</span>) {
+            popper.left += offset;
+        }
+        <span class="hljs-keyword">return</span> data;
+    };
+
+    <span class="hljs-comment">/**
+     * Modifier used to move the arrows on the edge of the popper to make sure them are always between the popper and the trigger
+     * It will use the CSS outer size of the arrow element to know how many pixels of conjuction are needed
+     * @method
+     * @memberof Popper.modifiers
+     * @argument {Object} data - The data object generated by _update method
+     * @returns {Object} The data object, properly modified
+     */</span>
+    Popper.prototype.modifiers.arrow = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+        <span class="hljs-keyword">var</span> arrow  = <span class="hljs-keyword">this</span>._options.arrowElement;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>if the arrowElement is a string, suppose it’s a CSS selector</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> arrow === <span class="hljs-string">'string'</span>) {
+            arrow = <span class="hljs-keyword">this</span>._popper.querySelector(arrow);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>if arrow element is not found, don’t run the modifier</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!arrow) {
+            <span class="hljs-keyword">return</span> data;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>the arrow element must be child of its popper</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>._popper.contains(arrow)) {
+            <span class="hljs-built_in">console</span>.warn(<span class="hljs-string">'WARNING: `arrowElement` must be child of its popper element!'</span>);
+            <span class="hljs-keyword">return</span> data;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>arrow depends on keepTogether in order to work</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.isModifierRequired(<span class="hljs-keyword">this</span>.modifiers.arrow, <span class="hljs-keyword">this</span>.modifiers.keepTogether)) {
+            <span class="hljs-built_in">console</span>.warn(<span class="hljs-string">'WARNING: keepTogether modifier is required by arrow modifier in order to work, be sure to include it before arrow!'</span>);
+            <span class="hljs-keyword">return</span> data;
+        }
+
+        <span class="hljs-keyword">var</span> arrowStyle = {};
+        <span class="hljs-keyword">var</span> placement  = data.placement.split(<span class="hljs-string">'-'</span>)[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">var</span> popper     = getPopperClientRect(data.offsets.popper);
+        <span class="hljs-keyword">var</span> trigger    = data.offsets.trigger;
+
+        <span class="hljs-keyword">var</span> isVertical = [<span class="hljs-string">'left'</span>, <span class="hljs-string">'right'</span>].indexOf(placement) !== <span class="hljs-number">-1</span>;
+
+        <span class="hljs-keyword">var</span> center;
+        <span class="hljs-keyword">if</span> (isVertical) {
+            <span class="hljs-keyword">var</span> arrowHeight = getOuterSizes(arrow).height;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>extends keepTogether behavior making sure the popper and its trigger have enough pixels in conjuction</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>top side</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (trigger.bottom - arrowHeight &lt; popper.top) {
+                data.offsets.popper.top -= popper.top - (trigger.bottom - arrowHeight);
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>bottom side</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (trigger.top + arrowHeight &gt; popper.bottom) {
+                data.offsets.popper.top += (trigger.top + arrowHeight) - popper.bottom;
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <p>compute center of the popper</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            center = trigger.top + (trigger.height / <span class="hljs-number">2</span>) - (arrowHeight / <span class="hljs-number">2</span>);
+
+            <span class="hljs-keyword">var</span> top = center - popper.top;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <p>prevent arrow from being placed not contiguously to its popper</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            top = <span class="hljs-built_in">Math</span>.max(<span class="hljs-built_in">Math</span>.min(popper.height - arrowHeight, top), <span class="hljs-number">0</span>);
+            arrowStyle.top  = top;
+            arrowStyle.left = <span class="hljs-string">''</span>; <span class="hljs-comment">// make sure to remove any old style from the arrow</span>
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">var</span> arrowWidth  = getOuterSizes(arrow).width;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <p>extends keepTogether behavior making sure the popper and its trigger have enough pixels in conjuction</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p>left side</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (trigger.right - arrowWidth &lt; popper.left) {
+                data.offsets.popper.left -= popper.left - (trigger.right - arrowWidth);
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
+              <p>right side</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (trigger.left + arrowWidth &gt; popper.right) {
+                data.offsets.popper.left += (trigger.left + arrowWidth) - popper.right;
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <p>compute center of the popper</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            center = trigger.left + (trigger.width / <span class="hljs-number">2</span>) - (arrowWidth / <span class="hljs-number">2</span>);
+
+            <span class="hljs-keyword">var</span> left = center - popper.left;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              <p>prevent arrow from being placed not contiguously to its popper</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            left = <span class="hljs-built_in">Math</span>.max(<span class="hljs-built_in">Math</span>.min(popper.width - arrowWidth, left), <span class="hljs-number">0</span>);
+            arrowStyle.left  = left;
+            arrowStyle.top = <span class="hljs-string">''</span>; <span class="hljs-comment">// make sure to remove any old style from the arrow</span>
+        }
+        data.offsets.arrow = arrowStyle;
+        data.arrowElement = arrow;
+
+        <span class="hljs-keyword">return</span> data;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>Helpers</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-comment">/**
+     * Get the outer sizes of the given element (offset size + margins)
+     * @function
+     * @ignore
+     * @argument {Element} element
+     * @returns {Object} object containing width and height properties
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getOuterSizes</span>(<span class="hljs-params">element</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              <p>NOTE: 1 DOM access here</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> styles = root.getComputedStyle(element);
+        <span class="hljs-keyword">var</span> x = <span class="hljs-built_in">parseFloat</span>(styles.marginTop) + <span class="hljs-built_in">parseFloat</span>(styles.marginBottom);
+        <span class="hljs-keyword">var</span> y = <span class="hljs-built_in">parseFloat</span>(styles.marginLeft) + <span class="hljs-built_in">parseFloat</span>(styles.marginRight);
+
+        <span class="hljs-keyword">return</span> { <span class="hljs-attr">width</span>: element.offsetWidth + y, <span class="hljs-attr">height</span>: element.offsetHeight + x };
+    }
+
+    <span class="hljs-comment">/**
+     * Get the opposite placement of the given one/
+     * @function
+     * @ignore
+     * @argument {String} placement
+     * @returns {String} flipped placement
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getOppositePlacement</span>(<span class="hljs-params">placement</span>) </span>{
+        <span class="hljs-keyword">var</span> hash = {<span class="hljs-attr">left</span>: <span class="hljs-string">'right'</span>, <span class="hljs-attr">right</span>: <span class="hljs-string">'left'</span>, <span class="hljs-attr">bottom</span>: <span class="hljs-string">'top'</span>, <span class="hljs-attr">top</span>: <span class="hljs-string">'bottom'</span> };
+        <span class="hljs-keyword">return</span> placement.replace(<span class="hljs-regexp">/left|right|bottom|top/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">matched</span>)</span>{
+            <span class="hljs-keyword">return</span> hash[matched];
+        });
+    }
+
+    <span class="hljs-comment">/**
+     * Given the popper offsets, generate an output similar to getBoundingClientRect
+     * @function
+     * @ignore
+     * @argument {Object} popperOffsets
+     * @returns {Object} ClientRect like output
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getPopperClientRect</span>(<span class="hljs-params">popperOffsets</span>) </span>{
+        <span class="hljs-keyword">var</span> offsets = <span class="hljs-built_in">Object</span>.assign({}, popperOffsets);
+        offsets.right = offsets.left + offsets.width;
+        offsets.bottom = offsets.top + offsets.height;
+        <span class="hljs-keyword">return</span> offsets;
+    }
+
+    <span class="hljs-comment">/**
+     * Given an array and the key to find, returns its index
+     * @function
+     * @ignore
+     * @argument {Array} arr
+     * @argument keyToFind
+     * @returns index or null
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getArrayKeyIndex</span>(<span class="hljs-params">arr, keyToFind</span>) </span>{
+        <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, key;
+        <span class="hljs-keyword">for</span> (key <span class="hljs-keyword">in</span> arr) {
+            <span class="hljs-keyword">if</span> (arr[key] === keyToFind) {
+                <span class="hljs-keyword">return</span> i;
+            }
+            i++;
+        }
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+    }
+
+    <span class="hljs-comment">/**
+     * Get CSS computed property of the given element
+     * @function
+     * @ignore
+     * @argument {Eement} element
+     * @argument {String} property
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getStyleComputedProperty</span>(<span class="hljs-params">element, property</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p>NOTE: 1 DOM access here</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> css = root.getComputedStyle(element, <span class="hljs-literal">null</span>);
+        <span class="hljs-keyword">return</span> css[property];
+    }
+
+    <span class="hljs-comment">/**
+     * Returns the offset parent of the given element
+     * @function
+     * @ignore
+     * @argument {Element} element
+     * @returns {Element} offset parent
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getOffsetParent</span>(<span class="hljs-params">element</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              <p>NOTE: 1 DOM access here</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> element.offsetParent === root.document.body || !element.offsetParent ? root.document.documentElement : element.offsetParent;
+    }
+
+    <span class="hljs-comment">/**
+     * Returns the scrolling parent of the given element
+     * @function
+     * @ignore
+     * @argument {Element} element
+     * @returns {Element} offset parent
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getScrollParent</span>(<span class="hljs-params">element</span>) </span>{
+        <span class="hljs-keyword">if</span> (element === root.document) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-72">&#182;</a>
+              </div>
+              <p>Firefox puts the scrollTOp value on <code>documentElement</code> instead of <code>body</code>, we then check which of them is
+greater than 0 and return the proper element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (root.document.body.scrollTop) {
+                <span class="hljs-keyword">return</span> root.document.body;
+            } <span class="hljs-keyword">else</span> {
+                <span class="hljs-keyword">return</span> root.document.documentElement;
+            }
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <p>Firefox want us to check <code>-x</code> and <code>-y</code> variations as well</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (
+            [<span class="hljs-string">'scroll'</span>, <span class="hljs-string">'auto'</span>].indexOf(getStyleComputedProperty(element, <span class="hljs-string">'overflow'</span>)) !== <span class="hljs-number">-1</span> ||
+            [<span class="hljs-string">'scroll'</span>, <span class="hljs-string">'auto'</span>].indexOf(getStyleComputedProperty(element, <span class="hljs-string">'overflow-x'</span>)) !== <span class="hljs-number">-1</span> ||
+            [<span class="hljs-string">'scroll'</span>, <span class="hljs-string">'auto'</span>].indexOf(getStyleComputedProperty(element, <span class="hljs-string">'overflow-y'</span>)) !== <span class="hljs-number">-1</span>
+        ) {
+            <span class="hljs-keyword">return</span> element;
+        }
+        <span class="hljs-keyword">return</span> element.parentNode ? getScrollParent(element.parentNode) : element;
+    }
+
+    <span class="hljs-comment">/**
+     * Check if the given element is fixed or is inside a fixed parent
+     * @function
+     * @ignore
+     * @argument {Element} element
+     * @argument {Element} customContainer
+     * @returns {Boolean} answer to "isFixed?"
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isFixed</span>(<span class="hljs-params">element</span>) </span>{
+        <span class="hljs-keyword">if</span> (element === root.document.body) {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        }
+        <span class="hljs-keyword">if</span> (getStyleComputedProperty(element, <span class="hljs-string">'position'</span>) === <span class="hljs-string">'fixed'</span>) {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+        }
+        <span class="hljs-keyword">return</span> element.parentNode ? isFixed(element.parentNode) : element;
+    }
+
+    <span class="hljs-comment">/**
+     * Set the style to the given popper
+     * @function
+     * @ignore
+     * @argument {Element} element - Element to apply the style to
+     * @argument {Object} styles - Object with a list of properties and values which will be applied to the element
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setStyle</span>(<span class="hljs-params">element, styles</span>) </span>{
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">is_numeric</span>(<span class="hljs-params">n</span>) </span>{
+            <span class="hljs-keyword">return</span> (n !== <span class="hljs-string">''</span> &amp;&amp; !<span class="hljs-built_in">isNaN</span>(<span class="hljs-built_in">parseFloat</span>(n)) &amp;&amp; <span class="hljs-built_in">isFinite</span>(n));
+        }
+        <span class="hljs-built_in">Object</span>.keys(styles).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">prop</span>) </span>{
+            <span class="hljs-keyword">var</span> unit = <span class="hljs-string">''</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
+              </div>
+              <p>add unit if the value is numeric and is one of the following</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> ([<span class="hljs-string">'width'</span>, <span class="hljs-string">'height'</span>, <span class="hljs-string">'top'</span>, <span class="hljs-string">'right'</span>, <span class="hljs-string">'bottom'</span>, <span class="hljs-string">'left'</span>].indexOf(prop) !== <span class="hljs-number">-1</span> &amp;&amp; is_numeric(styles[prop])) {
+                unit = <span class="hljs-string">'px'</span>;
+            }
+            element.style[prop] = styles[prop] + unit;
+        });
+    }
+
+    <span class="hljs-comment">/**
+     * Check if the given variable is a function
+     * @function
+     * @ignore
+     * @argument {Element} element - Element to check
+     * @returns {Boolean} answer to: is a function?
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isFunction</span>(<span class="hljs-params">functionToCheck</span>) </span>{
+        <span class="hljs-keyword">var</span> getType = {};
+        <span class="hljs-keyword">return</span> functionToCheck &amp;&amp; getType.toString.call(functionToCheck) === <span class="hljs-string">'[object Function]'</span>;
+    }
+
+    <span class="hljs-comment">/**
+     * Get the position of the given element, relative to its offset parent
+     * @function
+     * @ignore
+     * @param {Element} element
+     * @return {Object} position - Coordinates of the element and its `scrollTop`
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getOffsetRect</span>(<span class="hljs-params">element</span>) </span>{
+        <span class="hljs-keyword">var</span> elementRect = {
+            <span class="hljs-attr">width</span>: element.offsetWidth,
+            <span class="hljs-attr">height</span>: element.offsetHeight,
+            <span class="hljs-attr">left</span>: element.offsetLeft,
+            <span class="hljs-attr">top</span>: element.offsetTop
+        };
+
+        elementRect.right = elementRect.left + elementRect.width;
+        elementRect.bottom = elementRect.top + elementRect.height;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-75">&#182;</a>
+              </div>
+              <p>position</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> elementRect;
+    }
+
+    <span class="hljs-comment">/**
+     * Get bounding client rect of given element
+     * @function
+     * @ignore
+     * @param {HTMLElement} element
+     * @return {Object} client rect
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getBoundingClientRect</span>(<span class="hljs-params">element</span>) </span>{
+        <span class="hljs-keyword">var</span> rect = element.getBoundingClientRect();
+        <span class="hljs-keyword">return</span> {
+            <span class="hljs-attr">left</span>: rect.left,
+            <span class="hljs-attr">top</span>: rect.top,
+            <span class="hljs-attr">right</span>: rect.right,
+            <span class="hljs-attr">bottom</span>: rect.bottom,
+            <span class="hljs-attr">width</span>: rect.right - rect.left,
+            <span class="hljs-attr">height</span>: rect.bottom - rect.top
+        };
+    }
+
+    <span class="hljs-comment">/**
+     * Given an element and one of its parents, return the offset
+     * @function
+     * @ignore
+     * @param {HTMLElement} element
+     * @param {HTMLElement} parent
+     * @return {Object} rect
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getOffsetRectRelativeToCustomParent</span>(<span class="hljs-params">element, parent, fixed</span>) </span>{
+        <span class="hljs-keyword">var</span> elementRect = getBoundingClientRect(element);
+        <span class="hljs-keyword">var</span> parentRect = getBoundingClientRect(parent);
+
+        <span class="hljs-keyword">if</span> (fixed) {
+            <span class="hljs-keyword">var</span> scrollParent = getScrollParent(parent);
+            parentRect.top += scrollParent.scrollTop;
+            parentRect.bottom += scrollParent.scrollTop;
+            parentRect.left += scrollParent.scrollLeft;
+            parentRect.right += scrollParent.scrollLeft;
+        }
+
+        <span class="hljs-keyword">var</span> rect = {
+            <span class="hljs-attr">top</span>: elementRect.top - parentRect.top ,
+            <span class="hljs-attr">left</span>: elementRect.left - parentRect.left ,
+            <span class="hljs-attr">bottom</span>: (elementRect.top - parentRect.top) + elementRect.height,
+            <span class="hljs-attr">right</span>: (elementRect.left - parentRect.left) + elementRect.width,
+            <span class="hljs-attr">width</span>: elementRect.width,
+            <span class="hljs-attr">height</span>: elementRect.height
+        };
+        <span class="hljs-keyword">return</span> rect;
+    }
+
+    <span class="hljs-comment">/**
+     * Get the prefixed supported property name
+     * @function
+     * @ignore
+     * @argument {String} property (camelCase)
+     * @returns {String} prefixed property (camelCase)
+     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getSupportedPropertyName</span>(<span class="hljs-params">property</span>) </span>{
+        <span class="hljs-keyword">var</span> prefixes = [<span class="hljs-string">''</span>, <span class="hljs-string">'ms'</span>, <span class="hljs-string">'webkit'</span>, <span class="hljs-string">'moz'</span>, <span class="hljs-string">'o'</span>];
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; prefixes.length; i++) {
+            <span class="hljs-keyword">var</span> toCheck = prefixes[i] ? prefixes[i] + property.charAt(<span class="hljs-number">0</span>).toUpperCase() + property.slice(<span class="hljs-number">1</span>) : property;
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> root.document.body.style[toCheck] !== <span class="hljs-string">'undefined'</span>) {
+                <span class="hljs-keyword">return</span> toCheck;
+            }
+        }
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+    }
+
+    <span class="hljs-comment">/**
+     * The Object.assign() method is used to copy the values of all enumerable own properties from one or more source
+     * objects to a target object. It will return the target object.
+     * This polyfill doesn't support symbol properties, since ES5 doesn't have symbols anyway
+     * Source: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+     * @function
+     * @ignore
+     */</span>
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Object</span>.assign) {
+        <span class="hljs-built_in">Object</span>.defineProperty(<span class="hljs-built_in">Object</span>, <span class="hljs-string">'assign'</span>, {
+            <span class="hljs-attr">enumerable</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">configurable</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">writable</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">value</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">target</span>) </span>{
+                <span class="hljs-keyword">if</span> (target === <span class="hljs-literal">undefined</span> || target === <span class="hljs-literal">null</span>) {
+                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'Cannot convert first argument to object'</span>);
+                }
+
+                <span class="hljs-keyword">var</span> to = <span class="hljs-built_in">Object</span>(target);
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">1</span>; i &lt; <span class="hljs-built_in">arguments</span>.length; i++) {
+                    <span class="hljs-keyword">var</span> nextSource = <span class="hljs-built_in">arguments</span>[i];
+                    <span class="hljs-keyword">if</span> (nextSource === <span class="hljs-literal">undefined</span> || nextSource === <span class="hljs-literal">null</span>) {
+                        <span class="hljs-keyword">continue</span>;
+                    }
+                    nextSource = <span class="hljs-built_in">Object</span>(nextSource);
+
+                    <span class="hljs-keyword">var</span> keysArray = <span class="hljs-built_in">Object</span>.keys(nextSource);
+                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> nextIndex = <span class="hljs-number">0</span>, len = keysArray.length; nextIndex &lt; len; nextIndex++) {
+                        <span class="hljs-keyword">var</span> nextKey = keysArray[nextIndex];
+                        <span class="hljs-keyword">var</span> desc = <span class="hljs-built_in">Object</span>.getOwnPropertyDescriptor(nextSource, nextKey);
+                        <span class="hljs-keyword">if</span> (desc !== <span class="hljs-literal">undefined</span> &amp;&amp; desc.enumerable) {
+                            to[nextKey] = nextSource[nextKey];
+                        }
+                    }
+                }
+                <span class="hljs-keyword">return</span> to;
+            }
+        });
+    }
+
+    <span class="hljs-keyword">return</span> Popper;
+}));</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
