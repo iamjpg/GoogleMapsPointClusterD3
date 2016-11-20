@@ -32,16 +32,17 @@ export class Point {
   }
 
   print() {
-    var self = this;
+    const self = this;
     this.markers = [];
     this.collection.forEach(function(o, i) {
       // console.log(JSON.parse(JSON.stringify(o)))
       let lat = o.lat || o.location.latitude;
       let lng = o.lng || o.location.longitude;
-      var m = new MarkerWithLabel({
+      let m = new MarkerWithLabel({
         position: new google.maps.LatLng(lat, lng),
         map: self.map,
         hoverContent: o.hoverData || "",
+        clickContent: o.clickData || "",
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 0
@@ -64,13 +65,14 @@ export class Point {
   }
 
   setOmsEvents() {
-    var self = this;
+    const self = this;
 
     this.oms.addListener('click', function(marker, event) {
       self.removePopper();
     });
 
     this.oms.addListener('spiderfy', function(markers, event) {
+      self.removeUniversalPointHoverState();
       self.removePopper();
       self.markers.forEach(function(marker) {
         marker.setOptions({
@@ -89,6 +91,7 @@ export class Point {
     });
 
     this.oms.addListener('unspiderfy', function(markers, event) {
+      self.removeUniversalPointHoverState();
       self.removePopper();
       self.markers.forEach(function(marker) {
         marker.setOptions({
@@ -102,7 +105,7 @@ export class Point {
   }
 
   setExternalMouseEvents() {
-    var self = this;
+    const self = this;
     document.addEventListener('mouseover', function(e) {
       if (e.target.className.indexOf('PinResult') > -1) {
         if (!self.markers[parseInt(e.target.getAttribute('data-pinindex'))]) {
@@ -127,16 +130,29 @@ export class Point {
     });
   }
 
+  removeUniversalPointHoverState() {
+    this.markers.forEach((o, i) => {
+      o.setOptions({
+        zIndex: 100,
+        labelClass: "marker-point"
+      });
+    })
+  }
+
   setHoverEvents(ignoreZindex=false) {
 
     // set click events here.
     this.setClickEvents(ignoreZindex);
 
-    var self = this;
+    const self = this;
     this.markers.forEach(function(marker) {
-      var mouseOverListener = marker.addListener('mouseover', function(e) {
-        var target = e.target || e.srcElement;
-        var m = this;
+      let mouseOverListener = marker.addListener('mouseover', function(e) {
+
+        // Remove clicked poppers.
+        self.removePopper(true);
+
+        let target = e.target || e.srcElement;
+        let m = this;
 
         // First, set the hover state of the marker
         marker.setOptions({
@@ -145,11 +161,11 @@ export class Point {
         });
 
         // Determine where to place popper right/left
-        var mapDivHalfWidth = self.map.getDiv().offsetWidth / 2;
-        var markerLeftPos = target.offsetLeft;
-        var popperPlacement = (markerLeftPos > mapDivHalfWidth) ? 'top' : 'top';
+        let mapDivHalfWidth = self.map.getDiv().offsetWidth / 2;
+        let markerLeftPos = target.offsetLeft;
+        let popperPlacement = (markerLeftPos > mapDivHalfWidth) ? 'top' : 'top';
 
-        var popper = new Popper(
+        let popper = new Popper(
           target, {
             content: m.get('hoverContent'),
             allowHtml: true,
@@ -163,7 +179,7 @@ export class Point {
         }
       });
 
-      var mouseOutListener = marker.addListener('mouseout', function() {
+      let mouseOutListener = marker.addListener('mouseout', function() {
 
         // First, remove the hover state of the marker
         marker.setOptions({
@@ -185,19 +201,19 @@ export class Point {
     const self = this;
 
     this.markers.forEach(function(marker) {
-      var mouseOverListener = marker.addListener('click', function(e) {
+      let mouseOverListener = marker.addListener('click', function(e) {
 
-        // Remove any poppers...
+        // Remove any clicked poppers...
         self.removePopper(true);
 
-        var target = e.target || e.srcElement;
-        var m = this;
+        let target = e.target || e.srcElement;
+        let m = this;
 
-        var popperPlacement = 'top';
+        let popperPlacement = 'top';
 
-        var popper = new Popper(
+        let popper = new Popper(
           target, {
-            content: 'via click!',
+            content: m.get('clickContent'),
             allowHtml: true,
             classNames: ['popper', 'clicked']
           }, {
@@ -210,7 +226,7 @@ export class Point {
   }
 
   removeListeners() {
-    for (var i = 0; i < this.markerListeners.length; i++) {
+    for (let i = 0; i < this.markerListeners.length; i++) {
       google.maps.event.removeListener(this.markerListeners[i]);
     }
     this.markerListeners = [];
@@ -224,8 +240,8 @@ export class Point {
   }
 
   removePopper(clicked=false) {
-    var poppers = document.getElementsByClassName('popper');
-    for (var i = 0; i < poppers.length; i++) {
+    let poppers = document.getElementsByClassName('popper');
+    for (let i = 0; i < poppers.length; i++) {
       if (!clicked && poppers[i].className.indexOf('clicked') === -1) {
         poppers[i].remove();
       } else if (clicked) {

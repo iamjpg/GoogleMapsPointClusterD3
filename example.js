@@ -4,11 +4,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // Create the Google Map.
   window.map = new google.maps.Map(document.getElementById('map'), {
     // Zoom for US.
-    // zoom: 6,
-    // center: new google.maps.LatLng(37.76487, -122.41948)
+    zoom: 6,
+    center: new google.maps.LatLng(37.76487, -122.41948)
     // Direct to pins
-    zoom: 15,
-    center: new google.maps.LatLng(37.76859506472946, -122.49202600000001)
+    // zoom: 15,
+    // center: new google.maps.LatLng(37.76859506472946, -122.49202600000001)
   });
 
   // Construct PointCluster Object
@@ -33,7 +33,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     d3.json('example.json', function(error, res) {
 
       res.data.result_list.forEach(function(o, i) {
-        o.hoverData = "Hello<br>" + o.lat + " : " + o.lng
+        o.hoverData = "Hello<br>" + o.lat + " : " + o.lng;
+        o.clickData = "You've clicked on this locaton:<br />" + o.lat + " : " + o.lng;
       });
 
       // Set the collection of location objects.
