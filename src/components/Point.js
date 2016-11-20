@@ -10,6 +10,7 @@ export class Point {
     this.collection = collection;
     this.markerListeners = []
     this.setExternalMouseEvents();
+    this.setDocumentClick();
     this.oms = new OverlappingMarkerSpiderfier(this.map, {
       markersWontMove: true,
       markersWontHide: true,
@@ -17,6 +18,16 @@ export class Point {
       keepSpiderfied: true,
       legWeight: 3,
       usualLegZIndex: 25000
+    });
+  }
+
+  setDocumentClick() {
+    const self = this;
+    document.addEventListener('click', function (e) {
+      const target = e.target;
+      if (target.className.indexOf('clicked') === -1) {
+        self.removePopper(true);
+      }
     });
   }
 
@@ -170,8 +181,15 @@ export class Point {
   }
 
   setClickEvents(ignoreZindex=false) {
+
+    const self = this;
+
     this.markers.forEach(function(marker) {
       var mouseOverListener = marker.addListener('click', function(e) {
+
+        // Remove any poppers...
+        self.removePopper(true);
+
         var target = e.target || e.srcElement;
         var m = this;
 
@@ -205,10 +223,12 @@ export class Point {
     }
   }
 
-  removePopper() {
+  removePopper(clicked=false) {
     var poppers = document.getElementsByClassName('popper');
     for (var i = 0; i < poppers.length; i++) {
-      if (poppers[i].className.indexOf('clicked') === -1) {
+      if (!clicked && poppers[i].className.indexOf('clicked') === -1) {
+        poppers[i].remove();
+      } else if (clicked) {
         poppers[i].remove();
       }
     }
