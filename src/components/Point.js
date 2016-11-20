@@ -46,7 +46,7 @@ export class Point {
 
     });
 
-    self.setEvents(false);
+    self.setHoverEvents(false);
 
     this.setOmsEvents();
 
@@ -69,7 +69,7 @@ export class Point {
       })
       markers.forEach(function(marker) {
         self.removeListeners();
-        self.setEvents(true);
+        self.setHoverEvents(true);
         marker.setOptions({
           zIndex: 20000,
           labelClass: marker.labelClass.replace(" fadePins", "")
@@ -85,7 +85,7 @@ export class Point {
           labelClass: marker.labelClass.replace(" fadePins", "")
         });
       });
-      self.setEvents(false);
+      self.setHoverEvents(false);
     });
 
   }
@@ -116,7 +116,11 @@ export class Point {
     });
   }
 
-  setEvents(ignoreZindex=false) {
+  setHoverEvents(ignoreZindex=false) {
+
+    // set click events here.
+    this.setClickEvents(ignoreZindex);
+
     var self = this;
     this.markers.forEach(function(marker) {
       var mouseOverListener = marker.addListener('mouseover', function(e) {
@@ -147,7 +151,9 @@ export class Point {
           this.setZIndex(5000);
         }
       });
+
       var mouseOutListener = marker.addListener('mouseout', function() {
+
         // First, remove the hover state of the marker
         marker.setOptions({
           zIndex: 100,
@@ -163,6 +169,28 @@ export class Point {
     });
   }
 
+  setClickEvents(ignoreZindex=false) {
+    this.markers.forEach(function(marker) {
+      var mouseOverListener = marker.addListener('click', function(e) {
+        var target = e.target || e.srcElement;
+        var m = this;
+
+        var popperPlacement = 'top';
+
+        var popper = new Popper(
+          target, {
+            content: 'via click!',
+            allowHtml: true,
+            classNames: ['popper', 'clicked']
+          }, {
+            placement: popperPlacement,
+            boundariesElement: self.map.getDiv()
+          }
+        );
+      });
+    });
+  }
+
   removeListeners() {
     for (var i = 0; i < this.markerListeners.length; i++) {
       google.maps.event.removeListener(this.markerListeners[i]);
@@ -175,13 +203,14 @@ export class Point {
     for (var i = 0; i < this.markers.length; i++) {
       this.markers[i].setMap(null);
     }
-    // this.markers = [];
   }
 
   removePopper() {
-    var popper = document.querySelector('.popper');
-    if (popper) {
-      popper.remove();
+    var poppers = document.getElementsByClassName('popper');
+    for (var i = 0; i < poppers.length; i++) {
+      if (poppers[i].className.indexOf('clicked') === -1) {
+        poppers[i].remove();
+      }
     }
   }
 
