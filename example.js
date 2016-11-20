@@ -42,19 +42,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       // Print clusters
       pc.print();
 
-      //
-      PointPubSub.subscribe('Point.show', function(res) {
-        var results_div = document.getElementById('results');
-        results_div.innerHTML = '';
-        res.forEach(function(o, i) {
-          var p = document.body.appendChild(document.createElement("p"));
-          p.innerHTML = o.lat + ', ' + o.lng;
-          p.classList.add('PinResult');
-          p.setAttribute('data-pinindex', i);
-          results_div.appendChild(p);
-        });
-      });
-
     });
 
   });
