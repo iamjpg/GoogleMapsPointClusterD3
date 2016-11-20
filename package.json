@@ -1,8 +1,8 @@
 {
-  "name": "GoogleMapsPointCluster",
-  "version": "0.0.1",
+  "name": "GoogleMapsPointClusterD3",
+  "version": "1.0.0",
   "description": "Super fast point clustering on Google Maps via D3js",
-  "main": "index.js",
+  "main": "dist/build.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --hot --config ./webpack.base.config.js",
     "build": "webpack --progress --hide-modules --config webpack.prod.config.js",
