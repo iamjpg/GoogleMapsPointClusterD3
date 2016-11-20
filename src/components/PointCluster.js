@@ -106,10 +106,10 @@ export class PointCluster {
           self.points = window.PointClusterPoints = new Point(self.map, self.checkIfLatLngInBounds());
           self.points.print();
         } else {
-          self.points.collection = [];
+          // self.points.collection = [];
           self.paintClustersToCanvas(centerPoints);
         }
-        PointPubSub.publish('Point.show', self.points.collection)
+        // PointPubSub.publish('Point.show', self.points.collection)
       }
     }, 10);
   }

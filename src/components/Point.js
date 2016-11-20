@@ -24,9 +24,7 @@ export class Point {
     var self = this;
     this.markers = [];
     this.collection.forEach(function(o, i) {
-      if (i === 0) {
-        console.log(o)
-      }
+      // console.log(JSON.parse(JSON.stringify(o)))
       let lat = o.lat || o.location.latitude;
       let lng = o.lng || o.location.longitude;
       var m = new MarkerWithLabel({
@@ -95,8 +93,7 @@ export class Point {
   setExternalMouseEvents() {
     var self = this;
     document.addEventListener('mouseover', function(e) {
-      if (e.target.className === 'PinResult') {
-        // console.log(self.markers, self.markers.length)
+      if (e.target.className.indexOf('PinResult') > -1) {
         if (!self.markers[parseInt(e.target.getAttribute('data-pinindex'))]) {
           return false;
         }
@@ -107,7 +104,7 @@ export class Point {
       }
     });
     document.addEventListener('mouseout', function(e) {
-      if (e.target.className === 'PinResult') {
+      if (e.target.className.indexOf('PinResult') > -1) {
         if (!self.markers[parseInt(e.target.getAttribute('data-pinindex'))]) {
           return false;
         }
