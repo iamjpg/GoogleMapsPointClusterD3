@@ -160,10 +160,11 @@ export class Point {
           labelClass: this.labelClass + " PointHoverState"
         });
 
-        // Determine where to place popper right/left
-        let mapDivHalfWidth = self.map.getDiv().offsetWidth / 2;
-        let markerLeftPos = target.offsetLeft;
-        let popperPlacement = (markerLeftPos > mapDivHalfWidth) ? 'top' : 'top';
+        let popperPlacement = 'top';
+
+        if (m.get('hoverContent') === "") {
+          return false;
+        }
 
         let popper = new Popper(
           target, {
@@ -208,6 +209,10 @@ export class Point {
 
         let target = e.target || e.srcElement;
         let m = this;
+
+        if (m.get('clickContent') === "") {
+          return false;
+        }
 
         let popperPlacement = 'top';
 
