@@ -1,6 +1,3 @@
-// UnderscoreJS because it's awesome.
-import _ from 'underscore';
-
 // Import library for establishing the convex hull of a cluster of markers.
 import convexHull from '../services/convex_hull';
 
@@ -44,6 +41,8 @@ export class PointCluster {
   // setCollection() is responsible for setting the collection of lat/lng objects.
   setCollection(collection) {
 
+    var helpers = new Helpers;
+
     // Collection is required. Throw error if not set.
     if (!collection) {
       return console.error('Please pass an array of location objects. Ignore if running tests.');
@@ -51,7 +50,7 @@ export class PointCluster {
 
     // Set collection on the PointCluster object.
     this.collection = collection;
-    window.collection = _.clone(collection);
+    window.collection = helpers.clone(collection);
   }
 
   // createOverlay() is responsible for creating the div which we will append clusters and pins to.
@@ -65,8 +64,9 @@ export class PointCluster {
   }
 
   checkIfLatLngInBounds() {
+    var helpers = new Helpers;
     var self = this;
-    var arr = _.clone(this.collection);
+    var arr = helpers.clone(this.collection);
     for (var i=0; i < arr.length; ++i) {
       let lat = arr[i].lat || arr[i].location.latitude;
       let lng = arr[i].lng || arr[i].location.longitude;

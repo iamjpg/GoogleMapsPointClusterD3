@@ -3,6 +3,13 @@ export class Helpers {
 
   }
 
+  clone(o) {
+    var n = {}.toString.apply(o) == "[object Array]" ? [] : {};
+    for (var i in o)
+      n[i] = typeof o[i] == 'object' ? this.clone(o[i]) : o[i];
+    return n;
+  }
+
   returnClusterClassObject(length) {
     var classSize,
         offset;

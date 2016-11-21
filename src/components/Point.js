@@ -26,7 +26,7 @@ export class Point {
   // clicks away.
   setDocumentClick() {
     const self = this;
-    document.addEventListener('click', function (e) {
+    document.addEventListener('click', function(e) {
       const target = e.target;
       if (target.className.indexOf('clicked') === -1) {
         self.removePopper(true);
@@ -146,7 +146,7 @@ export class Point {
   }
 
   // Set the hover events.
-  setHoverEvents(ignoreZindex=false) {
+  setHoverEvents(ignoreZindex = false) {
 
     // set click events here.
     this.setClickEvents(ignoreZindex);
@@ -205,7 +205,7 @@ export class Point {
   }
 
   // Set the click events.
-  setClickEvents(ignoreZindex=false) {
+  setClickEvents(ignoreZindex = false) {
 
     const self = this;
 
@@ -255,7 +255,7 @@ export class Point {
   }
 
   // Remove the poppers either hover or click.
-  removePopper(clicked=false) {
+  removePopper(clicked = false) {
     let poppers = document.getElementsByClassName('popper');
     for (let i = 0; i < poppers.length; i++) {
       if (!clicked && poppers[i].className.indexOf('clicked') === -1) {
