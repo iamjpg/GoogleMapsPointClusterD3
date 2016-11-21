@@ -2,4 +2,7 @@
 import styles from './sass/main.scss';
 
 // Import the PointCluster object
-import './components/PointCluster';
+import { PointCluster } from './components/PointCluster';
+
+// Exporting PointCluster Object to window for global/general use.
+window.PointCluster = PointCluster;
