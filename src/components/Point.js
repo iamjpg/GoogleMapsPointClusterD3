@@ -77,7 +77,9 @@ export class Point {
 
     this.oms.addListener('spiderfy', function(markers, event) {
       self.removeUniversalPointHoverState();
-      self.removePopper();
+      requestAnimationFrame(() => {
+        self.removePopper(true);
+      });
       self.markers.forEach(function(marker) {
         marker.setOptions({
           zIndex: 1000,

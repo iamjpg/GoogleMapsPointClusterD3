@@ -101,7 +101,6 @@ export class PointCluster {
     var overlayInterval = setInterval(function() {
       if (document.getElementById('point_cluster_overlay')) {
         clearInterval(overlayInterval);
-        console.log(self.checkIfLatLngInBounds().length)
         if (self.checkIfLatLngInBounds().length <= self.threshold) {
           self.overlay.setMap(null);
           self.points = window.PointClusterPoints = new Point(self.map, self.checkIfLatLngInBounds());
