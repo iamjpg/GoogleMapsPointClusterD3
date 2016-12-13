@@ -1,7 +1,7 @@
 // Import library for establishing the convex hull of a cluster of markers.
 import convexHull from '../services/convex_hull';
 
-// Import the simple overlay object which allows us to add object to the Google Maps instance.
+// Import the simple overlay object which allows us to add objects to the Google Maps instance.
 import Overlay from '../services/overlay';
 
 // Import the point class which transfers from clusters to markers when under the threshold.
@@ -9,6 +9,10 @@ import { Point } from './Point';
 
 // Various helpers to, well, help.
 import { Helpers } from '../services/Helpers';
+
+// Import the point publish subscribe pattern.
+import PointPubSub from 'vanilla-pubsub';
+window.PointPubSub = PointPubSub;
 
 // PointCluster class definition.
 export class PointCluster {
@@ -97,12 +101,13 @@ export class PointCluster {
     var overlayInterval = setInterval(function() {
       if (document.getElementById('point_cluster_overlay')) {
         clearInterval(overlayInterval);
+        console.log(self.checkIfLatLngInBounds().length)
         if (self.checkIfLatLngInBounds().length <= self.threshold) {
           self.overlay.setMap(null);
           self.points = window.PointClusterPoints = new Point(self.map, self.checkIfLatLngInBounds());
           self.points.print();
+          PointPubSub.publish('Point.show', self.points.collection)
         } else {
-          // self.points.collection = [];
           self.paintClustersToCanvas(centerPoints);
         }
       }

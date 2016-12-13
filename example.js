@@ -3,19 +3,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   // Create the Google Map.
   window.map = new google.maps.Map(document.getElementById('map'), {
-    // Zoom for US.
     zoom: 6,
     center: new google.maps.LatLng(37.76487, -122.41948)
-    // Direct to pins
-    // zoom: 15,
-    // center: new google.maps.LatLng(37.76859506472946, -122.49202600000001)
   });
 
   // Construct PointCluster Object
   // @params{object}
   var pc = new PointCluster({
     map: map, // Pass in your map intance.
-    clusterRange: 150, // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
+    clusterRange: 250, // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
     threshold: 300, // Threshold is the number of results before showing markers,
     clusterRgba: '255, 0, 102, .8', // Change the background of the cluster icon. RGBA only.
     clusterBorder: '5px solid #dcdcdc', // Change the border around the icon. HEX only.
@@ -42,6 +38,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       // Print clusters
       pc.print();
+
+      PointPubSub.subscribe('Point.show', function(res) {
+        var results_div = document.getElementById('results');
+        results_div.innerHTML = '';
+        res.forEach(function(o, i) {
+          var p = document.body.appendChild(document.createElement("p"));
+          p.innerHTML = o.lat + ', ' + o.lng;
+          p.classList.add('PinResult');
+          p.setAttribute('data-pinindex', i);
+          results_div.appendChild(p);
+        });
+      });
 
     });
 
