@@ -39,6 +39,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
       // Print clusters
       pc.print();
 
+      PointPubSub.subscribe('Point.count', function(res) {
+        var container = document.getElementById('count');
+        container.innerHTML = 'Currently showing <b>' + res + '</b> points.'
+
+        if (parseInt(res) > pc.threshold) {
+          var results_div = document.getElementById('results');
+          results_div.innerHTML = '';
+          container.innerHTML = container.innerHTML + ' To see markers, get below the threshold of ' + pc.threshold + ' points.'
+        }
+      });
+
       PointPubSub.subscribe('Point.show', function(res) {
         var results_div = document.getElementById('results');
         results_div.innerHTML = '';

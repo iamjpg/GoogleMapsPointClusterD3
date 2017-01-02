@@ -2,6 +2,10 @@
 
 A simple to use, very fast, point clustering library for Google maps. Uses other amazing open source projects to accomplish goal. Credits below.
 
+### Demo
+
+[Clusering Demo Here](http://iamjpg.github.io/GoogleMapsPointClusterD3/)
+
 ### First, a thank you to the open source libraries used in this project.
 
 1. [D3JS](https://d3js.org/) - Without it the complex quadtree math would have been impossible for my tiny brain.
@@ -19,3 +23,7 @@ Also, a special thank you to these D3 projects and articles that allowed me to f
 IMO the current Google Maps Cluster library, [See library here](https://github.com/googlemaps/js-marker-clusterer), is really inefficient when dealing with massive amounts of points as it creates a Google Maps Marker object for each point before clustering them. I figured there had to be a better way.
 
 ###  Implementation
+
+Project isn't quite finished yet. In the meantime you can see the implementation in example.js for now.
+
+Implementation details to come.

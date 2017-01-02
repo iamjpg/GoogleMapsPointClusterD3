@@ -97,7 +97,7 @@ export class PointCluster {
 
     if (self.points) { self.points.remove(); }
 
-    // Unfortunate setInterval as it takes a second for Google to append their overlay div.
+    // Unfortunate setInterval as it takes a moment for Google to append their overlay div. Possibly refactor with requestAnimationFrame().
     var overlayInterval = setInterval(function() {
       if (document.getElementById('point_cluster_overlay')) {
         clearInterval(overlayInterval);
@@ -105,8 +105,10 @@ export class PointCluster {
           self.overlay.setMap(null);
           self.points = window.PointClusterPoints = new Point(self.map, self.checkIfLatLngInBounds());
           self.points.print();
+          PointPubSub.publish('Point.count', self.points.collection.length)
           PointPubSub.publish('Point.show', self.points.collection)
         } else {
+          PointPubSub.publish('Point.count', self.checkIfLatLngInBounds().length)
           self.paintClustersToCanvas(centerPoints);
         }
       }

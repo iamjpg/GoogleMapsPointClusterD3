@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Google Maps Point Clustering with D3.</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" />
     <style>
       body {
         margin: 0;
@@ -19,22 +20,33 @@
         width: 100%;
         height: 100%;
       }
-      #results {
+      #results-container {
         position: fixed;
         top: 0;
         right: 0;
         bottom: 0;
         width: 25%;
-        padding: 0 20px;
+        padding: 20px;
         box-sizing: border-box;
         overflow-y: auto;
+      }
+      #results {
+        margin-top: 20px;
+      }
+      #results > p {
+        cursor: pointer;
       }
     </style>
   </head>
   <body>
     <div id="map-container">
       <div id="map"></div>
-      <div id="results"></div>
+      <div id="results-container">
+        <div id="count"></div>
+        <div id="results">
+        
+        </div>
+      </div>
     </div>
 
     <script src="//maps.google.com/maps/api/js?key=AIzaSyDciDh5LCPwyxG8tml6998d80mlukEj8Q4&libraries=drawing,places,geometry"></script>
