@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --hot --config ./webpack.base.config.js",
     "build": "webpack --progress --hide-modules --config webpack.prod.config.js",
-    "test": "mocha --compilers ejs:./node_modules/ejsify/index.js,js:./node_modules/babel-core/register",
+    "test": "open http://localhost:8080/test.html",
     "docco": "docco src/**/*.js"
   },
   "author": "JP Given <jgiven@gmail.com> (http://johnpatrickgiven.com)",
