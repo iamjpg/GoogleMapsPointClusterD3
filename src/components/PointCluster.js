@@ -37,6 +37,7 @@ export class PointCluster {
     this.polygonStrokeWeight = options.polygonStrokeWeight || '4';
     this.polygonFillColor = options.polygonFillColor || '#336699';
     this.polygonFillOpacity = options.polygonFillOpacity || '0.2';
+    this.customPinClickBehavior = options.customPinClickBehavior || false;
 
     // Set map events.
     this.setMapEvents();
@@ -103,7 +104,7 @@ export class PointCluster {
         clearInterval(overlayInterval);
         if (self.checkIfLatLngInBounds().length <= self.threshold) {
           self.overlay.setMap(null);
-          self.points = window.PointClusterPoints = new Point(self.map, self.checkIfLatLngInBounds());
+          self.points = window.PointClusterPoints = new Point(self.map, self.checkIfLatLngInBounds(), self.customPinClickBehavior);
           self.points.print();
           PointPubSub.publish('Point.count', self.points.collection.length)
           PointPubSub.publish('Point.show', self.points.collection)
@@ -209,7 +210,9 @@ export class PointCluster {
     for (var i = 0; i < points.length; i++) {
       latlngbounds.extend(points[i]);
     }
-    this.map.fitBounds(latlngbounds);
+    requestAnimationFrame(function() {
+      self.map.fitBounds(latlngbounds);
+    })
   }
 
   returnPointsRaw() {

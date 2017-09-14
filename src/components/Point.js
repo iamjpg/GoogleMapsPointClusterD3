@@ -6,10 +6,11 @@ import Popper from '../services/popper';
 export class Point {
 
   // Constructor -> { options } object
-  constructor(map, collection) {
+  constructor(map, collection, customPinClickBehavior=false) {
     this.map = map;
     this.collection = collection;
     this.markerListeners = []
+    this.customPinClickBehavior = customPinClickBehavior;
     this.setExternalMouseEvents();
     this.setDocumentClick();
     this.oms = new OverlappingMarkerSpiderfier(this.map, {
@@ -208,6 +209,12 @@ export class Point {
 
   // Set the click events.
   setClickEvents(ignoreZindex = false) {
+
+    console.log(this.customPinClickBehavior)
+
+    if (this.customPinClickBehavior) {
+      return false;
+    }
 
     const self = this;
 
