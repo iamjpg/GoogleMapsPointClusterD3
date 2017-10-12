@@ -1,7 +1,6 @@
 // Import the MarkerWithLabel library.
 import MarkerWithLabel from 'markerwithlabel';
 import OverlappingMarkerSpiderfier from '../services/spider-marker';
-import Popper from '../services/popper';
 
 export class Point {
 
@@ -22,6 +21,28 @@ export class Point {
       legWeight: 3,
       usualLegZIndex: 25000
     });
+  }
+
+  returnHoverTemplate() {
+    const template = `
+      <div id="popper-container">
+        <div class="arrow_box">
+
+        </div>
+      </div>
+    `
+    return template;
+  }
+
+  returnClickTemplate() {
+    const template = `
+      <div id="popper-container-clicked">
+        <div class="arrow_box_clicked">
+
+        </div>
+      </div>
+    `
+    return template;
   }
 
   // Document click is to simply remove a clicked popper if user
@@ -61,6 +82,16 @@ export class Point {
       self.markers.push(m);
 
       self.oms.addMarker(m)
+
+      if (document.querySelector('#popper-container') === null) {
+        const fragHover = document.createRange().createContextualFragment(self.returnHoverTemplate());
+        document.body.appendChild(fragHover);
+      }
+
+      if (document.querySelector('#popper-container-clicked') === null) {
+        const fragClick = document.createRange().createContextualFragment(self.returnClickTemplate());
+        document.body.appendChild(fragClick);
+      }
 
     });
 
@@ -176,21 +207,39 @@ export class Point {
           labelClass: this.labelClass + " PointHoverState"
         });
 
-        let popperPlacement = 'top';
-
         if (m.get('hoverContent') === "") {
           return false;
         }
 
-        let popper = new Popper(
-          target, {
-            content: m.get('hoverContent'),
-            allowHtml: true,
-          }, {
-            placement: popperPlacement,
-            boundariesElement: self.map.getDiv()
-          }
+        // Pointers
+        let map = this.map;
+
+        // Get projection data
+        let projection = map.getProjection();
+        let topRight = projection.fromLatLngToPoint(map.getBounds().getNorthEast());
+        let bottomLeft = projection.fromLatLngToPoint(map.getBounds().getSouthWest());
+        let scale = Math.pow(2, map.getZoom());
+
+        // Create point
+        var point = projection.fromLatLngToPoint(
+          new google.maps.LatLng(m.internalPosition.lat(), m.internalPosition.lng())
         );
+
+        // Show the bubble
+        let elem = document.querySelector('#popper-container');
+        let inner = document.querySelector('.arrow_box');
+        inner.innerHTML = m.get('hoverContent');
+        elem.style.display = 'block';
+
+        // Get the x/y based on the scale.
+        let containerHeight = elem.offsetHeight;
+        let containerWidth = elem.offsetWidth;
+        var posLeft = parseInt(((point.x - bottomLeft.x) * scale) - (containerWidth / 2 + 7));
+        var posTop = parseInt(((point.y - topRight.y) * scale) - (20 + containerHeight));
+
+        elem.style.top = `${posTop}px`;
+        elem.style.left = `${posLeft}px`;
+
         if (!ignoreZindex) {
           this.setZIndex(5000);
         }
@@ -223,7 +272,7 @@ export class Point {
     const self = this;
 
     this.markers.forEach(function(marker) {
-      let mouseOverListener = marker.addListener('click', function(e) {
+      let mouseClickListener = marker.addListener('click', function(e) {
 
         // Remove any clicked poppers...
         self.removePopper(true);
@@ -235,18 +284,35 @@ export class Point {
           return false;
         }
 
-        let popperPlacement = 'top';
+        // Pointers
+        let map = this.map;
 
-        let popper = new Popper(
-          target, {
-            content: m.get('clickContent'),
-            allowHtml: true,
-            classNames: ['popper', 'clicked']
-          }, {
-            placement: popperPlacement,
-            boundariesElement: self.map.getDiv()
-          }
+        // Get projection data
+        let projection = map.getProjection();
+        let topRight = projection.fromLatLngToPoint(map.getBounds().getNorthEast());
+        let bottomLeft = projection.fromLatLngToPoint(map.getBounds().getSouthWest());
+        let scale = Math.pow(2, map.getZoom());
+
+        // Create point
+        var point = projection.fromLatLngToPoint(
+          new google.maps.LatLng(m.internalPosition.lat(), m.internalPosition.lng())
         );
+
+        // Show the bubble
+        let elem = document.querySelector('#popper-container-clicked');
+        let inner = document.querySelector('.arrow_box_clicked');
+        inner.innerHTML = m.get('clickContent');
+        elem.style.display = 'block';
+
+        // Get the x/y based on the scale.
+        let containerHeight = elem.offsetHeight;
+        let containerWidth = elem.offsetWidth;
+        var posLeft = parseInt(((point.x - bottomLeft.x) * scale) - (containerWidth / 2 + 7));
+        var posTop = parseInt(((point.y - topRight.y) * scale) - (20 + containerHeight));
+
+        elem.style.top = `${posTop}px`;
+        elem.style.left = `${posLeft}px`;
+
       });
     });
   }
@@ -269,13 +335,12 @@ export class Point {
 
   // Remove the poppers either hover or click.
   removePopper(clicked = false) {
-    let poppers = document.getElementsByClassName('popper');
-    for (let i = 0; i < poppers.length; i++) {
-      if (!clicked && poppers[i].className.indexOf('clicked') === -1) {
-        poppers[i].remove();
-      } else if (clicked) {
-        poppers[i].remove();
-      }
+    let popper = document.querySelector('#popper-container');
+    popper.style.display = 'none';
+
+    if (clicked) {
+      let popper_clicked = document.querySelector('#popper-container-clicked');
+      popper_clicked.style.display = 'none';
     }
   }
 

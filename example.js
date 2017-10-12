@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     d3.json('example.json', function(error, res) {
 
       res.data.result_list.forEach(function(o, i) {
-        o.hoverData = "Hello<br>" + o.lat + " : " + o.lng;
+        o.hoverData = o.lat + " : " + o.lng;
         o.clickData = "You've clicked on this locaton:<br />" + o.lat + " : " + o.lng;
       });
 
