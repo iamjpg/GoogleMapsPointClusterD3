@@ -37,6 +37,7 @@ export class PointCluster {
     this.polygonStrokeWeight = options.polygonStrokeWeight || '4';
     this.polygonFillColor = options.polygonFillColor || '#336699';
     this.polygonFillOpacity = options.polygonFillOpacity || '0.2';
+    this.customPinHoverBehavior = options.customPinHoverBehavior || false;
     this.customPinClickBehavior = options.customPinClickBehavior || false;
 
     // Set map events.
@@ -104,7 +105,7 @@ export class PointCluster {
         clearInterval(overlayInterval);
         if (self.checkIfLatLngInBounds().length <= self.threshold) {
           self.overlay.setMap(null);
-          self.points = window.PointClusterPoints = new Point(self.map, self.checkIfLatLngInBounds(), self.customPinClickBehavior);
+          self.points = window.PointClusterPoints = new Point(self.map, self.checkIfLatLngInBounds(), self.customPinClickBehavior, self.customPinHoverBehavior);
           self.points.print();
           PointPubSub.publish('Point.count', self.points.collection.length)
           PointPubSub.publish('Point.show', self.points.collection)
@@ -191,7 +192,7 @@ export class PointCluster {
   setMapEvents() {
     var self = this;
     google.maps.event.addListener(this.map, 'idle', function() {
-      // self.removeElements();
+
       if (self.collection) {
         self.print();
       }
@@ -202,17 +203,31 @@ export class PointCluster {
     var self = this;
     var collectionIds = el.dataset.latlngids.split(',');
     var points = [];
+    var points_alt = [];
     collectionIds.forEach(function(o, i) {
       var pointer = self.collection[parseInt(o)];
-      points.push(new google.maps.LatLng(pointer.lat, pointer.lng))
+      points_alt.push({
+        x: pointer.lat,
+        y: pointer.lng
+      });
+    });
+    points_alt = convexHull(points_alt);
+    points_alt.forEach(function(o, i) {
+      points.push(new google.maps.LatLng(o.x, o.y));
     });
     var latlngbounds = new google.maps.LatLngBounds();
     for (var i = 0; i < points.length; i++) {
       latlngbounds.extend(points[i]);
     }
+
     requestAnimationFrame(function() {
-      self.map.fitBounds(latlngbounds);
-    })
+      // self.map.fitBounds(latlngbounds);
+      const center_lat = latlngbounds.getCenter().lat();
+      const center_lng = latlngbounds.getCenter().lng();
+      const current_zoom = self.map.getZoom();
+      self.map.setCenter(new google.maps.LatLng(center_lat, center_lng));
+      self.map.setZoom(current_zoom + 1);
+    });
   }
 
   returnPointsRaw() {

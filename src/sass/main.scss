@@ -2,7 +2,7 @@ $normal-pin-size: 16px;
 $hidden-pin-size: 4px;
 .point-cluster {
   position: absolute;
-  color: #fff;
+  color: #fff !important;
   z-index: 2000;
   font-family: Helvetica, Verdana, Arial, sans-serif;
   width: 50px;
@@ -14,19 +14,19 @@ $hidden-pin-size: 4px;
 .point-cluster.large {
   width: 50px;
   height: 50px;
-  line-height: 50px;
+  line-height: 50px !important;
   border-radius: 50px;
 }
 .point-cluster.medium {
   width: 40px;
   height: 40px;
-  line-height: 40px;
+  line-height: 40px !important;
   border-radius: 40px;
 }
 .point-cluster.small {
   width: 30px;
   height: 30px;
-  line-height: 30px;
+  line-height: 30px !important;
   border-radius: 30px;
 }
 #point_cluster_overlay {
@@ -37,9 +37,10 @@ $hidden-pin-size: 4px;
   background: #0f2b5b;
   box-shadow: 0 0 5px 1px #ccc;
   border: 2px solid #FFF;
-  height: 16px;
-  width: 16px;
-  border-radius: 16px;
+  color: #fff;
+  height: 10px;
+  width: 10px;
+  border-radius: 10px;
   cursor: pointer;
 }
 .fadePins {

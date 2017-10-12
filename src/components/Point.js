@@ -3,14 +3,17 @@ import MarkerWithLabel from 'markerwithlabel';
 import OverlappingMarkerSpiderfier from '../services/spider-marker';
 import Popper from '../services/popper';
 
+window.Popper = Popper;
+
 export class Point {
 
   // Constructor -> { options } object
-  constructor(map, collection, customPinClickBehavior=false) {
+  constructor(map, collection, customPinClickBehavior=false, customPinHoverBehavior=false) {
     this.map = map;
     this.collection = collection;
     this.markerListeners = []
     this.customPinClickBehavior = customPinClickBehavior;
+    this.customPinHoverBehavior = customPinHoverBehavior;
     this.setExternalMouseEvents();
     this.setDocumentClick();
     this.oms = new OverlappingMarkerSpiderfier(this.map, {
@@ -47,6 +50,7 @@ export class Point {
         map: self.map,
         hoverContent: o.hoverData || "",
         clickContent: o.clickData || "",
+        labelContent: '',
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           scale: 0
@@ -154,6 +158,10 @@ export class Point {
     // set click events here.
     this.setClickEvents(ignoreZindex);
 
+    if (this.customPinHoverBehavior) {
+      return false;
+    }
+
     const self = this;
     this.markers.forEach(function(marker) {
       let mouseOverListener = marker.addListener('mouseover', function(e) {
@@ -209,8 +217,6 @@ export class Point {
 
   // Set the click events.
   setClickEvents(ignoreZindex = false) {
-
-    console.log(this.customPinClickBehavior)
 
     if (this.customPinClickBehavior) {
       return false;
