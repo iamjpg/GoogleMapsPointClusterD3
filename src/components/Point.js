@@ -85,12 +85,12 @@ export class Point {
 
       if (document.querySelector('#popper-container') === null) {
         const fragHover = document.createRange().createContextualFragment(self.returnHoverTemplate());
-        document.body.appendChild(fragHover);
+        self.map.getDiv().appendChild(fragHover);
       }
 
       if (document.querySelector('#popper-container-clicked') === null) {
         const fragClick = document.createRange().createContextualFragment(self.returnClickTemplate());
-        document.body.appendChild(fragClick);
+        self.map.getDiv().appendChild(fragClick);
       }
 
     });
