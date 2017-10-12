@@ -3,8 +3,6 @@ import MarkerWithLabel from 'markerwithlabel';
 import OverlappingMarkerSpiderfier from '../services/spider-marker';
 import Popper from '../services/popper';
 
-window.Popper = Popper;
-
 export class Point {
 
   // Constructor -> { options } object
