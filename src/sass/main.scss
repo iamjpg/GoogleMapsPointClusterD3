@@ -56,12 +56,12 @@ $hidden-pin-size: 4px;
   cursor: pointer;
 }
 
-#popper-container {
+#popper-container, #popper-container-clicked {
   position: absolute;
   z-index: 1000;
   background: pink;
 
-  .arrow_box {
+  .arrow_box, .arrow_box_clicked {
     position: relative;
     background: #FFF;
     display: inline-block;
@@ -72,7 +72,7 @@ $hidden-pin-size: 4px;
     font-weight: bold;
   }
 
-  .arrow_box:after {
+  .arrow_box:after, .arrow_box_clicked:after {
     content: "";
     position: absolute;
     width: 0;
