@@ -28,10 +28,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
   google.maps.event.addListenerOnce(map, 'idle', function() {
 
     // Get data with d3 JSON call. You can obviously use whatever you please to grab your data.
-    d3.json('example.json', function(error, res) {
+    d3.json('example2.json', function(error, res) {
 
       res.data.result_list.forEach(function(o, i) {
         o.hoverData = o.lat + " : " + o.lng;
+        o.dataset = [{bar: 'boop'}]
         o.clickData = "You've clicked on this locaton:<br />" + o.lat + " : " + o.lng;
       });
 
@@ -51,6 +52,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
           container.innerHTML = container.innerHTML + ' To see markers, get below the threshold of ' + pc.threshold + ' points.'
         }
       });
+
+      PointPubSub.subscribe('Point.click', function(target) {
+        console.log(target)
+      })
 
       PointPubSub.subscribe('Point.show', function(res) {
         var results_div = document.getElementById('results');

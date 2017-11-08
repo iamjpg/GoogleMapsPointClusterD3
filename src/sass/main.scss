@@ -60,6 +60,7 @@ $hidden-pin-size: 4px;
   position: absolute;
   z-index: 1000;
   background: pink;
+  display: none;
 
   .arrow_box, .arrow_box_clicked {
     position: relative;

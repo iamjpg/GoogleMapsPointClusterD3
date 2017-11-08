@@ -76,7 +76,8 @@ export class Point {
         },
         draggable: false,
         labelAnchor: new google.maps.Point(10, 10),
-        labelClass: 'marker-point'
+        labelClass: 'marker-point',
+        data: o.dataset
       });
 
       self.markers.push(m);
@@ -265,14 +266,17 @@ export class Point {
   // Set the click events.
   setClickEvents(ignoreZindex = false) {
 
-    if (this.customPinClickBehavior) {
-      return false;
-    }
-
     const self = this;
 
     this.markers.forEach(function(marker) {
       let mouseClickListener = marker.addListener('click', function(e) {
+
+        // PubSub this event - passing the element.
+        PointPubSub.publish('Point.click', e)
+
+        if (self.customPinClickBehavior) {
+          return false;
+        }
 
         // Remove any clicked poppers...
         self.removePopper(true);
