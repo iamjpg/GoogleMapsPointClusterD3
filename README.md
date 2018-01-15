@@ -19,10 +19,75 @@ Also, a special thank you to these D3 projects and articles that allowed me to f
 
 ### Why?
 
-IMO the current Google Maps Cluster library, [See library here](https://github.com/googlemaps/js-marker-clusterer), is really inefficient when dealing with massive amounts of points as it creates a Google Maps Marker object for each point before clustering them. I figured there had to be a better way.
+IMO, the current Google Maps Cluster library, [See library here](https://github.com/googlemaps/js-marker-clusterer), is really inefficient when dealing with massive amounts of points as it creates a Google Maps Marker object for each point before clustering them.
 
-###  Implementation
+###  Basic Implementation
 
-Project isn't quite finished yet. In the meantime you can see the implementation in example.js for now.
+##### Required Libraries
 
-Implementation details to come.
+```
+<script src="//maps.google.com/maps/api/js?key={YOUR_KEY}"></script>
+<script src="//d3js.org/d3.v4.min.js"></script>
+<script src="//d3js.org/d3-quadtree.v1.min.js"></script>
+```
+
+##### Expected data structure
+
+```javascript
+// example.js
+{
+  "data": {
+    "result_list": [
+      {
+        "lat": 39.498234,
+        "lng": -121.54583,
+        ... more
+      },
+      ... more...
+    ]
+  }
+}
+```
+
+##### Create a Point Cluster Instance
+
+```javascript
+var pc = new PointCluster({
+    map: map, // Pass in your map intance.
+    clusterRange: 300, // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
+    threshold: 300, // Threshold is the number of results before showing markers,
+    clusterRgba: '255, 0, 102, .8', // Change the background of the cluster icon. RGBA only.
+    clusterBorder: '5px solid #dcdcdc', // Change the border around the icon. HEX only.
+    polygonStrokeColor: '#0f0f0e', // Polygon stroke color.
+    polygonStrokeOpacity: '0.5', // Polygon stroke opacity.
+    polygonStrokeWeight: '4', // Polygon stroke weight.
+    polygonFillColor: '#0f0f0e', // Polygom fill color.
+    polygonFillOpacity: '0.2', // Polygon fill color.
+    customPinHoverBehavior: false, // If the user of the lib would rather not use internal overlay and opt for their own hover behavior.
+    customPinClickBehavior: false // If the user of the lib would rather not use internal overlay and opt for their own click behavior.
+});
+```
+
+##### Get your data and set your point collection on the instance
+
+```javascript
+// Get example.js
+d3.json('example.json', function(error, res) {
+  // In this example, we're mutating the results to add data attributes, hover data, and click data. This can obviously be done without mutation... 
+  res.data.result_list.forEach(function(o, i) {
+    o.hoverData = o.lat + " : " + o.lng;
+    o.dataset = [{foo: 'bar'}] // Dataset is an array of objects. This would add: data-foo="bar" to marker points.
+    o.clickData = "You've clicked on this locaton:<br />" + o.lat + " : " + o.lng; // Data to present on click of a marker point
+  });
+})
+```
+
+##### Set the collection and print
+
+```javascript
+// Set the collection of location objects.
+pc.setCollection(res.data.result_list);
+
+// Print clusters
+pc.print();
+```
