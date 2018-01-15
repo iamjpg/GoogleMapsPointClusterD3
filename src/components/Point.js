@@ -235,7 +235,7 @@ export class Point {
         // Get the x/y based on the scale.
         let containerHeight = elem.offsetHeight;
         let containerWidth = elem.offsetWidth;
-        var posLeft = parseInt(((point.x - bottomLeft.x) * scale) - (containerWidth / 2 + 7));
+        var posLeft = parseInt(((point.x - bottomLeft.x) * scale) - (containerWidth / 2 + 4));
         var posTop = parseInt(((point.y - topRight.y) * scale) - (20 + containerHeight));
 
         elem.style.top = `${posTop}px`;
@@ -311,7 +311,7 @@ export class Point {
         // Get the x/y based on the scale.
         let containerHeight = elem.offsetHeight;
         let containerWidth = elem.offsetWidth;
-        var posLeft = parseInt(((point.x - bottomLeft.x) * scale) - (containerWidth / 2 + 7));
+        var posLeft = parseInt(((point.x - bottomLeft.x) * scale) - (containerWidth / 2 + 4));
         var posTop = parseInt(((point.y - topRight.y) * scale) - (20 + containerHeight));
 
         elem.style.top = `${posTop}px`;
