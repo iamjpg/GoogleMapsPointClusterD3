@@ -31,10 +31,7 @@ describe('#createOverlay()', function () {
 
 describe('#checkIfLatLngInBounds()', function () {
   it('should have two lat lngs but only return one.', function () {
-    // Timeout because undefined map issues.
-    setTimeout(function () {
-      var arr = pc.checkIfLatLngInBounds()
-      chai.assert.strictEqual(arr.length, 1, 'Two points; only one in bounds - so one returned.');
-    }, 500)
+    var arr = pc.checkIfLatLngInBounds()
+    chai.assert.strictEqual(arr.length, 1, 'Two points; only one in bounds - so one returned.');
   });
 })
