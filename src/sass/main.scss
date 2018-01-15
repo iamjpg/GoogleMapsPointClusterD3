@@ -1,21 +1,93 @@
+$normal-pin-size: 16px;
+$hidden-pin-size: 4px;
 .point-cluster {
   position: absolute;
-  color: #fff;
+  color: #fff !important;
   z-index: 2000;
   font-family: Helvetica, Verdana, Arial, sans-serif;
   width: 50px;
   height: 50px;
   text-align: center;
-  line-height: 50px;
   font-size: 11px;
   cursor: pointer;
 }
 .point-cluster.large {
-  background: url('http://images-static.moxiworks.com/static/images/br/clusterLarge.png');
+  width: 50px;
+  height: 50px;
+  line-height: 50px !important;
+  border-radius: 50px;
 }
 .point-cluster.medium {
-  background: url('http://images-static.moxiworks.com/static/images/br/clusterMedium.png');
+  width: 40px;
+  height: 40px;
+  line-height: 40px !important;
+  border-radius: 40px;
 }
 .point-cluster.small {
-  background: url('http://images-static.moxiworks.com/static/images/br/clusterSmall.png');
+  width: 30px;
+  height: 30px;
+  line-height: 30px !important;
+  border-radius: 30px;
+}
+#point_cluster_overlay {
+  position: absolute;
+}
+.marker-point {
+  box-sizing: border-box;
+  background: #0f2b5b;
+  box-shadow: 0 0 5px 1px #ccc;
+  border: 2px solid #FFF;
+  color: #fff;
+  height: 16px;
+  width: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+}
+.fadePins {
+  border: 0 solid #FFF;
+  height: $hidden-pin-size;
+  width: $hidden-pin-size;
+  border-radius: $hidden-pin-size;
+}
+.PointHoverState {
+  -webkit-box-shadow: 0 0 5px 20px rgba(146, 155, 168, 0.3);
+  box-shadow: 0 0 5px 20px rgba(146, 155, 168, 0.3);
+  background: red;
+  cursor: pointer;
+}
+
+#popper-container, #popper-container-clicked {
+  position: absolute;
+  z-index: 1000;
+  background: pink;
+  display: none;
+
+  .arrow_box, .arrow_box_clicked {
+    position: relative;
+    background: #FFF;
+    display: inline-block;
+    padding: 5px 10px;
+    box-shadow: 0px 3px 3px 0 rgba(0, 0, 0, 0.4);
+    border-radius: 3px;
+    font-size: 12px !important;
+    font-weight: bold;
+  }
+
+  .arrow_box:after, .arrow_box_clicked:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    margin-left: 0;
+    bottom: 0;
+    left: calc(50% - 5px);
+    box-sizing: border-box;
+    border: 1em solid black;
+    border-color: transparent transparent #FFF #FFF;
+    transform-origin: 0 0;
+    transform: rotate(-45deg);
+    box-shadow: -3px 3px 3px 0 rgba(0, 0, 0, 0.4);
+    border-width: 5px;
+    top: 100%;
+  }
 }

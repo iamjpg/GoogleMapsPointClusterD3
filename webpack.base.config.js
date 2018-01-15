@@ -1,5 +1,5 @@
 module.exports = {
-  entry: './src/main.js',
+  entry: './src/index.js',
   output: {
     path: './dist',
     publicPath: 'dist/',
@@ -16,7 +16,7 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loaders: ["style", "css", "sass"]
+        loaders: ["style", "css", "sass?sourceMap"]
       },
       {
         test: /\.jsx?$/,

@@ -2,8 +2,7 @@ var webpack = require('webpack')
 var config = require('./webpack.base.config')
 
 config.plugins = (config.plugins || []).concat([
-  // this allows uglify to strip all warnings
-  // from Vue.js source code.
+  // this allows uglify to strip all warnings.
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: '"production"'

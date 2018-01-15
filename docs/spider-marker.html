@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>spider-marker.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="Point.html">
+                  Point.js
+                </a>
+              
+                
+                <a class="source" href="PointCluster.html">
+                  PointCluster.js
+                </a>
+              
+                
+                <a class="source" href="PubSub.html">
+                  PubSub.js
+                </a>
+              
+                
+                <a class="source" href="convex_hull.html">
+                  convex_hull.js
+                </a>
+              
+                
+                <a class="source" href="helpers.html">
+                  helpers.js
+                </a>
+              
+                
+                <a class="source" href="overlay.html">
+                  overlay.js
+                </a>
+              
+                
+                <a class="source" href="popper.html">
+                  popper.js
+                </a>
+              
+                
+                <a class="source" href="spider-marker.html">
+                  spider-marker.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>spider-marker.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/*
+ OverlappingMarkerSpiderfier
+https://github.com/jawj/OverlappingMarkerSpiderfier
+Copyright (c) 2011 - 2013 George MacKerron
+Released under the MIT licence: http://opensource.org/licenses/mit-license
+Note: The Google Maps API v3 must be included *before* this code
+*/</span>
+<span class="hljs-keyword">var</span> y = {}.hasOwnProperty,
+  z = [].slice;
+<span class="hljs-keyword">var</span> OverlappingMarkerSpiderfier = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">v</span>(<span class="hljs-params">b, d</span>) </span>{
+    <span class="hljs-keyword">var</span> a, g, e, f;
+    <span class="hljs-keyword">this</span>.map = b;
+    <span class="hljs-literal">null</span> == d &amp;&amp; (d = {});
+    <span class="hljs-keyword">for</span> (a <span class="hljs-keyword">in</span> d) y.call(d, a) &amp;&amp; (g = d[a], <span class="hljs-keyword">this</span>[a] = g);
+    <span class="hljs-keyword">this</span>.e = <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>.constructor.g(<span class="hljs-keyword">this</span>.map);
+    <span class="hljs-keyword">this</span>.n();
+    <span class="hljs-keyword">this</span>.b = {};
+    f = [<span class="hljs-string">"click"</span>, <span class="hljs-string">"zoom_changed"</span>, <span class="hljs-string">"maptypeid_changed"</span>];
+    g = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (e = f.length; g &lt; e; g++) a = f[g], q.addListener(<span class="hljs-keyword">this</span>.map, a, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a</span>) </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">return</span> a.unspiderfy()
+      }
+    }(<span class="hljs-keyword">this</span>))
+  }
+  <span class="hljs-keyword">var</span> q, t, u, s, r, c, w, x;
+  c = v.prototype;
+  x = [v, c];
+  s = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">for</span> (r = x.length; s &lt; r; s++) u = x[s], u.VERSION = <span class="hljs-string">"0.3.3"</span>;
+  t = google.maps;
+  q = t.event;
+  r = t.MapTypeId;
+  w =
+    <span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI;
+  c.keepSpiderfied = !<span class="hljs-number">1</span>;
+  c.markersWontHide = !<span class="hljs-number">1</span>;
+  c.markersWontMove = !<span class="hljs-number">1</span>;
+  c.nearbyDistance = <span class="hljs-number">20</span>;
+  c.circleSpiralSwitchover = <span class="hljs-number">9</span>;
+  c.circleFootSeparation = <span class="hljs-number">23</span>;
+  c.circleStartAngle = w / <span class="hljs-number">12</span>;
+  c.spiralFootSeparation = <span class="hljs-number">26</span>;
+  c.spiralLengthStart = <span class="hljs-number">11</span>;
+  c.spiralLengthFactor = <span class="hljs-number">4</span>;
+  c.spiderfiedZIndex = <span class="hljs-number">1E3</span>;
+  c.usualLegZIndex = <span class="hljs-number">10</span>;
+  c.highlightedLegZIndex = <span class="hljs-number">20</span>;
+  c.event = <span class="hljs-string">"click"</span>;
+  c.minZoomLevel = !<span class="hljs-number">1</span>;
+  c.legWeight = <span class="hljs-number">1.5</span>;
+  c.legColors = {
+    <span class="hljs-attr">usual</span>: {},
+    <span class="hljs-attr">highlighted</span>: {}
+  };
+  s = c.legColors.usual;
+  u = c.legColors.highlighted;
+  s[r.HYBRID] = s[r.SATELLITE] = <span class="hljs-string">"#fff"</span>;
+  u[r.HYBRID] = u[r.SATELLITE] =
+    <span class="hljs-string">"#f00"</span>;
+  s[r.TERRAIN] = s[r.ROADMAP] = <span class="hljs-string">"#444"</span>;
+  u[r.TERRAIN] = u[r.ROADMAP] = <span class="hljs-string">"#f00"</span>;
+  c.n = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">this</span>.a = [];
+    <span class="hljs-keyword">this</span>.j = []
+  };
+  c.addMarker = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b</span>) </span>{
+    <span class="hljs-keyword">var</span> d;
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> != b._oms) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    b._oms = !<span class="hljs-number">0</span>;
+    d = [q.addListener(b, <span class="hljs-keyword">this</span>.event, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a</span>) </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">d</span>) </span>{
+        <span class="hljs-keyword">return</span> a.G(b, d)
+      }
+    }(<span class="hljs-keyword">this</span>))];
+    <span class="hljs-keyword">this</span>.markersWontHide || d.push(q.addListener(b, <span class="hljs-string">"visible_changed"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a</span>) </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">return</span> a.o(b, !<span class="hljs-number">1</span>)
+      }
+    }(<span class="hljs-keyword">this</span>)));
+    <span class="hljs-keyword">this</span>.markersWontMove || d.push(q.addListener(b, <span class="hljs-string">"position_changed"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a</span>) </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">return</span> a.o(b, !<span class="hljs-number">0</span>)
+      }
+    }(<span class="hljs-keyword">this</span>)));
+    <span class="hljs-keyword">this</span>.j.push(d);
+    <span class="hljs-keyword">this</span>.a.push(b);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
+  };
+  c.o = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b, d</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> != b._omsData &amp;&amp; (d || !b.getVisible()) &amp;&amp; <span class="hljs-literal">null</span> == <span class="hljs-keyword">this</span>.s &amp;&amp; <span class="hljs-literal">null</span> == <span class="hljs-keyword">this</span>.t) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.unspiderfy(d ? b : <span class="hljs-literal">null</span>)
+  };
+  c.getMarkers = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.a.slice(<span class="hljs-number">0</span>)
+  };
+  c.removeMarker = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b</span>) </span>{
+    <span class="hljs-keyword">var</span> d, a, g, e, f;
+    <span class="hljs-literal">null</span> != b._omsData &amp;&amp; <span class="hljs-keyword">this</span>.unspiderfy();
+    d = <span class="hljs-keyword">this</span>.m(<span class="hljs-keyword">this</span>.a, b);
+    <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> &gt; d) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    g = <span class="hljs-keyword">this</span>.j.splice(d, <span class="hljs-number">1</span>)[<span class="hljs-number">0</span>];
+    e = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (f = g.length; e &lt; f; e++) a = g[e], q.removeListener(a);
+    <span class="hljs-keyword">delete</span> b._oms;
+    <span class="hljs-keyword">this</span>.a.splice(d, <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
+  };
+  c.clearMarkers = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> b, d, a, g, e, f, c, h;
+    <span class="hljs-keyword">this</span>.unspiderfy();
+    h = <span class="hljs-keyword">this</span>.a;
+    b = g = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (f = h.length; g &lt; f; b = ++g) {
+      a = h[b];
+      d = <span class="hljs-keyword">this</span>.j[b];
+      e = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">for</span> (c = d.length; e &lt; c; e++) b = d[e], q.removeListener(b);
+      <span class="hljs-keyword">delete</span> a._oms
+    }
+    <span class="hljs-keyword">this</span>.n();
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
+  };
+  c.addListener = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b, d</span>) </span>{
+    <span class="hljs-keyword">var</span> a;
+    (<span class="hljs-literal">null</span> != (a = <span class="hljs-keyword">this</span>.b)[b] ? a[b] : a[b] = []).push(d);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
+  };
+  c.removeListener = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b, d</span>) </span>{
+    <span class="hljs-keyword">var</span> a;
+    a = <span class="hljs-keyword">this</span>.m(<span class="hljs-keyword">this</span>.b[b], d);
+    <span class="hljs-number">0</span> &gt; a || <span class="hljs-keyword">this</span>.b[b].splice(a, <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
+  };
+  c.clearListeners = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b</span>) </span>{
+    <span class="hljs-keyword">this</span>.b[b] = [];
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
+  };
+  c.trigger = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> b, d, a, g, e, f;
+    d = <span class="hljs-built_in">arguments</span>[<span class="hljs-number">0</span>];
+    b = <span class="hljs-number">2</span> &lt;= <span class="hljs-built_in">arguments</span>.length ? z.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>) : [];
+    d = <span class="hljs-literal">null</span> != (a =
+      <span class="hljs-keyword">this</span>.b[d]) ? a : [];
+    f = [];
+    g = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (e = d.length; g &lt; e; g++) a = d[g], f.push(a.apply(<span class="hljs-literal">null</span>, b));
+    <span class="hljs-keyword">return</span> f
+  };
+  c.u = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b, d</span>) </span>{
+    <span class="hljs-keyword">var</span> a, g, e, f, c;
+    e = <span class="hljs-keyword">this</span>.circleFootSeparation * (<span class="hljs-number">2</span> + b) / w;
+    g = w / b;
+    c = [];
+    <span class="hljs-keyword">for</span> (a = f = <span class="hljs-number">0</span>; <span class="hljs-number">0</span> &lt;= b ? f &lt; b : f &gt; b; a = <span class="hljs-number">0</span> &lt;= b ? ++f : --f) a = <span class="hljs-keyword">this</span>.circleStartAngle + a * g, c.push(<span class="hljs-keyword">new</span> t.Point(d.x + e * <span class="hljs-built_in">Math</span>.cos(a), d.y + e * <span class="hljs-built_in">Math</span>.sin(a)));
+    <span class="hljs-keyword">return</span> c
+  };
+  c.v = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b, d</span>) </span>{
+    <span class="hljs-keyword">var</span> a, g, e, f, c;
+    e = <span class="hljs-keyword">this</span>.spiralLengthStart;
+    a = <span class="hljs-number">0</span>;
+    c = [];
+    <span class="hljs-keyword">for</span> (g = f = <span class="hljs-number">0</span>; <span class="hljs-number">0</span> &lt;= b ? f &lt; b : f &gt; b; g = <span class="hljs-number">0</span> &lt;= b ? ++f : --f) a += <span class="hljs-keyword">this</span>.spiralFootSeparation / e + <span class="hljs-number">5E-4</span> * g, g = <span class="hljs-keyword">new</span> t.Point(d.x + e * <span class="hljs-built_in">Math</span>.cos(a), d.y + e * <span class="hljs-built_in">Math</span>.sin(a)), e += w * <span class="hljs-keyword">this</span>.spiralLengthFactor /
+      a, c.push(g);
+    <span class="hljs-keyword">return</span> c
+  };
+  c.G = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b, d</span>) </span>{
+    <span class="hljs-keyword">var</span> a, g, e, f, p, h, k, n, l, m;
+    h = <span class="hljs-literal">null</span> != b._omsData;
+    h &amp;&amp; <span class="hljs-keyword">this</span>.keepSpiderfied || (<span class="hljs-string">"mouseover"</span> === <span class="hljs-keyword">this</span>.event ? (a = <span class="hljs-keyword">this</span>, g = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">return</span> a.unspiderfy()
+    }, <span class="hljs-built_in">window</span>.clearTimeout(c.timeout), c.timeout = setTimeout(g, <span class="hljs-number">3E3</span>)) : <span class="hljs-keyword">this</span>.unspiderfy());
+    <span class="hljs-keyword">if</span> (h || <span class="hljs-keyword">this</span>.map.getStreetView().getVisible() || <span class="hljs-string">"GoogleEarthAPI"</span> === <span class="hljs-keyword">this</span>.map.getMapTypeId()) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.trigger(<span class="hljs-string">"click"</span>, b, d);
+    g = [];
+    h = [];
+    e = <span class="hljs-keyword">this</span>.nearbyDistance;
+    k = e * e;
+    p = <span class="hljs-keyword">this</span>.c(b.position);
+    m = <span class="hljs-keyword">this</span>.a;
+    n = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (l = m.length; n &lt; l; n++) e = m[n], <span class="hljs-literal">null</span> != e.map &amp;&amp; e.getVisible() &amp;&amp;
+      (f = <span class="hljs-keyword">this</span>.c(e.position), <span class="hljs-keyword">this</span>.f(f, p) &lt; k ? g.push({
+        <span class="hljs-attr">B</span>: e,
+        <span class="hljs-attr">p</span>: f
+      }) : h.push(e));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> === g.length ? <span class="hljs-keyword">this</span>.trigger(<span class="hljs-string">"click"</span>, b, d) : <span class="hljs-keyword">this</span>.H(g, h)
+  };
+  c.markersNearMarker = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b, d</span>) </span>{
+    <span class="hljs-keyword">var</span> a, g, e, f, c, h, k, n, l, m;
+    <span class="hljs-literal">null</span> == d &amp;&amp; (d = !<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == <span class="hljs-keyword">this</span>.e.getProjection()) <span class="hljs-keyword">throw</span> <span class="hljs-string">"Must wait for 'idle' event on map before calling markersNearMarker"</span>;
+    a = <span class="hljs-keyword">this</span>.nearbyDistance;
+    c = a * a;
+    e = <span class="hljs-keyword">this</span>.c(b.position);
+    f = [];
+    n = <span class="hljs-keyword">this</span>.a;
+    h = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (k = n.length; h &lt; k &amp;&amp; !(a = n[h], a !== b &amp;&amp; <span class="hljs-literal">null</span> != a.map &amp;&amp; a.getVisible() &amp;&amp; (g = <span class="hljs-keyword">this</span>.c(<span class="hljs-literal">null</span> != (l = <span class="hljs-literal">null</span> != (m = a._omsData) ? m.l : <span class="hljs-keyword">void</span> <span class="hljs-number">0</span>) ? l : a.position),
+        <span class="hljs-keyword">this</span>.f(g, e) &lt; c &amp;&amp; (f.push(a), d))); h++);
+    <span class="hljs-keyword">return</span> f
+  };
+  c.markersNearAnyOtherMarker = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> b, d, a, g, e, f, c, h, k, n, l, m;
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == <span class="hljs-keyword">this</span>.e.getProjection()) <span class="hljs-keyword">throw</span> <span class="hljs-string">"Must wait for 'idle' event on map before calling markersNearAnyOtherMarker"</span>;
+    f = <span class="hljs-keyword">this</span>.nearbyDistance;
+    b = f * f;
+    g = <span class="hljs-keyword">this</span>.a;
+    f = [];
+    l = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (a = g.length; l &lt; a; l++) d = g[l], f.push({
+      <span class="hljs-attr">q</span>: <span class="hljs-keyword">this</span>.c(<span class="hljs-literal">null</span> != (c = <span class="hljs-literal">null</span> != (k = d._omsData) ? k.l : <span class="hljs-keyword">void</span> <span class="hljs-number">0</span>) ? c : d.position),
+      <span class="hljs-attr">d</span>: !<span class="hljs-number">1</span>
+    });
+    l = <span class="hljs-keyword">this</span>.a;
+    d = c = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (k = l.length; c &lt; k; d = ++c)
+      <span class="hljs-keyword">if</span> (a = l[d], <span class="hljs-literal">null</span> != a.map &amp;&amp; a.getVisible() &amp;&amp; (g = f[d], !g.d))
+        <span class="hljs-keyword">for</span> (m = <span class="hljs-keyword">this</span>.a, a = h = <span class="hljs-number">0</span>, n = m.length; h &lt;
+          n; a = ++h)
+          <span class="hljs-keyword">if</span> (e = m[a], a !== d &amp;&amp; <span class="hljs-literal">null</span> != e.map &amp;&amp; e.getVisible() &amp;&amp; (e = f[a], (!(a &lt; d) || e.d) &amp;&amp; <span class="hljs-keyword">this</span>.f(g.q, e.q) &lt; b)) {
+            g.d = e.d = !<span class="hljs-number">0</span>;
+            <span class="hljs-keyword">break</span>
+          }
+    l = <span class="hljs-keyword">this</span>.a;
+    a = [];
+    b = c = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (k = l.length; c &lt; k; b = ++c) d = l[b], f[b].d &amp;&amp; a.push(d);
+    <span class="hljs-keyword">return</span> a
+  };
+  c.A = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b</span>) </span>{
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">h</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">d</span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+          <span class="hljs-keyword">return</span> b._omsData.i.setOptions({
+            <span class="hljs-attr">strokeColor</span>: d.legColors.highlighted[d.map.mapTypeId],
+            <span class="hljs-attr">zIndex</span>: d.highlightedLegZIndex
+          })
+        }
+      }(<span class="hljs-keyword">this</span>),
+      <span class="hljs-attr">k</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">d</span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+          <span class="hljs-keyword">return</span> b._omsData.i.setOptions({
+            <span class="hljs-attr">strokeColor</span>: d.legColors.usual[d.map.mapTypeId],
+            <span class="hljs-attr">zIndex</span>: d.usualLegZIndex
+          })
+        }
+      }(<span class="hljs-keyword">this</span>)
+    }
+  };
+  c.H = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b, d</span>) </span>{
+    <span class="hljs-keyword">var</span> a, c, e, f, p, h, k, n, l, m;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.minZoomLevel &amp;&amp; <span class="hljs-keyword">this</span>.map.getZoom() &lt; <span class="hljs-keyword">this</span>.minZoomLevel) <span class="hljs-keyword">return</span> !<span class="hljs-number">1</span>;
+    <span class="hljs-keyword">this</span>.s = !<span class="hljs-number">0</span>;
+    m = b.length;
+    a = <span class="hljs-keyword">this</span>.D(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">var</span> a, d, c;
+      c = [];
+      a = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">for</span> (d = b.length; a &lt; d; a++) n = b[a], c.push(n.p);
+      <span class="hljs-keyword">return</span> c
+    }());
+    f = m &gt;= <span class="hljs-keyword">this</span>.circleSpiralSwitchover ? <span class="hljs-keyword">this</span>.v(m, a).reverse() : <span class="hljs-keyword">this</span>.u(m, a);
+    a = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">var</span> a, d, m;
+      m = [];
+      a = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">for</span> (d = f.length; a &lt; d; a++) e = f[a], c = <span class="hljs-keyword">this</span>.F(e), l = <span class="hljs-keyword">this</span>.C(b, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a</span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b</span>) </span>{
+          <span class="hljs-keyword">return</span> a.f(b.p, e)
+        }
+      }(<span class="hljs-keyword">this</span>)), k = l.B, h = <span class="hljs-keyword">new</span> t.Polyline({
+        <span class="hljs-attr">map</span>: <span class="hljs-keyword">this</span>.map,
+        <span class="hljs-attr">path</span>: [k.position, c],
+        <span class="hljs-attr">strokeColor</span>: <span class="hljs-keyword">this</span>.legColors.usual[<span class="hljs-keyword">this</span>.map.mapTypeId],
+        <span class="hljs-attr">strokeWeight</span>: <span class="hljs-keyword">this</span>.legWeight,
+        <span class="hljs-attr">zIndex</span>: <span class="hljs-keyword">this</span>.usualLegZIndex
+      }), k._omsData = {
+        <span class="hljs-attr">l</span>: k.position,
+        <span class="hljs-attr">i</span>: h
+      }, <span class="hljs-keyword">this</span>.legColors.highlighted[<span class="hljs-keyword">this</span>.map.mapTypeId] !== <span class="hljs-keyword">this</span>.legColors.usual[<span class="hljs-keyword">this</span>.map.mapTypeId] &amp;&amp; (p = <span class="hljs-keyword">this</span>.A(k), k._omsData.w = {
+        <span class="hljs-attr">h</span>: q.addListener(k, <span class="hljs-string">"mouseover"</span>, p.h),
+        <span class="hljs-attr">k</span>: q.addListener(k, <span class="hljs-string">"mouseout"</span>, p.k)
+      }), k.setPosition(c), k.setZIndex(<span class="hljs-built_in">Math</span>.round(<span class="hljs-keyword">this</span>.spiderfiedZIndex + e.y)), m.push(k);
+      <span class="hljs-keyword">return</span> m
+    }.call(<span class="hljs-keyword">this</span>);
+    <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.s;
+    <span class="hljs-keyword">this</span>.r = !<span class="hljs-number">0</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.trigger(<span class="hljs-string">"spiderfy"</span>, a, d)
+  };
+  c.unspiderfy = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b</span>) </span>{
+    <span class="hljs-keyword">var</span> d, a, c, e, f, p, h;
+    <span class="hljs-literal">null</span> == b &amp;&amp; (b = <span class="hljs-literal">null</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> ==
+      <span class="hljs-keyword">this</span>.r) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">this</span>.t = !<span class="hljs-number">0</span>;
+    e = [];
+    c = [];
+    h = <span class="hljs-keyword">this</span>.a;
+    f = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (p = h.length; f &lt; p; f++) a = h[f], <span class="hljs-literal">null</span> != a._omsData ? (a._omsData.i.setMap(<span class="hljs-literal">null</span>), a !== b &amp;&amp; a.setPosition(a._omsData.l), a.setZIndex(<span class="hljs-literal">null</span>), d = a._omsData.w, <span class="hljs-literal">null</span> != d &amp;&amp; (q.removeListener(d.h), q.removeListener(d.k)), <span class="hljs-keyword">delete</span> a._omsData, e.push(a)) : c.push(a);
+    <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.t;
+    <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.r;
+    <span class="hljs-keyword">this</span>.trigger(<span class="hljs-string">"unspiderfy"</span>, e, c);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
+  };
+  c.f = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b, d</span>) </span>{
+    <span class="hljs-keyword">var</span> a, c;
+    a = b.x - d.x;
+    c = b.y - d.y;
+    <span class="hljs-keyword">return</span> a * a + c * c
+  };
+  c.D = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b</span>) </span>{
+    <span class="hljs-keyword">var</span> d, a, c, e, f;
+    e = a = c = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (f = b.length; e &lt; f; e++) d = b[e], a += d.x, c += d.y;
+    b = b.length;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> t.Point(a / b, c / b)
+  };
+  c.c = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.e.getProjection().fromLatLngToDivPixel(b)
+  };
+  c.F = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.e.getProjection().fromDivPixelToLatLng(b)
+  };
+  c.C = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b, d</span>) </span>{
+    <span class="hljs-keyword">var</span> a, c, e, f, p, h;
+    e = p = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (h = b.length; p &lt; h; e = ++p)
+      <span class="hljs-keyword">if</span> (f = b[e], f = d(f), <span class="hljs-string">"undefined"</span> === <span class="hljs-keyword">typeof</span> a || <span class="hljs-literal">null</span> === a || f &lt; c) c = f, a = e;
+    <span class="hljs-keyword">return</span> b.splice(a, <span class="hljs-number">1</span>)[<span class="hljs-number">0</span>]
+  };
+  c.m = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b, c</span>) </span>{
+    <span class="hljs-keyword">var</span> a, g, e, f;
+    <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> != b.indexOf) <span class="hljs-keyword">return</span> b.indexOf(c);
+    a = e = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (f = b.length; e &lt; f; a = ++e)
+      <span class="hljs-keyword">if</span> (g = b[a], g === c) <span class="hljs-keyword">return</span> a;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>
+  };
+  v.g = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">b</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setMap(b)
+  };
+  v.g.prototype = <span class="hljs-keyword">new</span> t.OverlayView;
+  v.g.prototype.draw = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{};
+  <span class="hljs-keyword">return</span> v
+}();
+
+<span class="hljs-built_in">module</span>.exports = OverlappingMarkerSpiderfier;</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
