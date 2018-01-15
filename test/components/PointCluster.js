@@ -39,9 +39,15 @@ describe('#checkIfLatLngInBounds()', function () {
 describe('#returnPointsRaw()', function () {
   it('should return raw x/y pixel points from lat/lngs. Should be positive floats.', function () {
     var arr = pc.returnPointsRaw()
-    console.log(arr)
     arr.forEach(function (o, i) {
       chai.expect(o[0]).to.be.above(0);
     })
+  });
+})
+
+describe('#checkIfLatLngInBounds()', function () {
+  it('should have two lat lngs but only return one.', function () {
+    var arr = pc.checkIfLatLngInBounds()
+    chai.assert.strictEqual(arr.length, 1, 'Two points; only one in bounds - so one returned.');
   });
 })
