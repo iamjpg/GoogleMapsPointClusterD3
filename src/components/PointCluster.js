@@ -94,8 +94,6 @@ export class PointCluster {
     var quadtree = d3.quadtree().addAll(this.returnPointsRaw());
     var centerPoints = this.getCenterPoints(quadtree);
 
-    console.log(centerPoints)
-
     // Create the overlay div to append to.
     this.createOverlay();
 
@@ -262,7 +260,7 @@ export class PointCluster {
   searchQuadTree(quadtree, x0, y0, x3, y3) {
     var validData = [];
     quadtree.visit(function(node, x1, y1, x2, y2) {
-      var p = node.point;
+      var p = node.data;
       if (p) {
         p.selected = (p[0] >= x0) && (p[0] < x3) && (p[1] >= y0) && (p[1] < y3);
         if (p.selected) {
