@@ -20,8 +20,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     polygonStrokeWeight: '4', // Polygon stroke weight.
     polygonFillColor: '#0f0f0e', // Polygom fill color.
     polygonFillOpacity: '0.2', // Polygon fill color.
-    customPinHoverBehavior: false, // If the user of the lib would rather not use popper and opt for their own hover behavior.
-    customPinClickBehavior: false // If the user of the lib would rather not use popper and opt for their own click behavior.
+    customPinHoverBehavior: false, // If the user of the lib would rather not use internal overlay and opt for their own hover behavior.
+    customPinClickBehavior: false // If the user of the lib would rather not use internal overlay and opt for their own click behavior.
   });
 
   // Map idle listener.

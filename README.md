@@ -10,7 +10,6 @@ A simple to use, very fast, point clustering library for Google maps. Uses other
 
 1. [D3JS](https://d3js.org/) - Without it the complex quadtree math would have been impossible for my tiny brain.
 2. [Google Maps Overlapping Marker Spiderfier](https://github.com/jawj/OverlappingMarkerSpiderfier) used to spider overlapping markers.
-3. [Popper.JS](https://popper.js.org/) Tool tip library used to show hover and click data.
 
 Also, a special thank you to these D3 projects and articles that allowed me to figure out how to accomplish this task:
 
