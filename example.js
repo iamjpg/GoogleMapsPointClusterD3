@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   // Create the Google Map.
   window.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 4,
+    zoom: 6,
     center: new google.maps.LatLng(37.76487, -122.41948)
   });
 
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // @params{object}
   var pc = new PointCluster({
     map: map, // Pass in your map intance.
-    clusterRange: 200, // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
+    clusterRange: 300, // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
     threshold: 300, // Threshold is the number of results before showing markers,
     clusterRgba: '255, 0, 102, .8', // Change the background of the cluster icon. RGBA only.
     clusterBorder: '5px solid #dcdcdc', // Change the border around the icon. HEX only.

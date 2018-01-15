@@ -89,9 +89,9 @@ export class PointCluster {
     var self = this;
 
     // Set the projection, create quadtree, and get centerpoints.
-    var projection = d3.geo.mercator();
-    var path = d3.geo.path().projection(projection).pointRadius(1);
-    var quadtree = d3.geom.quadtree()(this.returnPointsRaw());
+    var projection = d3.geoMercator();
+    var path = d3.geoPath().projection(projection).pointRadius(1);
+    var quadtree = d3.quadtree().add(this.returnPointsRaw());
     var centerPoints = this.getCenterPoints(quadtree);
 
     // Create the overlay div to append to.
