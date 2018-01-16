@@ -221,12 +221,12 @@ export class PointCluster {
     }
 
     requestAnimationFrame(function() {
-      // self.map.fitBounds(latlngbounds);
-      const center_lat = latlngbounds.getCenter().lat();
+      self.map.fitBounds(latlngbounds);
+      /*const center_lat = latlngbounds.getCenter().lat();
       const center_lng = latlngbounds.getCenter().lng();
       const current_zoom = self.map.getZoom();
       self.map.setCenter(new google.maps.LatLng(center_lat, center_lng));
-      self.map.setZoom(current_zoom + 1);
+      self.map.setZoom(current_zoom + 1);*/
     });
   }
 

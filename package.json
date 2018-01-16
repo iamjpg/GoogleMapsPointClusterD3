@@ -1,11 +1,11 @@
 {
   "name": "GoogleMapsPointClusterD3",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Super fast point clustering on Google Maps via D3js",
   "main": "dist/build.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --hot --config ./webpack.base.config.js",
-    "build": "webpack --progress --hide-modules --config webpack.prod.config.js",
+    "build": "webpack --progress --hide-modules --config webpack.prod.config.js && grunt",
     "test": "open http://localhost:8080/test.html",
     "docco": "docco src/**/*.js"
   },
@@ -23,6 +23,8 @@
     "ejsify": "^1.0.0",
     "event-emitter": "^0.3.4",
     "graham_scan": "^1.0.4",
+    "grunt": "^1.0.1",
+    "grunt-contrib-uglify": "^3.3.0",
     "install": "^0.6.0",
     "marker-spider": "^0.1.0",
     "markerwithlabel": "^1.1.13",
