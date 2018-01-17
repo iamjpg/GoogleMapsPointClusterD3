@@ -34,7 +34,7 @@ IMO, the current Google Maps Cluster library, [See library here](https://github.
 ##### Expected data structure
 
 ```javascript
-// example.js
+// example.json
 {
   "data": {
     "result_list": [
@@ -71,7 +71,7 @@ var pc = new PointCluster({
 ##### Get your data and set your point collection on the instance
 
 ```javascript
-// Get example.js
+// Get example.json
 d3.json('example.json', function(error, res) {
   // In this example, we're mutating the results to add data attributes, hover data, and click data. This can obviously be done without mutation... 
   res.data.result_list.forEach(function(o, i) {
