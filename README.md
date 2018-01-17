@@ -79,15 +79,15 @@ d3.json('example.json', function(error, res) {
     o.dataset = [{foo: 'bar'}] // Dataset is an array of objects. This would add: data-foo="bar" to marker points.
     o.clickData = "You've clicked on this locaton:<br />" + o.lat + " : " + o.lng; // Data to present on click of a marker point
   });
+  // Set the collection of location objects.
+  pc.setCollection(res.data.result_list);
+
+  // Print clusters
+  pc.print();
 })
 ```
 
-##### Set the collection and print
+### Coming soon
 
-```javascript
-// Set the collection of location objects.
-pc.setCollection(res.data.result_list);
-
-// Print clusters
-pc.print();
-```
+1. Better examples on how to utilize this library.
+2. Tricks for styling markers. 
