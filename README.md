@@ -19,7 +19,7 @@ Also, a special thank you to these D3 projects and articles that allowed me to f
 
 ### Why?
 
-IMO, the current Google Maps Cluster library, [See library here](https://github.com/googlemaps/js-marker-clusterer), is really inefficient when dealing with massive amounts of points as it creates a Google Maps Marker object for each point before clustering them.
+IMO, the current Google Maps Cluster library ([See library here](https://github.com/googlemaps/js-marker-clusterer)) is really inefficient when dealing with massive amounts of points as it creates a Google Maps Marker object for each point before clustering them.
 
 ### Install
 
