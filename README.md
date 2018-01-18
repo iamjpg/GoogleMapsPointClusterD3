@@ -21,6 +21,21 @@ Also, a special thank you to these D3 projects and articles that allowed me to f
 
 IMO, the current Google Maps Cluster library, [See library here](https://github.com/googlemaps/js-marker-clusterer), is really inefficient when dealing with massive amounts of points as it creates a Google Maps Marker object for each point before clustering them.
 
+### Install
+
+Using NPM:
+
+```
+npm i google-maps-d3-marker-cluster --save-dev
+```
+
+In App
+```
+import 'google-maps-d3-marker-cluster'
+```
+
+The import sets constructor, PointCluster, object for you. See below for implementation.
+
 ###  Basic Implementation
 
 ##### Required Libraries
