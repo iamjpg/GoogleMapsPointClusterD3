@@ -34,7 +34,7 @@ In App
 import 'google-maps-d3-marker-cluster'
 ```
 
-The import sets constructor, PointCluster, object for you. See below for implementation.
+The import sets the constructor, PointCluster, object for you. See below for implementation.
 
 ###  Basic Implementation
 
@@ -68,7 +68,7 @@ The import sets constructor, PointCluster, object for you. See below for impleme
 
 ```javascript
 var pc = new PointCluster({
-    map: map, // Pass in your map intance.
+    map: map, // Pass in your Google map intance.
     clusterRange: 300, // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
     threshold: 300, // Threshold is the number of results before showing markers,
     clusterRgba: '255, 0, 102, .8', // Change the background of the cluster icon. RGBA only.
@@ -106,3 +106,4 @@ d3.json('example.json', function(error, res) {
 
 1. Better examples on how to utilize this library.
 2. Tricks for styling markers. 
+3. Utilizing the internal Publish/Subscribe API to do custom popovers/hover effects on click/touch and mouseenter.
