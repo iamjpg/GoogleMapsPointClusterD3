@@ -1,6 +1,6 @@
 {
   "name": "google-maps-d3-marker-cluster",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Super fast point clustering on Google Maps via D3js",
   "main": "dist/build.js",
   "scripts": {

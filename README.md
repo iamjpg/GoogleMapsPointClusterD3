@@ -19,7 +19,22 @@ Also, a special thank you to these D3 projects and articles that allowed me to f
 
 ### Why?
 
-IMO, the current Google Maps Cluster library, [See library here](https://github.com/googlemaps/js-marker-clusterer), is really inefficient when dealing with massive amounts of points as it creates a Google Maps Marker object for each point before clustering them.
+IMO, the current Google Maps Cluster library ([See library here](https://github.com/googlemaps/js-marker-clusterer)) is really inefficient when dealing with massive amounts of points as it creates a Google Maps Marker object for each point before clustering them.
+
+### Install
+
+Using NPM:
+
+```
+npm i google-maps-d3-marker-cluster --save-dev
+```
+
+In App
+```
+import 'google-maps-d3-marker-cluster'
+```
+
+The import sets the constructor, PointCluster, object for you. See below for implementation.
 
 ###  Basic Implementation
 
@@ -34,7 +49,7 @@ IMO, the current Google Maps Cluster library, [See library here](https://github.
 ##### Expected data structure
 
 ```javascript
-// example.js
+// example.json
 {
   "data": {
     "result_list": [
@@ -53,7 +68,7 @@ IMO, the current Google Maps Cluster library, [See library here](https://github.
 
 ```javascript
 var pc = new PointCluster({
-    map: map, // Pass in your map intance.
+    map: map, // Pass in your Google map intance.
     clusterRange: 300, // clusterRange is the pixel grid to cluster. Smaller = more clusters / Larger = less clusters.
     threshold: 300, // Threshold is the number of results before showing markers,
     clusterRgba: '255, 0, 102, .8', // Change the background of the cluster icon. RGBA only.
@@ -71,7 +86,7 @@ var pc = new PointCluster({
 ##### Get your data and set your point collection on the instance
 
 ```javascript
-// Get example.js
+// Get example.json
 d3.json('example.json', function(error, res) {
   // In this example, we're mutating the results to add data attributes, hover data, and click data. This can obviously be done without mutation... 
   res.data.result_list.forEach(function(o, i) {
@@ -79,15 +94,16 @@ d3.json('example.json', function(error, res) {
     o.dataset = [{foo: 'bar'}] // Dataset is an array of objects. This would add: data-foo="bar" to marker points.
     o.clickData = "You've clicked on this locaton:<br />" + o.lat + " : " + o.lng; // Data to present on click of a marker point
   });
+  // Set the collection of location objects.
+  pc.setCollection(res.data.result_list);
+
+  // Print clusters
+  pc.print();
 })
 ```
 
-##### Set the collection and print
+### Coming soon
 
-```javascript
-// Set the collection of location objects.
-pc.setCollection(res.data.result_list);
-
-// Print clusters
-pc.print();
-```
+1. Better examples on how to utilize this library.
+2. Tricks for styling markers. 
+3. Utilizing the internal Publish/Subscribe API to do custom popovers/hover effects on click/touch and mouseenter.
