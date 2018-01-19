@@ -24,10 +24,10 @@ export class PointCluster {
     if (!options.map) {
       return console.error('ERROR: Google map instance is a requirement.');
     }
-
+    
     // Set object properties with sensible defaults (except the map instance).
     this.map = options.map;
-    this.mapContainer = options.mapContainer || 'map';
+    this.mapContainer = options.map.getDiv().getAttribute('id');
     this.clusterRange = options.clusterRange || 300;
     this.threshold = options.threshold || 200;
     this.clusterRgba = options.clusterRgba || '51, 102, 153, 0.8';
