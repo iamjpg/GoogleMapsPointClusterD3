@@ -102,6 +102,32 @@ d3.json('example.json', function(error, res) {
 })
 ```
 
+### Development and Building
+
+##### Dev
+
+I am assuming you have node installed and `webpack-dev-server` installed globally.
+
+Fork the repository and clone it locally. Navigate into your cloned directory and run:
+
+```
+npm run dev
+```
+
+This will fire up the dev server on [http://localhot:8080](http://localhot:8080)
+
+Main development files are in the `src` directory. Changes automatically update the `dist/bundle.js` for development.
+
+##### Build
+
+Run the following:
+
+```
+npm run build
+```
+
+This creates a versioned and minified file in the `build` directory.
+
 ### Coming soon
 
 1. Better examples on how to utilize this library.
