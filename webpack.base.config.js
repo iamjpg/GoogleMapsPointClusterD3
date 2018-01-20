@@ -1,7 +1,10 @@
+
+
 module.exports = {
+  context: __dirname,
   entry: './src/index.js',
   output: {
-    path: './dist',
+    path: __dirname + '/dist',
     publicPath: 'dist/',
     filename: 'build.js'
   },
@@ -16,12 +19,12 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loaders: ["style", "css", "sass?sourceMap"]
+        loaders: ["style-loader", "css-loader", "sass-loader?sourceMap"]
       },
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
           presets: ['es2015']
         }
