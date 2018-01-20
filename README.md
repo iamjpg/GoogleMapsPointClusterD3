@@ -106,7 +106,7 @@ d3.json('example.json', function(error, res) {
 
 ##### Dev
 
-I am assuming you have node installed and `webpack-dev-server` installed globally.
+I am assuming you have node (v8+) installed, webpack installed (v3+), and `webpack-dev-server` installed globally.
 
 Fork the repository and clone it locally. Navigate into your cloned directory and run:
 
