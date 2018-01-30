@@ -85,13 +85,15 @@ export class Point {
       self.oms.addMarker(m)
 
       if (document.querySelector('#popper-container') === null) {
-        const fragHover = document.createRange().createContextualFragment(self.returnHoverTemplate());
-        self.map.getDiv().appendChild(fragHover);
+        let temp = document.createElement('template');
+        temp.innerHTML = self.returnHoverTemplate();
+        self.map.getDiv().appendChild(temp.content);
       }
 
       if (document.querySelector('#popper-container-clicked') === null) {
-        const fragClick = document.createRange().createContextualFragment(self.returnClickTemplate());
-        self.map.getDiv().appendChild(fragClick);
+        let temp = document.createElement('template');
+        temp.innerHTML = self.returnClickTemplate();
+        self.map.getDiv().appendChild(temp.content);
       }
 
     });
