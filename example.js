@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   // Create the Google Map.
   window.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 6,
-    center: new google.maps.LatLng(37.76487, -122.41948)
+    zoom: 12,
+    center: new google.maps.LatLng(42.13813785493148, -123.69739349999998)
   });
 
   // Construct PointCluster Object
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       res.data.result_list.forEach(function(o, i) {
         o.hoverData = o.lat + " : " + o.lng;
-        o.dataset = [{bar: 'boop'}]
+        o.dataset = [{bar: 'boop'}, {foo: 'baz'}]
         o.clickData = "You've clicked on this locaton:<br />" + o.lat + " : " + o.lng;
       });
 

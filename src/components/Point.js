@@ -77,24 +77,28 @@ export class Point {
         draggable: false,
         labelAnchor: new google.maps.Point(10, 10),
         labelClass: 'marker-point',
-        data: o.dataset
+        labelData: o.dataset
       });
 
       self.markers.push(m);
 
       self.oms.addMarker(m)
 
-      if (document.querySelector('#popper-container') === null) {
-        let temp = document.createElement('template');
-        temp.innerHTML = self.returnHoverTemplate();
-        self.map.getDiv().appendChild(temp.content);
-      }
+      setTimeout(function () {
+        if (document.querySelector('#popper-container') === null) {
+          let temp = document.createElement('template');
+          temp.innerHTML = self.returnHoverTemplate();
+          //self.map.getDiv().appendChild(temp.content);
+          $(self.map.getDiv()).append(self.returnHoverTemplate())
+        }
 
-      if (document.querySelector('#popper-container-clicked') === null) {
-        let temp = document.createElement('template');
-        temp.innerHTML = self.returnClickTemplate();
-        self.map.getDiv().appendChild(temp.content);
-      }
+        if (document.querySelector('#popper-container-clicked') === null) {
+          let temp = document.createElement('template');
+          temp.innerHTML = self.returnClickTemplate();
+          //self.map.getDiv().appendChild(temp.content);
+          $(self.map.getDiv()).append(self.returnClickTemplate())
+        }
+      }, 1000)
 
     });
 
@@ -149,6 +153,11 @@ export class Point {
 
   // Various events for the points.
   setExternalMouseEvents() {
+
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      return false;
+    }
+
     const self = this;
     document.addEventListener('mouseover', function(e) {
       if (e.target.className.indexOf('PinResult') > -1) {
