@@ -117,36 +117,44 @@ export class Point {
     });
 
     this.oms.addListener('spiderfy', function(markers, event) {
-      self.removeUniversalPointHoverState();
-      requestAnimationFrame(() => {
-        self.removePopper(true);
-      });
-      self.markers.forEach(function(marker) {
-        marker.setOptions({
-          zIndex: 1000,
-          labelClass: marker.labelClass + " fadePins"
+
+      setTimeout(function() {
+        self.removeUniversalPointHoverState();
+        requestAnimationFrame(() => {
+          self.removePopper(true);
         });
-      })
-      markers.forEach(function(marker) {
-        self.removeListeners();
-        self.setHoverEvents(true);
-        marker.setOptions({
-          zIndex: 20000,
-          labelClass: marker.labelClass.replace(" fadePins", "")
+        self.markers.forEach(function(marker) {
+          marker.setOptions({
+            zIndex: 1000,
+            labelClass: marker.labelClass + " fadePins"
+          });
+        })
+        markers.forEach(function(marker) {
+          self.removeListeners();
+          self.setHoverEvents(true);
+          marker.setOptions({
+            zIndex: 20000,
+            labelClass: marker.labelClass.replace(" fadePins", "")
+          });
         });
-      });
+      }, 250)
+
     });
 
     this.oms.addListener('unspiderfy', function(markers, event) {
-      self.removeUniversalPointHoverState();
-      self.removePopper();
-      self.markers.forEach(function(marker) {
-        marker.setOptions({
-          zIndex: 1000,
-          labelClass: marker.labelClass.replace(" fadePins", "")
+
+      setTimeout(function() {
+        self.removeUniversalPointHoverState();
+        self.removePopper();
+        self.markers.forEach(function(marker) {
+          marker.setOptions({
+            zIndex: 1000,
+            labelClass: marker.labelClass.replace(" fadePins", "")
+          });
         });
-      });
-      self.setHoverEvents(false);
+        self.setHoverEvents(false);
+      }, 250)
+
     });
 
   }
@@ -351,6 +359,11 @@ export class Point {
   // Remove the poppers either hover or click.
   removePopper(clicked = false) {
     let popper = document.querySelector('#popper-container');
+
+    if (popper === null) {
+      return false;
+    }
+
     popper.style.display = 'none';
 
     if (clicked) {

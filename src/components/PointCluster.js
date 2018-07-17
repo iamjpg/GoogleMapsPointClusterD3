@@ -56,6 +56,7 @@ export class PointCluster {
 
     // Set collection on the PointCluster object.
     this.collection = collection;
+
     window.collection = helpers.clone(collection);
   }
 
@@ -191,8 +192,17 @@ export class PointCluster {
 
   setMapEvents() {
     var self = this;
+    google.maps.event.addListener(this.map, 'zoom_changed', function() {
+      if (self.collection) {
+        $('.point-cluster').hide();
+      }
+    });
+    google.maps.event.addListener(this.map, 'drag', function() {
+      if (self.collection) {
+        $('.point-cluster').hide();
+      }
+    });
     google.maps.event.addListener(this.map, 'idle', function() {
-
       if (self.collection) {
         self.print();
       }
@@ -221,12 +231,12 @@ export class PointCluster {
     }
 
     requestAnimationFrame(function() {
-      self.map.fitBounds(latlngbounds);
-      /*const center_lat = latlngbounds.getCenter().lat();
+      // self.map.fitBounds(latlngbounds);
+      const center_lat = latlngbounds.getCenter().lat();
       const center_lng = latlngbounds.getCenter().lng();
       const current_zoom = self.map.getZoom();
       self.map.setCenter(new google.maps.LatLng(center_lat, center_lng));
-      self.map.setZoom(current_zoom + 1);*/
+      self.map.setZoom(current_zoom + 1);
     });
   }
 
