@@ -32,8 +32,8 @@ export class Point {
       let m = new MarkerWithLabel({
         position: new google.maps.LatLng(lat, lng),
         map: self.map,
-        hoverContent: o.hoverData || "",
-        clickContent: o.clickData || "",
+        hoverContent: o.hoverData || '',
+        clickContent: o.clickData || '',
         labelContent: '',
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
@@ -53,14 +53,12 @@ export class Point {
         if (document.querySelector('#popper-container') === null) {
           let temp = document.createElement('template');
           temp.innerHTML = self.returnHoverTemplate();
-          //self.map.getDiv().appendChild(temp.content);
           $(self.map.getDiv()).append(self.returnHoverTemplate())
         }
 
         if (document.querySelector('#popper-container-clicked') === null) {
           let temp = document.createElement('template');
           temp.innerHTML = self.returnClickTemplate();
-          //self.map.getDiv().appendChild(temp.content);
           $(self.map.getDiv()).append(self.returnClickTemplate())
         }
       }, 1000)
@@ -96,7 +94,7 @@ export class Point {
         })
         markers.forEach(function(marker) {
           self.removeListeners();
-          self.setEvents(true);
+          self.setEventssetEvents(true);
           marker.setOptions({
             zIndex: 20000,
             labelClass: `marker-point`
@@ -301,9 +299,7 @@ export class Point {
   setDocumentClick() {
     const self = this;
     document.addEventListener('click', function(e) {
-      const target = e.target;
-      console.log(target.className)
-      if (target.className.indexOf('clicked') === -1) {
+      if (e.target.className.indexOf('clicked') === -1) {
         self.removePopper(true);
       }
     });
