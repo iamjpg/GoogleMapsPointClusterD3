@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       });
 
       PointPubSub.subscribe('Point.click', function(target) {
-        console.log(target)
+        //console.log(target)
       })
 
       PointPubSub.subscribe('Point.show', function(res) {

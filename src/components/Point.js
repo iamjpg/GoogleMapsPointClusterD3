@@ -41,7 +41,7 @@ export class Point {
         },
         draggable: false,
         labelAnchor: new google.maps.Point(10, 10),
-        labelClass: 'marker-point',
+        labelClass: 'marker-point open',
         labelData: o.dataset
       });
 
@@ -87,17 +87,23 @@ export class Point {
           self.removePopper(true);
         });
         self.markers.forEach(function(marker) {
+
+          let newClass = self.returnUpdatedPinClass(marker);
+
           marker.setOptions({
             zIndex: 1000,
-            labelClass: `${marker.labelClass} fadePins`
+            labelClass: `${newClass} fadePins`
           });
         })
         markers.forEach(function(marker) {
+
+          let newClass = self.returnUpdatedPinClass(marker);
+
           self.removeListeners();
           self.setEvents(true);
           marker.setOptions({
             zIndex: 20000,
-            labelClass: `marker-point`
+            labelClass: newClass.replace('fadePins', '')
           });
         });
       }, 250)
@@ -174,9 +180,7 @@ export class Point {
 
   setMouseOut(marker) {
 
-    let currentClass = marker.get('labelClass');
-
-    let newClass = (currentClass.indexOf('PointHoverStateClicked') > -1) ? 'marker-point PointHoverStateClicked' : 'marker-point';
+    let newClass = this.returnUpdatedPinClass(marker);
 
     marker.setOptions({
       zIndex: 100,
@@ -288,9 +292,12 @@ export class Point {
   // A universal point method for removing the hoverstate of all pins.
   removeUniversalPointHoverState() {
     this.markers.forEach((o, i) => {
+
+      let newClass = this.returnUpdatedPinClass(o);
+
       o.setOptions({
         zIndex: 100,
-        labelClass: 'marker-point'
+        labelClass: newClass.replace(/PointHoverStateClicked/g, '')
       });
     })
   }
@@ -319,6 +326,18 @@ export class Point {
         self.removeUniversalPointHoverState();
       }
     });
+  }
+
+  returnUpdatedPinClass(marker) {
+    let currentClass = marker.get('labelClass').split(' ');
+
+    let index = currentClass.indexOf('PointHoverState');
+
+    if (index > -1) {
+      currentClass.splice(index, 1);
+    }
+
+    return currentClass.join(' ')
   }
 
 }
