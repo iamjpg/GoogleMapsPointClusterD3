@@ -195,11 +195,9 @@ export class Point {
     // Remove any clicked poppers...
     this.removePopper(true);
 
-    if (marker.get('clickContent') === '') {
-      return false;
+    if (marker.get('clickContent') !== '') {
+      this.showPopper(marker, e)
     }
-
-    this.showPopper(marker, e)
 
     marker.setOptions({
       zIndex: 10000,

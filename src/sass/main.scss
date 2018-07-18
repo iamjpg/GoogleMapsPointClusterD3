@@ -50,15 +50,15 @@ $hidden-pin-size: 4px;
   border-radius: $hidden-pin-size;
 }
 .PointHoverState {
-  -webkit-box-shadow: 0 0 5px 20px rgba(146, 155, 168, 0.3);
-  box-shadow: 0 0 5px 20px rgba(146, 155, 168, 0.3);
+  -webkit-box-shadow: 0 0 5px 10px rgba(146, 155, 168, 0.8);
+  box-shadow: 0 0 5px 10px rgba(146, 155, 168, 0.8);
   background: red;
   cursor: pointer;
 }
 
 .PointHoverStateClicked {
-  -webkit-box-shadow: 0 0 5px 20px rgba(146, 155, 168, 0.8);
-  box-shadow: 0 0 5px 20px rgba(146, 155, 168, 0.8);
+  -webkit-box-shadow: 0 0 5px 10px rgba(146, 155, 168, 0.95);
+  box-shadow: 0 0 5px 10px rgba(146, 155, 168, 0.95);
 }
 
 #popper-container, #popper-container-clicked {
