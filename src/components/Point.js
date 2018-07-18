@@ -41,7 +41,7 @@ export class Point {
         },
         draggable: false,
         labelAnchor: new google.maps.Point(10, 10),
-        labelClass: 'marker-point open',
+        labelClass: 'marker-point',
         labelData: o.dataset
       });
 
