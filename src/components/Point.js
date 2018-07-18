@@ -68,8 +68,59 @@ export class Point {
     });
 
     this.setEvents(false);
+    this.setOmsEvents();
 
-    // this.setOmsEvents();
+  }
+
+  // Init the point spiderification.
+  setOmsEvents() {
+
+    const self = this;
+
+    this.oms.addListener('click', function(marker, event) {
+      self.removePopper();
+    });
+
+    this.oms.addListener('spiderfy', function(markers, event) {
+
+      setTimeout(function() {
+        self.removeUniversalPointHoverState();
+        requestAnimationFrame(() => {
+          self.removePopper(true);
+        });
+        self.markers.forEach(function(marker) {
+          marker.setOptions({
+            zIndex: 1000,
+            labelClass: `${marker.labelClass} fadePins`
+          });
+        })
+        markers.forEach(function(marker) {
+          self.removeListeners();
+          self.setEvents(true);
+          marker.setOptions({
+            zIndex: 20000,
+            labelClass: `marker-point`
+          });
+        });
+      }, 250)
+
+    });
+
+    this.oms.addListener('unspiderfy', function(markers, event) {
+
+      setTimeout(function() {
+        self.removeUniversalPointHoverState();
+        self.removePopper();
+        self.markers.forEach(function(marker) {
+          marker.setOptions({
+            zIndex: 1000,
+            labelClass: marker.labelClass.replace(" fadePins", "")
+          });
+        });
+        self.setEvents(false);
+      }, 250)
+
+    });
 
   }
 
@@ -227,6 +278,24 @@ export class Point {
       let popper_clicked = document.querySelector('#popper-container-clicked');
       popper_clicked.style.display = 'none';
     }
+  }
+
+  // A universal point method for removing the hoverstate of all pins.
+  removeUniversalPointHoverState() {
+    this.markers.forEach((o, i) => {
+      o.setOptions({
+        zIndex: 100,
+        labelClass: 'marker-point'
+      });
+    })
+  }
+
+  // Remove listeners.
+  removeListeners() {
+    for (let i = 0; i < this.markerListeners.length; i++) {
+      google.maps.event.removeListener(this.markerListeners[i]);
+    }
+    this.markerListeners = [];
   }
 
   setDocumentClick() {
