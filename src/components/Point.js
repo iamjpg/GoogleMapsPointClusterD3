@@ -3,7 +3,6 @@ import MarkerWithLabel from 'markerwithlabel';
 import OverlappingMarkerSpiderfier from '../services/spider-marker';
 
 export class Point {
-
   // Constructor -> { options } object
   constructor(map, collection, customPinClickBehavior=false, customPinHoverBehavior=false) {
     this.map = map;
@@ -11,8 +10,7 @@ export class Point {
     this.markerListeners = []
     this.customPinClickBehavior = customPinClickBehavior;
     this.customPinHoverBehavior = customPinHoverBehavior;
-    this.setExternalMouseEvents();
-    this.setDocumentClick();
+    this.previousClickedMarker = null;
     this.oms = new OverlappingMarkerSpiderfier(this.map, {
       markersWontMove: true,
       markersWontHide: true,
@@ -21,6 +19,195 @@ export class Point {
       legWeight: 3,
       usualLegZIndex: 25000
     });
+    this.setDocumentClick();
+  }
+
+  // Print the points when under threshold.
+  print() {
+    const self = this;
+    this.markers = [];
+    this.collection.forEach(function(o, i) {
+      let lat = o.lat || o.location.latitude;
+      let lng = o.lng || o.location.longitude;
+      let m = new MarkerWithLabel({
+        position: new google.maps.LatLng(lat, lng),
+        map: self.map,
+        hoverContent: o.hoverData || '',
+        clickContent: o.clickData || '',
+        labelContent: '',
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 0
+        },
+        draggable: false,
+        labelAnchor: new google.maps.Point(10, 10),
+        labelClass: 'marker-point open',
+        labelData: o.dataset
+      });
+
+      self.markers.push(m);
+
+      self.oms.addMarker(m)
+
+      setTimeout(function () {
+        if (document.querySelector('#popper-container') === null) {
+          let temp = document.createElement('template');
+          temp.innerHTML = self.returnHoverTemplate();
+          $(self.map.getDiv()).append(self.returnHoverTemplate())
+        }
+
+        if (document.querySelector('#popper-container-clicked') === null) {
+          let temp = document.createElement('template');
+          temp.innerHTML = self.returnClickTemplate();
+          $(self.map.getDiv()).append(self.returnClickTemplate())
+        }
+      }, 1000)
+
+    });
+
+    this.setEvents(false);
+    this.setOmsEvents();
+
+  }
+
+  // Init the point spiderification.
+  setOmsEvents() {
+
+    const self = this;
+
+    this.oms.addListener('click', function(marker, event) {
+      self.removePopper();
+    });
+
+    this.oms.addListener('spiderfy', function(markers, event) {
+
+      setTimeout(function() {
+        self.removeUniversalPointHoverState();
+        requestAnimationFrame(() => {
+          self.removePopper(true);
+        });
+        self.markers.forEach(function(marker) {
+
+          let newClass = self.returnUpdatedPinClass(marker);
+
+          marker.setOptions({
+            zIndex: 1000,
+            labelClass: `${newClass} fadePins`
+          });
+        })
+        markers.forEach(function(marker) {
+
+          let newClass = self.returnUpdatedPinClass(marker);
+
+          self.removeListeners();
+          self.setEvents(true);
+          marker.setOptions({
+            zIndex: 20000,
+            labelClass: newClass.replace('fadePins', '')
+          });
+        });
+      }, 250)
+
+    });
+
+    this.oms.addListener('unspiderfy', function(markers, event) {
+
+      setTimeout(function() {
+        self.removeUniversalPointHoverState();
+        self.removePopper();
+        self.markers.forEach(function(marker) {
+          marker.setOptions({
+            zIndex: 1000,
+            labelClass: marker.labelClass.replace(" fadePins", "")
+          });
+        });
+        self.setEvents(false);
+      }, 250)
+
+    });
+
+  }
+
+  setEvents(ignoreZindex = false) {
+
+    const self = this;
+
+    this.markers.forEach(function(marker) {
+
+      // MouseEnter
+      let mouseOverListener = marker.addListener('mouseover', function(e) {
+
+        let target = e.target;
+        let index = $(target).index()
+
+        self.setMouseOver(self.markers[index], e)
+
+      });
+
+      // MouseLeave
+      let mouseOutListener = marker.addListener('mouseout', function(e) {
+
+        let target = e.target;
+        let index = $(target).index()
+
+        self.setMouseOut(self.markers[index])
+
+      });
+
+      let clickListener = marker.addListener('click', function(e) {
+
+        let target = e.target;
+        let index = $(target).index()
+
+        self.setClickEvent(self.markers[index], e)
+
+      });
+
+    })
+    
+  }
+
+  setMouseOver(marker, e) {
+
+    marker.setOptions({
+      zIndex: 10000,
+      labelClass: `${marker.labelClass} PointHoverState`
+    });
+
+    this.showPopper(marker, e)
+
+  }
+
+  setMouseOut(marker) {
+
+    let newClass = this.returnUpdatedPinClass(marker);
+
+    marker.setOptions({
+      zIndex: 100,
+      labelClass: newClass
+    });
+
+    this.removePopper(false)
+
+  }
+
+  setClickEvent(marker, e) {
+
+    // PubSub this event - passing the element.
+    PointPubSub.publish('Point.click', e);
+
+    // Remove any clicked poppers...
+    this.removePopper(true);
+
+    if (marker.get('clickContent') !== '') {
+      this.showPopper(marker, e)
+    }
+
+    marker.setOptions({
+      zIndex: 10000,
+      labelClass: `${marker.labelClass} PointHoverStateClicked`
+    })
+
   }
 
   returnHoverTemplate() {
@@ -45,299 +232,74 @@ export class Point {
     return template;
   }
 
-  // Document click is to simply remove a clicked popper if user
-  // clicks away.
-  setDocumentClick() {
-    const self = this;
-    document.addEventListener('click', function(e) {
-      const target = e.target;
-      if (target.className.indexOf('clicked') === -1) {
-        self.removePopper(true);
-      }
-    });
+  showPopper(marker, e) {
+
+    // Pointers
+    let map = this.map;
+
+    // Get projection data
+    let projection = map.getProjection();
+    let topRight = projection.fromLatLngToPoint(map.getBounds().getNorthEast());
+    let bottomLeft = projection.fromLatLngToPoint(map.getBounds().getSouthWest());
+    let scale = Math.pow(2, map.getZoom());
+
+    // Create point
+    var point = projection.fromLatLngToPoint(
+      new google.maps.LatLng(marker.internalPosition.lat(), marker.internalPosition.lng())
+    );
+
+    let elem;
+
+    // Show the bubble
+    if (e.type === 'click') {
+      elem = document.querySelector('#popper-container-clicked');
+      let inner = document.querySelector('.arrow_box_clicked');
+      inner.innerHTML = marker.get('clickContent');
+    } else {
+      elem = document.querySelector('#popper-container');
+      let inner = document.querySelector('.arrow_box');
+      inner.innerHTML = marker.get('hoverContent');
+    }
+
+    elem.style.display = 'block';
+
+    // Get the x/y based on the scale.
+    let containerHeight = elem.offsetHeight;
+    let containerWidth = elem.offsetWidth;
+    var posLeft = parseInt(((point.x - bottomLeft.x) * scale) - (containerWidth / 2 + 4));
+    var posTop = parseInt(((point.y - topRight.y) * scale) - (20 + containerHeight));
+
+    elem.style.top = `${posTop}px`;
+    elem.style.left = `${posLeft}px`;
   }
 
-  // Print the points when under threshold.
-  print() {
-    const self = this;
-    this.markers = [];
-    this.collection.forEach(function(o, i) {
-      let lat = o.lat || o.location.latitude;
-      let lng = o.lng || o.location.longitude;
-      let m = new MarkerWithLabel({
-        position: new google.maps.LatLng(lat, lng),
-        map: self.map,
-        hoverContent: o.hoverData || "",
-        clickContent: o.clickData || "",
-        labelContent: '',
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 0
-        },
-        draggable: false,
-        labelAnchor: new google.maps.Point(10, 10),
-        labelClass: 'marker-point',
-        labelData: o.dataset
-      });
+  // Remove the poppers either hover or click.
+  removePopper(clicked = false) {
+    let popper = document.querySelector('#popper-container');
 
-      self.markers.push(m);
-
-      self.oms.addMarker(m)
-
-      setTimeout(function () {
-        if (document.querySelector('#popper-container') === null) {
-          let temp = document.createElement('template');
-          temp.innerHTML = self.returnHoverTemplate();
-          //self.map.getDiv().appendChild(temp.content);
-          $(self.map.getDiv()).append(self.returnHoverTemplate())
-        }
-
-        if (document.querySelector('#popper-container-clicked') === null) {
-          let temp = document.createElement('template');
-          temp.innerHTML = self.returnClickTemplate();
-          //self.map.getDiv().appendChild(temp.content);
-          $(self.map.getDiv()).append(self.returnClickTemplate())
-        }
-      }, 1000)
-
-    });
-
-    self.setHoverEvents(false);
-
-    this.setOmsEvents();
-
-  }
-
-  // Init the point spiderification.
-  setOmsEvents() {
-    const self = this;
-
-    this.oms.addListener('click', function(marker, event) {
-      self.removePopper();
-    });
-
-    this.oms.addListener('spiderfy', function(markers, event) {
-
-      setTimeout(function() {
-        self.removeUniversalPointHoverState();
-        requestAnimationFrame(() => {
-          self.removePopper(true);
-        });
-        self.markers.forEach(function(marker) {
-          marker.setOptions({
-            zIndex: 1000,
-            labelClass: marker.labelClass + " fadePins"
-          });
-        })
-        markers.forEach(function(marker) {
-          self.removeListeners();
-          self.setHoverEvents(true);
-          marker.setOptions({
-            zIndex: 20000,
-            labelClass: marker.labelClass.replace(" fadePins", "")
-          });
-        });
-      }, 250)
-
-    });
-
-    this.oms.addListener('unspiderfy', function(markers, event) {
-
-      setTimeout(function() {
-        self.removeUniversalPointHoverState();
-        self.removePopper();
-        self.markers.forEach(function(marker) {
-          marker.setOptions({
-            zIndex: 1000,
-            labelClass: marker.labelClass.replace(" fadePins", "")
-          });
-        });
-        self.setHoverEvents(false);
-      }, 250)
-
-    });
-
-  }
-
-  // Various events for the points.
-  setExternalMouseEvents() {
-
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    if (popper === null) {
       return false;
     }
 
-    const self = this;
-    document.addEventListener('mouseover', function(e) {
-      if (e.target.className.indexOf('PinResult') > -1) {
-        if (!self.markers[parseInt(e.target.getAttribute('data-pinindex'))]) {
-          return false;
-        }
-        self.markers[parseInt(e.target.getAttribute('data-pinindex'))].setOptions({
-          zIndex: 10000,
-          labelClass: self.markers[parseInt(e.target.getAttribute('data-pinindex'))].labelClass + " PointHoverState"
-        });
-      }
-    });
-    document.addEventListener('mouseout', function(e) {
-      if (e.target.className.indexOf('PinResult') > -1) {
-        if (!self.markers[parseInt(e.target.getAttribute('data-pinindex'))]) {
-          return false;
-        }
-        self.markers[parseInt(e.target.getAttribute('data-pinindex'))].setOptions({
-          zIndex: 100,
-          labelClass: self.markers[parseInt(e.target.getAttribute('data-pinindex'))].labelClass.replace(" PointHoverState", "")
-        });
-      }
-    });
+    popper.style.display = 'none';
+
+    if (clicked) {
+      let popper_clicked = document.querySelector('#popper-container-clicked');
+      popper_clicked.style.display = 'none';
+    }
   }
 
   // A universal point method for removing the hoverstate of all pins.
   removeUniversalPointHoverState() {
     this.markers.forEach((o, i) => {
+
+      let newClass = this.returnUpdatedPinClass(o);
+
       o.setOptions({
         zIndex: 100,
-        labelClass: "marker-point"
+        labelClass: newClass.replace(/PointHoverStateClicked/g, '')
       });
     })
-  }
-
-  // Set the hover events.
-  setHoverEvents(ignoreZindex = false) {
-
-    // set click events here.
-    this.setClickEvents(ignoreZindex);
-
-    if (this.customPinHoverBehavior) {
-      return false;
-    }
-
-    const self = this;
-    this.markers.forEach(function(marker) {
-      let mouseOverListener = marker.addListener('mouseover', function(e) {
-
-        // Remove clicked poppers.
-        self.removePopper(true);
-
-        let target = e.target || e.srcElement;
-        let m = this;
-
-        // First, set the hover state of the marker
-        marker.setOptions({
-          zIndex: 10000,
-          labelClass: this.labelClass + " PointHoverState"
-        });
-
-        if (m.get('hoverContent') === "") {
-          return false;
-        }
-
-        // Pointers
-        let map = this.map;
-
-        // Get projection data
-        let projection = map.getProjection();
-        let topRight = projection.fromLatLngToPoint(map.getBounds().getNorthEast());
-        let bottomLeft = projection.fromLatLngToPoint(map.getBounds().getSouthWest());
-        let scale = Math.pow(2, map.getZoom());
-
-        // Create point
-        var point = projection.fromLatLngToPoint(
-          new google.maps.LatLng(m.internalPosition.lat(), m.internalPosition.lng())
-        );
-
-        // Show the bubble
-        let elem = document.querySelector('#popper-container');
-        let inner = document.querySelector('.arrow_box');
-        inner.innerHTML = m.get('hoverContent');
-        elem.style.display = 'block';
-
-        // Get the x/y based on the scale.
-        let containerHeight = elem.offsetHeight;
-        let containerWidth = elem.offsetWidth;
-        var posLeft = parseInt(((point.x - bottomLeft.x) * scale) - (containerWidth / 2 + 4));
-        var posTop = parseInt(((point.y - topRight.y) * scale) - (20 + containerHeight));
-
-        elem.style.top = `${posTop}px`;
-        elem.style.left = `${posLeft}px`;
-
-        if (!ignoreZindex) {
-          this.setZIndex(5000);
-        }
-      });
-
-      let mouseOutListener = marker.addListener('mouseout', function() {
-
-        // First, remove the hover state of the marker
-        marker.setOptions({
-          zIndex: 100,
-          labelClass: this.labelClass.replace(" PointHoverState", "")
-        });
-        self.removePopper();
-        if (!ignoreZindex) {
-          this.setZIndex(1000);
-        }
-      });
-      self.markerListeners.push(mouseOverListener)
-      self.markerListeners.push(mouseOutListener)
-    });
-  }
-
-  // Set the click events.
-  setClickEvents(ignoreZindex = false) {
-
-    const self = this;
-
-    this.markers.forEach(function(marker) {
-      let mouseClickListener = marker.addListener('click', function(e) {
-
-        // PubSub this event - passing the element.
-        PointPubSub.publish('Point.click', e)
-
-        if (self.customPinClickBehavior) {
-          return false;
-        }
-
-        // Remove any clicked poppers...
-        self.removePopper(true);
-
-        let target = e.target || e.srcElement;
-        let m = this;
-
-        if (m.get('clickContent') === "") {
-          return false;
-        }
-
-        // Pointers
-        let map = this.map;
-
-        // Get projection data
-        let projection = map.getProjection();
-        let topRight = projection.fromLatLngToPoint(map.getBounds().getNorthEast());
-        let bottomLeft = projection.fromLatLngToPoint(map.getBounds().getSouthWest());
-        let scale = Math.pow(2, map.getZoom());
-
-        // Create point
-        var point = projection.fromLatLngToPoint(
-          new google.maps.LatLng(m.internalPosition.lat(), m.internalPosition.lng())
-        );
-
-        // Show the bubble
-        let elem = document.querySelector('#popper-container-clicked');
-        let inner = document.querySelector('.arrow_box_clicked');
-        inner.innerHTML = m.get('clickContent');
-        elem.style.display = 'block';
-
-        // Get the x/y based on the scale.
-        let containerHeight = elem.offsetHeight;
-        let containerWidth = elem.offsetWidth;
-        var posLeft = parseInt(((point.x - bottomLeft.x) * scale) - (containerWidth / 2 + 4));
-        var posTop = parseInt(((point.y - topRight.y) * scale) - (20 + containerHeight));
-
-        elem.style.top = `${posTop}px`;
-        elem.style.left = `${posLeft}px`;
-
-      });
-    });
   }
 
   // Remove listeners.
@@ -356,20 +318,26 @@ export class Point {
     }
   }
 
-  // Remove the poppers either hover or click.
-  removePopper(clicked = false) {
-    let popper = document.querySelector('#popper-container');
+  setDocumentClick() {
+    const self = this;
+    document.addEventListener('click', function(e) {
+      if (e.target.className.indexOf('clicked') === -1) {
+        self.removePopper(true);
+        self.removeUniversalPointHoverState();
+      }
+    });
+  }
 
-    if (popper === null) {
-      return false;
+  returnUpdatedPinClass(marker) {
+    let currentClass = marker.get('labelClass').split(' ');
+
+    let index = currentClass.indexOf('PointHoverState');
+
+    if (index > -1) {
+      currentClass.splice(index, 1);
     }
 
-    popper.style.display = 'none';
-
-    if (clicked) {
-      let popper_clicked = document.querySelector('#popper-container-clicked');
-      popper_clicked.style.display = 'none';
-    }
+    return currentClass.join(' ')
   }
 
 }
