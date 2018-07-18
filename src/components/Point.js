@@ -94,7 +94,7 @@ export class Point {
         })
         markers.forEach(function(marker) {
           self.removeListeners();
-          self.setEventssetEvents(true);
+          self.setEvents(true);
           marker.setOptions({
             zIndex: 20000,
             labelClass: `marker-point`
