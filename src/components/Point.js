@@ -296,6 +296,14 @@ export class Point {
     this.markerListeners = [];
   }
 
+  // Remove method to remove everything.
+  remove() {
+    this.removeListeners();
+    for (var i = 0; i < this.markers.length; i++) {
+      this.markers[i].setMap(null);
+    }
+  }
+
   setDocumentClick() {
     const self = this;
     document.addEventListener('click', function(e) {
