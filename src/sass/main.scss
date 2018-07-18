@@ -56,6 +56,11 @@ $hidden-pin-size: 4px;
   cursor: pointer;
 }
 
+.PointHoverStateClicked {
+  -webkit-box-shadow: 0 0 5px 20px rgba(146, 155, 168, 0.8);
+  box-shadow: 0 0 5px 20px rgba(146, 155, 168, 0.8);
+}
+
 #popper-container, #popper-container-clicked {
   position: absolute;
   z-index: 1000;

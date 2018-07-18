@@ -174,9 +174,13 @@ export class Point {
 
   setMouseOut(marker) {
 
+    let currentClass = marker.get('labelClass');
+
+    let newClass = (currentClass.indexOf('PointHoverStateClicked') > -1) ? 'marker-point PointHoverStateClicked' : 'marker-point';
+
     marker.setOptions({
       zIndex: 100,
-      labelClass: `marker-point`
+      labelClass: newClass
     });
 
     this.removePopper(false)
@@ -191,11 +195,16 @@ export class Point {
     // Remove any clicked poppers...
     this.removePopper(true);
 
-    if (marker.get('clickContent') === "") {
+    if (marker.get('clickContent') === '') {
       return false;
     }
 
     this.showPopper(marker, e)
+
+    marker.setOptions({
+      zIndex: 10000,
+      labelClass: `${marker.labelClass} PointHoverStateClicked`
+    })
 
   }
 
@@ -309,6 +318,7 @@ export class Point {
     document.addEventListener('click', function(e) {
       if (e.target.className.indexOf('clicked') === -1) {
         self.removePopper(true);
+        self.removeUniversalPointHoverState();
       }
     });
   }
