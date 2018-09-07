@@ -199,6 +199,8 @@ export class Point {
     // Remove any clicked poppers...
     this.removePopper(true);
 
+    this.removeUniversalPointHoverState();
+
     if (marker.get('clickContent') !== '') {
       this.showPopper(marker, e)
     }
