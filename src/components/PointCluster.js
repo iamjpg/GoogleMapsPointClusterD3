@@ -24,7 +24,7 @@ export class PointCluster {
     if (!options.map) {
       return console.error('ERROR: Google map instance is a requirement.');
     }
-    
+
     // Set object properties with sensible defaults (except the map instance).
     this.map = options.map;
     this.mapContainer = options.map.getDiv().getAttribute('id');
@@ -55,9 +55,7 @@ export class PointCluster {
     }
 
     // Set collection on the PointCluster object.
-    this.collection = collection;
-
-    window.collection = helpers.clone(collection);
+    this.collection = window.collection = collection;
   }
 
   // createOverlay() is responsible for creating the div which we will append clusters and pins to.

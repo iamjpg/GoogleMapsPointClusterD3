@@ -67,12 +67,10 @@ export class Point {
 
     this.setEvents(false);
     this.setOmsEvents();
-
   }
 
   // Init the point spiderification.
   setOmsEvents() {
-
     const self = this;
 
     this.oms.addListener('click', function(marker, event) {
@@ -96,7 +94,6 @@ export class Point {
           });
         })
         markers.forEach(function(marker) {
-
           let newClass = self.returnUpdatedPinClass(marker);
 
           self.removeListeners();
@@ -111,7 +108,6 @@ export class Point {
     });
 
     this.oms.addListener('unspiderfy', function(markers, event) {
-
       setTimeout(function() {
         self.removeUniversalPointHoverState();
         self.removePopper();
@@ -123,9 +119,7 @@ export class Point {
         });
         self.setEvents(false);
       }, 250)
-
     });
-
   }
 
   setEvents(ignoreZindex = false) {
@@ -133,49 +127,40 @@ export class Point {
     const self = this;
 
     this.markers.forEach(function(marker) {
-
       // MouseEnter
       let mouseOverListener = marker.addListener('mouseover', function(e) {
 
         let target = e.target;
         let index = $(target).index()
 
-        self.setMouseOver(self.markers[index], e)
-
+        self.setMouseOver(marker, e)
       });
 
       // MouseLeave
       let mouseOutListener = marker.addListener('mouseout', function(e) {
-
         let target = e.target;
         let index = $(target).index()
 
-        self.setMouseOut(self.markers[index])
-
+        self.setMouseOut(marker)
       });
 
       let clickListener = marker.addListener('click', function(e) {
-
         let target = e.target;
         let index = $(target).index()
 
         self.setClickEvent(self.markers[index], e)
-
       });
 
     })
-    
   }
 
   setMouseOver(marker, e) {
-
     marker.setOptions({
       zIndex: 10000,
       labelClass: `${marker.labelClass} PointHoverState`
     });
 
     this.showPopper(marker, e)
-
   }
 
   setMouseOut(marker) {
@@ -188,7 +173,6 @@ export class Point {
     });
 
     this.removePopper(false)
-
   }
 
   setClickEvent(marker, e) {
@@ -209,7 +193,6 @@ export class Point {
       zIndex: 10000,
       labelClass: `${marker.labelClass} PointHoverStateClicked`
     })
-
   }
 
   returnHoverTemplate() {
