@@ -1,5 +1,5 @@
 // Import the MarkerWithLabel library.
-import MarkerWithLabel from 'markerwithlabel';
+import MarkerWithLabel from '../services/MarkerWithLabel';
 import OverlappingMarkerSpiderfier from '../services/spider-marker';
 
 export class Point {

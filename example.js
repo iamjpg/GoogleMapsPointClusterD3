@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   // Create the Google Map.
   window.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 4,
-    center: new google.maps.LatLng(42.13813785493148, -123.69739349999998)
+    zoom: 10,
+    center: new google.maps.LatLng(35.2021285, -118.83414599999998)
   });
 
   // Construct PointCluster Object
