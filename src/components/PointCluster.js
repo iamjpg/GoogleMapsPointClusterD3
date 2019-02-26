@@ -190,21 +190,27 @@ export class PointCluster {
 
   setMapEvents() {
     var self = this;
-    google.maps.event.addListener(this.map, 'zoom_changed', function() {
+    this.ZOOM_CHANGED_LISTENER = google.maps.event.addListener(this.map, 'zoom_changed', function() {
       if (self.collection) {
         $('.point-cluster').hide();
       }
     });
-    google.maps.event.addListener(this.map, 'drag', function() {
+    this.DRAG_LISTENER = google.maps.event.addListener(this.map, 'drag', function() {
       if (self.collection) {
         $('.point-cluster').hide();
       }
     });
-    google.maps.event.addListener(this.map, 'idle', function() {
+    this.IDLE_LISTENER = google.maps.event.addListener(this.map, 'idle', function() {
       if (self.collection) {
         self.print();
       }
     });
+  }
+
+  removeMapEvents() {
+    google.maps.event.removeListener(this.ZOOM_CHANGED_LISTENER);
+    google.maps.event.removeListener(this.DRAG_LISTENER);
+    google.maps.event.removeListener(this.IDLE_LISTENER);
   }
 
   zoomToFit(el) {

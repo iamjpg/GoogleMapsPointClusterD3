@@ -42,7 +42,8 @@ export class Point {
         draggable: false,
         labelAnchor: new google.maps.Point(10, 10),
         labelClass: 'marker-point',
-        labelData: o.dataset
+        labelData: o.dataset,
+        labelStyle: o.labelStyle || {}
       });
 
       self.markers.push(m);

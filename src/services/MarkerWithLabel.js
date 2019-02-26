@@ -379,6 +379,8 @@ MarkerLabel_.prototype.setTitle = function () {
 MarkerLabel_.prototype.setStyles = function () {
   var i, labelStyle;
 
+  if (this.eventDiv_.getAttribute('style').indexOf('visibility') > -1) { return false; }
+
   // Apply style values from the style sheet defined in the labelClass parameter:
   this.labelDiv_.className = this.marker_.get("labelClass");
   this.eventDiv_.className = this.labelDiv_.className;
@@ -400,6 +402,7 @@ MarkerLabel_.prototype.setStyles = function () {
 MarkerLabel_.prototype.setDataSet = function() {
   var self = this;
   var labels = this.marker_.get("labelData");
+  if (!labels) { return false; } 
   labels.forEach(function(o, i) {
     self.eventDiv_.setAttribute(`data-${Object.keys(o)[0]}`, o[Object.keys(o)[0]])
   })

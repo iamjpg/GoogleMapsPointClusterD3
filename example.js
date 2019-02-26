@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         o.hoverData = o.lat + " : " + o.lng;
         o.dataset = [{bar: 'boop'}, {foo: 'baz'}]
         o.clickData = "You've clicked on this locaton:<br />" + o.lat + " : " + o.lng;
+        o.labelStyle = {background: 'salmon'}
       });
 
       // Set the collection of location objects.
