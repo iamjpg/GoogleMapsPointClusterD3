@@ -123,35 +123,20 @@ export class Point {
     });
   }
 
-  setEvents(ignoreZindex = false) {
-
+  setEvents() {
     const self = this;
-
     this.markers.forEach(function(marker) {
-      // MouseEnter
-      let mouseOverListener = marker.addListener('mouseover', function(e) {
-
-        let target = e.target;
-        let index = $(target).index()
-
-        self.setMouseOver(marker, e)
+      marker.addListener('mouseover', function(e) {
+        self.setMouseOver(this, e);
       });
 
-      // MouseLeave
-      let mouseOutListener = marker.addListener('mouseout', function(e) {
-        let target = e.target;
-        let index = $(target).index()
-
-        self.setMouseOut(marker)
+      marker.addListener('mouseout', function() {
+        self.setMouseOut(this);
       });
 
-      let clickListener = marker.addListener('click', function(e) {
-        let target = e.target;
-        let index = $(target).index()
-
-        self.setClickEvent(self.markers[index], e)
+      marker.addListener('click', function(e) {
+        self.setClickEvent(this, e);
       });
-
     })
   }
 
